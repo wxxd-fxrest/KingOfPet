@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "KingOfPet",
+    "slug": "KingOfPet",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "KingOfPet"
+}
