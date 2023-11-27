@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "250916092516",
+    "project_id": "kingofpet-caa38",
+    "storage_bucket": "kingofpet-caa38.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250916092516:android:f46dadb94049df574f3d71",
+        "android_client_info": {
+          "package_name": "com.kingofpet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZND8aig3_8Z2s65sVvy85o5-F_Zr0JfI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

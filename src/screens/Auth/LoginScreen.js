@@ -6,7 +6,7 @@ const LoginScreen = () => {
 };
 
 const Container = styled.View`
-    background-color: white;
+    background-color: gray;
     flex: 1;
     align-items: center;
     color: white;

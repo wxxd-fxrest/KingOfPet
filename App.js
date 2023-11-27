@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import MainRoot from './src/navigation/MainRoot';
 import AuthRoot from './src/navigation/AuthRoot';
+import StartScreen from './src/screens/StartScreen';
 
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
 
@@ -42,7 +43,7 @@ export default function App() {
     return (
         <SafeAreaView style={styles.container}>
             <NavigationContainer>
-                {isAuthentication ? <MainRoot /> : <AuthRoot />}
+                {isAuthentication ? <MainRoot /> : <StartScreen />}
                 <StatusBar barStyle="auto" />
             </NavigationContainer>
         </SafeAreaView>
