@@ -17,8 +17,6 @@ const Container = styled.View`
     flex: 1;
 `;
 
-const Title = styled.Text``;
-
 const Logo = styled.Image`
     width: 350px;
     height: 350px;
