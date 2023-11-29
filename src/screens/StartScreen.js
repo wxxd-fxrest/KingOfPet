@@ -4,8 +4,17 @@ import LogoImage from '../assets/logo.png';
 import Kakao from '../assets/kakao-talk.png';
 import Google from '../assets/social.png';
 import Naver from '../assets/naver.png';
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const StartScreen = ({ navigation }) => {
+    const onGoogleSignInPress = async () => {
+        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        const { idToken } = await GoogleSignin.signIn();
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        const res = await auth().signInWithCredential(googleCredential);
+    };
+
     return (
         <Container>
             <Logo source={LogoImage} />
@@ -26,9 +35,9 @@ const StartScreen = ({ navigation }) => {
                         borderColor: '#d5d5d4',
                         borderWidth: 1,
                     }}
+                    onPress={onGoogleSignInPress}
                 >
                     <IconImage source={Google} />
-
                     <JoinTitle style={{ color: '#243e35' }}>구글로 시작</JoinTitle>
                 </AuthButton>
                 <AuthButton

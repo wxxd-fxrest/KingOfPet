@@ -4,11 +4,12 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-import AppLoading from 'expo-app-loading';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import MainRoot from './src/navigation/MainRoot';
 import AuthRoot from './src/navigation/AuthRoot';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { REACT_GOOGLE_AUTH_KEY } from '@env';
 
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
 
@@ -28,16 +29,21 @@ export default function App() {
         });
     }, [currentUser]);
 
-    const onFinish = () => setReady(true);
+    useEffect(() => {
+        const loadApp = async () => {
+            const fonts = loadFonts([Ionicons.font]);
+            await Promise.all([...fonts]);
+            setReady(true);
+        };
 
-    const startLoading = async () => {
-        const fonts = loadFonts([Ionicons.font]);
-        await Promise.all([...fonts]);
-    };
+        loadApp();
+    }, []);
 
-    if (!ready) {
-        return <AppLoading startAsync={startLoading} onFinish={onFinish} onError={console.error} />;
-    }
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId: `${REACT_GOOGLE_AUTH_KEY}`,
+        });
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>

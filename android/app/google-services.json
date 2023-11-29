@@ -12,7 +12,12 @@
           "package_name": "com.kingofpet"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "428785732632-7jv2eitubv6a001ttjmklquoke56tprv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB2RXWutv6QPCRUVrVC5WAM12oGJESeFbA"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "428785732632-7jv2eitubv6a001ttjmklquoke56tprv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "428785732632-0jmkgj6b3mef10otnjq7fo4t6vtb7ur6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.name.KingOfPet"
+              }
+            }
+          ]
         }
       }
     }
