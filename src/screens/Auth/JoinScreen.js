@@ -1,24 +1,86 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import { styled } from 'styled-components';
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import * as Animatable from 'react-native-animatable';
+import * as ImagePicker from 'expo-image-picker';
 
 const Join = () => {
-    const [different, setDifferent] = useState(false);
     const [eyeOff, setEyeOff] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [petName, setPetName] = useState('');
+
+    const [dog, setDog] = useState(true);
+    const [cat, setCat] = useState(false);
+    const [different, setDifferent] = useState(false);
+    const [petType, setPetType] = useState('');
+
     const passwordInput = useRef();
+    const typeDog = useRef();
+    const typeCat = useRef();
+    const typeDifferent = useRef();
+
+    const [imageUrl, setImageUrl] = useState('');
+    const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+    const [saveImgUrl, setSaveImgUrl] = useState('');
 
     const onSubmitEmailEditing = () => {
         passwordInput.current.focus();
+    };
+
+    useEffect(() => {
+        const uploadImage = async () => {
+            if (!imageUrl) return;
+
+            // 이미지 업로드 로직
+            setLoading(true);
+            try {
+                const asset = imageUrl.assets[0];
+                const reference = storage().ref(`/profile/${asset.fileName}`);
+                await reference.putFile(asset.uri);
+                const IMG_URL = await reference.getDownloadURL();
+                console.log('IMG_URL', IMG_URL);
+                setSaveImgUrl(IMG_URL);
+                setImageUrl('');
+                console.log('imageUrl', imageUrl);
+                setLoading(false);
+            } catch (e) {
+                console.error(e);
+                setLoading(false);
+            }
+        };
+
+        uploadImage(); // 이미지 업로드 실행
+    }, [imageUrl]); // imageUrl이 변경될 때마다 실행
+
+    const handleImagePick = async () => {
+        if (!status?.granted) {
+            const permission = await requestPermission();
+            if (!permission.granted) {
+                // 권한이 거부된 경우에 대한 처리 로직
+                console.log('권한이 거부되었습니다.');
+                return;
+            }
+        }
+
+        // 이미지 선택 로직
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: false,
+            quality: 1,
+            aspect: [1, 1],
+        });
+
+        // console.log('result', result);
+        setImageUrl(result);
     };
 
     const onSubmitPasswordEditing = async () => {
@@ -31,17 +93,33 @@ const Join = () => {
         }
 
         try {
-            const userCredential = await auth().createUserWithEmailAndPassword(email, password);
-            firestore()
-                .collection('Users')
-                .doc(`${userCredential.user.email}`)
-                .set({
-                    email: `${userCredential.user.email}`,
-                    name: `${userCredential.user.email.split('@')[0]}`,
-                })
-                .then(() => {
-                    console.log('User added!');
-                });
+            const petTypeData =
+                typeDog.current.state.checked === true
+                    ? { type: '강아지' }
+                    : typeCat.current.state.checked === true
+                    ? { type: '고양이' }
+                    : typeDifferent.current.state.checked === true && petType
+                    ? { type: petType }
+                    : null;
+
+            if (petTypeData && petName && saveImgUrl) {
+                const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+                firestore()
+                    .collection('Users')
+                    .doc(`${userCredential.user.email}`)
+                    .set({
+                        email: `${userCredential.user.email}`,
+                        userid: `${userCredential.user.email.split('@')[0]}`,
+                        petname: petName,
+                        petimage: saveImgUrl,
+                        ...petTypeData,
+                    })
+                    .then(() => {
+                        console.log('User added!');
+                    });
+            } else {
+                Alert.alert('빈칸을 모두 채워주세요!');
+            }
         } catch (e) {
             switch (e.code) {
                 case 'auth/user-not-found' || 'auth/wrong-password':
@@ -121,9 +199,6 @@ const Join = () => {
                     >
                         <Feather name="x-circle" size={24} color="#86918d" />
                     </DeleteTextBtn>
-                    <EmailCheckBtn activeOpacity={0.6}>
-                        <CheckText>중복확인</CheckText>
-                    </EmailCheckBtn>
                 </EmailBox>
 
                 <TextInputTitle>비밀번호를 입력해 주세요.</TextInputTitle>
@@ -133,7 +208,7 @@ const Join = () => {
                         ref={passwordInput}
                         placeholder="password"
                         placeholderTextColor="grey"
-                        secureTextEntry
+                        secureTextEntry={eyeOff === true ? false : true}
                         returnKeyType="done"
                         onSubmitEditing={onSubmitPasswordEditing}
                         onChangeText={(text) => setPassword(text)}
@@ -156,26 +231,48 @@ const Join = () => {
                 <PetInfoContainer>
                     <PetInfoBox>
                         <PetInputTitle>사진을 선택해 주세요.</PetInputTitle>
-                        <PetImageSelectBox activeOpacity={0.6}>
-                            <PreviewBox>
-                                <Feather name="camera" size={24} color="#86918d" />
-                            </PreviewBox>
+                        <PetImageSelectBox activeOpacity={0.6} onPress={handleImagePick}>
+                            {saveImgUrl ? (
+                                <PreviewBox>
+                                    <PreviewImage source={saveImgUrl && { uri: saveImgUrl }} />
+                                    <DeleteImageBtn
+                                        activeOpacity={0.6}
+                                        onPress={() => {
+                                            setSaveImgUrl('');
+                                        }}
+                                    >
+                                        <Feather name="x-circle" size={22} color="#243e35" />
+                                    </DeleteImageBtn>
+                                </PreviewBox>
+                            ) : (
+                                <PreviewBox>
+                                    <Feather name="camera" size={24} color="#86918d" />
+                                </PreviewBox>
+                            )}
                         </PetImageSelectBox>
                     </PetInfoBox>
                     <PetInfoBox>
                         <PetInputTitle>이름을 알려주세요.</PetInputTitle>
                         <PetNameInputBox>
                             <PetNameTextInput
-                                value={password}
+                                value={petName}
                                 placeholder="Pet Name"
                                 placeholderTextColor="grey"
-                                keyboardType="text"
+                                keyboardType="default"
                                 returnKeyType="done"
                                 onSubmitEditing={onSubmitPasswordEditing}
                                 onChangeText={(text) => {
-                                    setPassword(text);
+                                    setPetName(text);
                                 }}
                             />
+                            <DeletePetNameBtn
+                                activeOpacity={0.6}
+                                onPress={() => {
+                                    setPetName('');
+                                }}
+                            >
+                                <Feather name="x-circle" size={24} color="#86918d" />
+                            </DeletePetNameBtn>
                         </PetNameInputBox>
                         <PetInputTitle>종을 선택해 주세요.</PetInputTitle>
                         <PetCheckBox
@@ -183,9 +280,24 @@ const Join = () => {
                             fillColor="#243e35"
                             unfillColor="#f9f9f7"
                             text="강아지"
+                            ref={typeDog}
+                            isChecked={dog}
                             innerIconStyle={{ borderWidth: 2 }}
                             textStyle={{
                                 textDecorationLine: 'none',
+                            }}
+                            onPress={() => {
+                                if (typeDog.current.state.checked === true) {
+                                    if (typeCat.current.state.checked === true) {
+                                        typeCat.current.onPress();
+                                    }
+                                    if (typeDifferent.current.state.checked === true) {
+                                        typeDifferent.current.onPress();
+                                        setDifferent(false);
+                                    }
+                                    setDog(!dog);
+                                }
+                                console.log(typeDog.current.state.checked);
                             }}
                         />
                         <PetCheckBox
@@ -193,9 +305,23 @@ const Join = () => {
                             fillColor="#243e35"
                             unfillColor="#f9f9f7"
                             text="고양이"
+                            ref={typeCat}
+                            isChecked={cat}
                             innerIconStyle={{ borderWidth: 2 }}
                             textStyle={{
                                 textDecorationLine: 'none',
+                            }}
+                            onPress={() => {
+                                if (typeCat.current.state.checked === true) {
+                                    if (typeDog.current.state.checked === true) {
+                                        typeDog.current.onPress();
+                                    }
+                                    if (typeDifferent.current.state.checked === true) {
+                                        typeDifferent.current.onPress();
+                                        setDifferent(false);
+                                    }
+                                    setCat(!dog);
+                                }
                             }}
                         />
                         <PetCheckBox
@@ -203,26 +329,47 @@ const Join = () => {
                             fillColor="#243e35"
                             unfillColor="#f9f9f7"
                             text="기타"
+                            ref={typeDifferent}
+                            isChecked={different}
                             innerIconStyle={{ borderWidth: 2 }}
                             textStyle={{
                                 textDecorationLine: 'none',
                             }}
-                            onPress={() => setDifferent(!different)}
+                            onPress={() => {
+                                if (typeDifferent.current.state.checked === true) {
+                                    if (typeDog.current.state.checked === true) {
+                                        typeDog.current.onPress();
+                                    }
+                                    if (typeCat.current.state.checked === true) {
+                                        typeCat.current.onPress();
+                                    }
+                                    setDifferent(!different);
+                                }
+                            }}
                         />
                         {different === true && (
                             <Animatable.View animation="fadeInUp" duration={600}>
                                 <PetInputTitle>반려동물의 종을 입력해 주세요.</PetInputTitle>
                                 <PetNameInputBox>
                                     <PetNameTextInput
-                                        value={password}
-                                        keyboardType="text"
-                                        placeholder="Pet Name"
+                                        value={petType}
+                                        keyboardType="default"
+                                        placeholder="Pet Type"
                                         placeholderTextColor="grey"
-                                        secureTextEntry
                                         returnKeyType="done"
                                         onSubmitEditing={onSubmitPasswordEditing}
-                                        onChangeText={(text) => setPassword(text)}
+                                        onChangeText={(text) => {
+                                            setPetType(text);
+                                        }}
                                     />
+                                    <DeletePetNameBtn
+                                        activeOpacity={0.6}
+                                        onPress={() => {
+                                            setPetType('');
+                                        }}
+                                    >
+                                        <Feather name="x-circle" size={24} color="#86918d" />
+                                    </DeletePetNameBtn>
                                 </PetNameInputBox>
                             </Animatable.View>
                         )}
@@ -258,30 +405,15 @@ const EmailInput = styled.TextInput`
     padding: 0px 20px;
     border-radius: 12px;
     font-size: 14px;
-    width: 75%;
+    width: 100%;
     height: 50px;
     padding-right: 45px;
 `;
 
 const DeleteTextBtn = styled.TouchableOpacity`
     position: absolute;
-    right: 28%;
+    right: 3%;
     z-index: 1;
-`;
-
-const EmailCheckBtn = styled.TouchableOpacity`
-    background-color: #c1ccc8;
-    width: 20%;
-    justify-content: center;
-    align-items: center;
-    border-radius: 12px;
-    height: 50px;
-`;
-
-const CheckText = styled.Text`
-    font-size: 12px;
-    font-weight: 500;
-    color: #243e35;
 `;
 
 const PasswordBox = styled.View`
@@ -321,14 +453,6 @@ const PetInputTitle = styled.Text`
     padding: 0px 6px;
 `;
 
-const TextInput = styled.TextInput`
-    background-color: rgba(193, 204, 200, 0.3);
-    padding: 15px 20px;
-    border-radius: 12px;
-    font-size: 14px;
-    margin-bottom: 20px;
-`;
-
 const PetInfoContainer = styled.View`
     justify-content: space-between;
     flex-direction: row;
@@ -353,6 +477,19 @@ const PreviewBox = styled.View`
     height: 100%;
 `;
 
+const PreviewImage = styled.Image`
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+`;
+
+const DeleteImageBtn = styled.TouchableOpacity`
+    position: absolute;
+    z-index: 1;
+    top: 8px;
+    right: 8px;
+`;
+
 const PetNameInputBox = styled.View`
     flex-direction: row;
     margin-bottom: 15px;
@@ -366,6 +503,12 @@ const PetNameTextInput = styled.TextInput`
     font-size: 14px;
     width: 100%;
     height: 50px;
+`;
+
+const DeletePetNameBtn = styled.TouchableOpacity`
+    position: absolute;
+    right: 5%;
+    z-index: 1;
 `;
 
 const PetCheckBox = styled(BouncyCheckbox)`
