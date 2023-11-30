@@ -47,10 +47,10 @@ const Join = () => {
                 const reference = storage().ref(`/profile/${asset.fileName}`);
                 await reference.putFile(asset.uri);
                 const IMG_URL = await reference.getDownloadURL();
-                console.log('IMG_URL', IMG_URL);
+                // console.log('IMG_URL', IMG_URL);
                 setSaveImgUrl(IMG_URL);
                 setImageUrl('');
-                console.log('imageUrl', imageUrl);
+                // console.log('imageUrl', imageUrl);
                 setLoading(false);
             } catch (e) {
                 console.error(e);
@@ -113,6 +113,7 @@ const Join = () => {
                         petname: petName,
                         petimage: saveImgUrl,
                         ...petTypeData,
+                        createprofile: true,
                     })
                     .then(() => {
                         console.log('User added!');

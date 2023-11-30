@@ -26,6 +26,7 @@ export default function App() {
             } else {
                 setIsAuthentication(false);
             }
+            console.log(currentUser);
         });
     }, [currentUser]);
 

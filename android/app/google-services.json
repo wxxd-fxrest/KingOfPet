@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "428785732632-opbha72bcfk3g4tk6j1sepfhceloh17m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kingofpet",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "428785732632-7jv2eitubv6a001ttjmklquoke56tprv.apps.googleusercontent.com",
           "client_type": 3
         }
