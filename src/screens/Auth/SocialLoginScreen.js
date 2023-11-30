@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const SocialLoginScreen = () => {
     return (
         <Container>
-            <Title> social </Title>
+            <Title> social login </Title>
         </Container>
     );
 };
