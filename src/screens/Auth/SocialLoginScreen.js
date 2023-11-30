@@ -5,6 +5,7 @@ const SocialLoginScreen = () => {
     return (
         <Container>
             <Title> social login </Title>
+            <Title> social login </Title>
         </Container>
     );
 };
