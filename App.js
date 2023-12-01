@@ -26,7 +26,7 @@ export default function App() {
             } else {
                 setIsAuthentication(false);
             }
-            console.log(currentUser);
+            console.log('App.js', currentUser);
         });
     }, [currentUser]);
 
