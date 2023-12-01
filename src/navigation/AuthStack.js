@@ -61,11 +61,6 @@ const AuthStack = ({ navigation }) => {
                             <MaterialIcons name="arrow-back-ios" size={25} color="#243e35" />
                         </SetupButton>
                     ),
-                    headerRight: () => (
-                        <LoginButton onPress={() => navigation.navigate('Login')}>
-                            <LoginText>로그인</LoginText>
-                        </LoginButton>
-                    ),
                 }}
             />
         </Stack.Navigator>

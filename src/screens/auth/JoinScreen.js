@@ -114,6 +114,7 @@ const Join = () => {
                         petimage: saveImgUrl,
                         ...petTypeData,
                         createprofile: true,
+                        signType: 'Email',
                     })
                     .then(() => {
                         console.log('User added!');

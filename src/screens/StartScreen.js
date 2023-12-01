@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import LogoImage from '../assets/logo.png';
 import Kakao from '../assets/kakao-talk.png';
 import Google from '../assets/social.png';
+import Email from '../assets/arroba.png';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -15,24 +16,29 @@ const StartScreen = ({ navigation }) => {
         const { idToken } = await GoogleSignin.signIn();
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
         const res = await auth().signInWithCredential(googleCredential);
-        // console.log(res.additionalUserInfo.profile.email);
-        // console.log(res.additionalUserInfo.profile.name);
 
-        // database에 해당 유저의 정보가 없을 경우에만 하단 코드가 실행되도록 해야 함
-        firestore()
-            .collection('Users')
-            .doc(`${res.additionalUserInfo.profile.email}`)
-            .set({
-                email: `${res.additionalUserInfo.profile.email}`,
-                userid: `${res.additionalUserInfo.profile.name}`,
-                petname: '',
-                petimage: '',
-                type: '',
-                createprofile: false,
-            })
-            .then(() => {
-                console.log('User added!');
-            });
+        const userDoc = await firestore().collection('Users').doc(`${res.additionalUserInfo.profile.email}`).get();
+        const userData = userDoc.data();
+
+        if (!userData) {
+            // 사용자 데이터가 없을 때 Firestore에 데이터 추가
+            await firestore()
+                .collection('Users')
+                .doc(`${res.additionalUserInfo.profile.email}`)
+                .set({
+                    email: `${res.additionalUserInfo.profile.email}`,
+                    userid: `${res.additionalUserInfo.profile.name}`,
+                    petname: '',
+                    petimage: '',
+                    type: '',
+                    createprofile: false,
+                    signType: 'Google',
+                })
+                .then(() => {
+                    console.log('User added!');
+                });
+        }
+
         if (!res.additionalUserInfo.profile) {
             Alert.alert('다시 시도해 주세요.', '로그인이 정상적으로 진행되지 않았습니다.');
         }
@@ -55,27 +61,37 @@ const StartScreen = ({ navigation }) => {
 
     const getProfile = () => {
         KakaoLogin.getProfile()
-            .then((result) => {
+            .then(async (result) => {
                 console.log('GetProfile Success', result);
                 const email = result.email;
                 const password = 'A!@' + result.id;
 
-                // database에 해당 유저의 정보가 없을 경우에만 하단 코드가 실행되도록 해야 함
-                auth().createUserWithEmailAndPassword(email, password);
-                firestore()
-                    .collection('Users')
-                    .doc(`${email}`)
-                    .set({
-                        email: `${email}`,
-                        userid: `${result.nickname}`,
-                        petname: '',
-                        petimage: '',
-                        type: '',
-                        createprofile: false,
-                    })
-                    .then(() => {
-                        console.log('User added!');
-                    });
+                const userDoc = await firestore().collection('Users').doc(`${email}`).get();
+                const userData = userDoc.data();
+
+                if (userData) {
+                    await auth().signInWithEmailAndPassword(email, password);
+                }
+
+                if (!userData) {
+                    // 사용자 데이터가 없을 때 Firestore에 데이터 추가
+                    auth().createUserWithEmailAndPassword(email, password);
+                    firestore()
+                        .collection('Users')
+                        .doc(`${email}`)
+                        .set({
+                            email: `${email}`,
+                            userid: `${result.nickname}`,
+                            petname: '',
+                            petimage: '',
+                            type: '',
+                            createprofile: false,
+                            signType: 'KaKao',
+                        })
+                        .then(() => {
+                            console.log('User added!');
+                        });
+                }
             })
             .catch((error) => {
                 console.log(`GetProfile Fail(code:${error.code})`, error.message);
@@ -99,9 +115,8 @@ const StartScreen = ({ navigation }) => {
                 <AuthButton
                     activeOpacity={0.6}
                     style={{
-                        backgroundColor: '#f9f9f7',
-                        borderColor: '#d5d5d4',
-                        borderWidth: 1,
+                        // backgroundColor: '#f9f9f7',
+                        backgroundColor: '#d5d5d4',
                     }}
                     onPress={onGoogleSignInPress}
                 >
@@ -111,12 +126,15 @@ const StartScreen = ({ navigation }) => {
                 <AuthButton
                     activeOpacity={0.6}
                     style={{
+                        backgroundColor: '#f9f9f7',
+                        borderColor: '#d5d5d4',
+                        borderWidth: 1,
                         marginBottom: 0,
-                        justifyContent: 'center',
                     }}
-                    onPress={() => navigation.navigate('AuthStack', { screen: 'Join' })}
+                    onPress={() => navigation.navigate('AuthStack', { screen: 'Login' })}
                 >
-                    <JoinTitle>이메일 로그인/회원가입</JoinTitle>
+                    <IconImage source={Email} />
+                    <JoinTitle>이메일로 시작</JoinTitle>
                 </AuthButton>
             </AuthBox>
         </Container>
@@ -143,7 +161,7 @@ const AuthBox = styled.View`
 `;
 
 const AuthButton = styled.TouchableOpacity`
-    background-color: #929f9a;
+    background-color: #c1ccc8;
     width: 100%;
     height: 50px;
     justify-content: center;

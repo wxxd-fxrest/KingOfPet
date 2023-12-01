@@ -14,30 +14,32 @@ const MainScreen = ({ navigation }) => {
     }, [currentUser]);
 
     useEffect(() => {
-        const subscriber = firestore()
-            .collection('Users')
-            .doc(`${currentUser.email}`)
-            .onSnapshot((documentSnapshot) => {
-                const userData = documentSnapshot.data();
-                setLoginUserData(userData);
-                console.log('User data: ', userData);
+        const timeoutId = setTimeout(() => {
+            const subscriber = firestore()
+                .collection('Users')
+                .doc(`${currentUser.email}`)
+                .onSnapshot((documentSnapshot) => {
+                    const userData = documentSnapshot.data();
+                    setLoginUserData(userData);
+                    console.log('User data: ', userData);
 
-                if (userData.createprofile === false) {
-                    Alert.alert('프로필이 미완성 상태입니다.', '프로필 수정을 통해 프로필을 완성해 주세요!', [
-                        // {
-                        //     text: 'No',
-                        //     onPress: () => console.log('no'),
-                        //     style: 'destructive',
-                        // },
-                        {
-                            text: 'Yes',
-                            onPress: () => navigation.navigate('MainStack', { screen: 'SocialLoginScreen' }),
-                        },
-                    ]);
-                }
-            });
+                    if (userData.createprofile === false) {
+                        Alert.alert('프로필이 미완성 상태입니다.', '프로필 수정을 통해 프로필을 완성해 주세요!', [
+                            {
+                                text: 'Yes',
+                                onPress: () => navigation.navigate('MainStack', { screen: 'SocialLoginScreen' }),
+                            },
+                        ]);
+                    }
+                });
 
-        return () => subscriber();
+            return () => {
+                clearTimeout(timeoutId);
+                subscriber();
+            };
+        }, 2000); // 2초 후에 실행
+
+        return () => clearTimeout(timeoutId);
     }, [currentUser]);
 
     return (
