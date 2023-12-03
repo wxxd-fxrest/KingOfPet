@@ -35,6 +35,7 @@ export default [
         useremail: 'user2@naver.com',
         userimg: 'https://i.pinimg.com/564x/ec/48/05/ec48054b6b71e7f67cc9aed123c352cd.jpg',
         qna_boolen: true,
+        image: 'https://i.pinimg.com/564x/c9/22/68/c92268d92cf2dbf96e3195683d9e14fb.jpg',
         description: `Inspired by the original that debuted in 1985, the Air Jordan 1 Low delivers a clean, classic look that's familiar yet fresh. With an iconic design that blends seamlessly with any fit, these shoes are perfect for taking charge.
     
             Advantages: rubber sole combines with a soft sockliner and encapsulated Nike Air cushioning for all-day comfort. The rubber outsole offers durable traction on a variety of surfaces.`,
@@ -83,6 +84,7 @@ export default [
         useremail: 'user2@naver.com',
         userimg: 'https://i.pinimg.com/564x/ec/48/05/ec48054b6b71e7f67cc9aed123c352cd.jpg',
         qna_boolen: true,
+        image: 'https://i.pinimg.com/564x/c9/22/68/c92268d92cf2dbf96e3195683d9e14fb.jpg',
         description: `Inspired by the original that debuted in 1985, the Air Jordan 1 Low delivers a clean, classic look that's familiar yet fresh. With an iconic design that blends seamlessly with any fit, these shoes are perfect for taking charge.
     
             Advantages: rubber sole combines with a soft sockliner and encapsulated Nike Air cushioning for all-day comfort. The rubber outsole offers durable traction on a variety of surfaces.`,

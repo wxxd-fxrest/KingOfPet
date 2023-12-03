@@ -9,10 +9,12 @@ import RandomFeedScreen from './RandomFeedScreen';
 import FollowFeedScreen from './FollowFeedScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
-const MainScreen = ({ navigation }) => {
+const MainScreen = ({ handleScroll }) => {
+    const navigation = useNavigation();
     const [currentUser, setCurrentUser] = useState([]);
     const [loginUserData, setLoginUserData] = useState([]);
 
@@ -68,7 +70,7 @@ const MainScreen = ({ navigation }) => {
                 tabBarActiveTintColor: '#243e35',
                 tabBarInactiveTintColor: 'rgba(36, 62, 53, 0.5)',
                 tabBarStyle: {
-                    backgroundColor: 'white',
+                    backgroundColor: '#f9f9f7',
                 },
                 tabBarLabelStyle: {
                     textAlign: 'center',
@@ -83,16 +85,8 @@ const MainScreen = ({ navigation }) => {
             }}
         >
             <Tab.Screen
-                name="QnA"
-                component={QuestionFeedScreen}
-                options={{
-                    title: '질문',
-                    unmountOnBlur: true,
-                }}
-            />
-            <Tab.Screen
                 name="All"
-                children={() => <RandomFeedScreen navigation={navigation} />}
+                children={() => <RandomFeedScreen navigation={navigation} handleScroll={handleScroll} />}
                 options={{
                     title: '전체',
                     unmountOnBlur: true,
@@ -103,6 +97,15 @@ const MainScreen = ({ navigation }) => {
                 component={FollowFeedScreen}
                 options={{
                     title: '구독',
+                }}
+            />
+            <Tab.Screen
+                name="QnA"
+                // component={QuestionFeedScreen}
+                children={() => <QuestionFeedScreen navigation={navigation} handleScroll={handleScroll} />}
+                options={{
+                    title: '질문',
+                    unmountOnBlur: true,
                 }}
             />
         </Tab.Navigator>

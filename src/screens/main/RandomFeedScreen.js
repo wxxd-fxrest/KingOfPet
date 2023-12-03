@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import MasonryList from 'react-native-masonry-list';
+import { ActivityIndicator, Image, Pressable } from 'react-native';
+import MasonryList from '@react-native-seoul/masonry-list';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import postData from '../../data/postData';
-import { Image, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-const RandomFeedScreen = () => {
-    const spacing = 1;
-
+const RandomFeedScreen = ({ navigation, handleScroll }) => {
     // 랜덤한 dimensions 값을 생성하는 함수
     const generateRandomDimensions = () => {
         const width = Math.floor(Math.random() * 200) + 100; // 최소 100, 최대 300
-        const height = Math.floor(Math.random() * 200) + 100; // 최소 100, 최대 300
+        const height = Math.floor(Math.random() * 191) + 130; // 최소 130, 최대 320
         return { width, height };
     };
 
@@ -24,80 +23,104 @@ const RandomFeedScreen = () => {
 
     return (
         <Container>
-            <MasonryList
-                images={dataWithDimensions.map((item) => ({ uri: item.image, data: item }))}
-                columns={2}
-                spacing={spacing}
-                backgroundColor="#f9f9f7"
-                showsVerticalScrollIndicator={false}
-                onPressImage={(item, index) => console.log(item, index)}
-                renderIndividualHeader={(props) => {
-                    return (
-                        <>
-                            {props.data.qna_boolen === true && (
-                                <QnABox>
-                                    <QnABoolen>Q&A</QnABoolen>
-                                </QnABox>
-                            )}
-                            <FeedDetail numberOfLines={3} ellipsizeMode="tail">
-                                {props.data.description}
-                            </FeedDetail>
-                        </>
-                    );
-                }}
-                renderIndividualFooter={(props) => {
-                    return (
-                        <>
-                            <PetNameTag>
-                                <PetImageBox>
-                                    <PetImage source={{ uri: props.data.userimg }} />
-                                </PetImageBox>
-                                <UserName>{props.data.username}</UserName>
-                            </PetNameTag>
-                        </>
-                    );
-                }}
-                customImageComponent={(props) => {
-                    return (
-                        <View style={{ alignItems: 'center' }}>
-                            <LinearGradientBox
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 0, y: 1 }}
-                                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.9)']}
-                                style={{
-                                    width: props.style.width - spacing,
-                                    height: props.style.height - 50,
-                                    marginBottom: props.style.margin,
-                                }}
-                            />
-                            <Image
-                                {...props}
-                                style={{
-                                    ...props.style,
-                                    borderRadius: 12, // 보더의 모서리 둥글기
-                                }}
-                            />
-                        </View>
-                    );
-                }}
-            />
+            {dataWithDimensions.length === 0 ? (
+                <LoadingContainer>
+                    <ActivityIndicator color="red" />
+                </LoadingContainer>
+            ) : (
+                <MasonryList
+                    onScroll={handleScroll}
+                    data={dataWithDimensions}
+                    keyExtractor={(item) => item.id}
+                    numColumns={2}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item, i }) => <RandomCard item={item} index={i} navigation={navigation} />}
+                    onEndReachedThreshold={0.1}
+                />
+            )}
         </Container>
     );
 };
 
 const Container = styled.View`
     background-color: #f9f9f7;
+    padding: 0 4px;
+    padding-top: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     flex: 1;
-    padding: 4px 0px;
 `;
 
-const LinearGradientBox = styled(LinearGradient)`
-    position: absolute;
-    bottom: 0px;
-    z-index: 1;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
+const LoadingContainer = styled.View`
+    margin-top: 100px;
 `;
+
+export default RandomFeedScreen;
+
+const RandomCard = ({ item, index, navigation }) => {
+    const isEven = index % 2 === 0;
+
+    return (
+        <AnimatedContainer
+            entering={FadeInDown.delay(index * 100)
+                .duration(600)
+                .springify()
+                .damping(12)}
+            style={{
+                marginBottom: isEven ? 4 : 4,
+            }}
+        >
+            {item.qna_boolen === true && (
+                <QnABox>
+                    <QnABoolen>Q&A</QnABoolen>
+                </QnABox>
+            )}
+            <FeedDetail numberOfLines={3} ellipsizeMode="tail">
+                {item.description}
+            </FeedDetail>
+            <Pressable
+                style={{
+                    width: '100%',
+                    paddingLeft: isEven ? 2 : 2,
+                    paddingRight: isEven ? 2 : 2,
+                    alignItems: 'center',
+                }}
+            >
+                <LinearGradientBox
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                    colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.9)']}
+                    style={{
+                        width: '100%',
+                        height: item.dimensions.height - 50,
+                        marginBottom: item.dimensions.margin,
+                    }}
+                />
+                <Image
+                    source={{ uri: item.image }}
+                    isEven={isEven}
+                    resizeMode="cover"
+                    style={{
+                        width: '100%',
+                        // ...item.dimensions,
+                        // width: item.dimensions.width,
+                        height: item.dimensions.height,
+                        borderRadius: 12, // 보더의 모서리 둥글기
+                    }}
+                />
+            </Pressable>
+            <PetNameTag>
+                <PetImageBox>
+                    <PetImage source={{ uri: item.userimg }} />
+                </PetImageBox>
+                <UserName>{item.username}</UserName>
+            </PetNameTag>
+        </AnimatedContainer>
+    );
+};
+
+const AnimatedContainer = styled(Animated.View)``;
 
 const QnABox = styled.View`
     background-color: rgba(193, 204, 200, 0.5);
@@ -122,10 +145,18 @@ const FeedDetail = styled.Text`
     position: absolute;
     z-index: 1;
     bottom: 26px;
-    width: 90%;
-    margin: 12px;
+    width: 85%;
+    margin: 14px 16px;
     color: #c1ccc8;
     font-size: 12px;
+`;
+
+const LinearGradientBox = styled(LinearGradient)`
+    position: absolute;
+    bottom: 0px;
+    z-index: 1;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
 `;
 
 const PetNameTag = styled.View`
@@ -156,5 +187,3 @@ const UserName = styled.Text`
     font-size: 14px;
     margin-left: 4px;
 `;
-
-export default RandomFeedScreen;
