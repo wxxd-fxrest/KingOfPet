@@ -5,6 +5,7 @@ import MasonryList from '@react-native-seoul/masonry-list';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import postData from '../../data/postData';
 import LinearGradient from 'react-native-linear-gradient';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const RandomFeedScreen = ({ navigation, handleScroll }) => {
     // 랜덤한 dimensions 값을 생성하는 함수
@@ -76,6 +77,7 @@ const RandomCard = ({ item, index, navigation }) => {
                     <QnABoolen>Q&A</QnABoolen>
                 </QnABox>
             )}
+
             <FeedDetail numberOfLines={3} ellipsizeMode="tail">
                 {item.description}
             </FeedDetail>
@@ -103,13 +105,21 @@ const RandomCard = ({ item, index, navigation }) => {
                     resizeMode="cover"
                     style={{
                         width: '100%',
-                        // ...item.dimensions,
-                        // width: item.dimensions.width,
                         height: item.dimensions.height,
                         borderRadius: 12, // 보더의 모서리 둥글기
                     }}
                 />
             </Pressable>
+            {item.qna_boolen === false && (
+                <TotalLikeBox>
+                    <IconBox>
+                        <MaterialIcons name="pets" size={12} color="rgba(249, 19, 0, 0.8)" />
+                    </IconBox>
+                    <TotalLike numberOfLines={1} ellipsizeMode="tail">
+                        {item.totalLike}
+                    </TotalLike>
+                </TotalLikeBox>
+            )}
             <PetNameTag>
                 <PetImageBox>
                     <PetImage source={{ uri: item.userimg }} />
@@ -157,6 +167,29 @@ const LinearGradientBox = styled(LinearGradient)`
     z-index: 1;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
+`;
+
+const TotalLikeBox = styled.View`
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    position: absolute;
+    z-index: 1;
+    bottom: 16px;
+    left: 16px;
+    width: 40%;
+`;
+
+const IconBox = styled.View`
+    background-color: rgba(193, 204, 200, 0.2);
+    padding: 2px;
+    border-radius: 4px;
+`;
+
+const TotalLike = styled.Text`
+    color: #c1ccc8;
+    font-size: 12px;
+    margin-left: 4px;
 `;
 
 const PetNameTag = styled.View`
