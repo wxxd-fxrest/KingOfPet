@@ -6,7 +6,7 @@ export default [
         userimg: 'https://i.pinimg.com/736x/96/d4/43/96d443c92059f2b3a240a7ff74692bbf.jpg',
         qna_boolen: false,
         image: 'https://i.pinimg.com/736x/83/e2/83/83e283e33be7f4a3ede5beb7b38e6558.jpg',
-        tatalLike: 500,
+        totalLike: 598237491278340900,
         description: `Inspired by the original that debuted in 1985, the Air Jordan 1 Low delivers a clean, classic look that's familiar yet fresh. With an iconic design that blends seamlessly with any fit, these shoes are perfect for taking charge.
     
             Advantages:
@@ -56,7 +56,7 @@ export default [
         userimg: 'https://i.pinimg.com/736x/96/d4/43/96d443c92059f2b3a240a7ff74692bbf.jpg',
         qna_boolen: false,
         image: 'https://i.pinimg.com/736x/83/e2/83/83e283e33be7f4a3ede5beb7b38e6558.jpg',
-        tatalLike: 1340,
+        totalLike: 1340,
         description: `Inspired by the original that debuted in 1985, the Air Jordan 1 Low delivers a clean, classic look that's familiar yet fresh. With an iconic design that blends seamlessly with any fit, these shoes are perfect for taking charge.
     
             Advantages:
