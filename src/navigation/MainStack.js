@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import SocialLoginScreen from '../screens/auth/SocialLoginScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import CreateAllPostScreen from '../screens/newPost/CreateAllPostScreen';
+import EditProfileScreen from '../screens/profile/EditProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,26 @@ const MainStack = ({ navigation }) => {
                 component={CreateAllPostScreen}
                 options={{
                     title: '포스트 작성',
+                    headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                        <BackButton>
+                            <MaterialIcons
+                                name="arrow-back-ios"
+                                size={25}
+                                color="#6b8a47"
+                                onPress={() => navigation.goBack()}
+                            />
+                        </BackButton>
+                    ),
+                }}
+            />
+
+            <Stack.Screen
+                name="EditProfile"
+                component={EditProfileScreen}
+                options={{
+                    title: '프로필 수정',
                     headerShown: true,
                     headerShadowVisible: false,
                     headerLeft: () => (

@@ -12,7 +12,7 @@ const MainTab = () => {
     const handleScroll = (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;
         // 여기에 스크롤 감지 시 실행할 코드를 작성합니다.
-        console.log('Scroll OffsetY:', offsetY);
+        // console.log('Scroll OffsetY:', offsetY);
 
         if (offsetY > 0) {
             setHide(false);
@@ -47,6 +47,7 @@ const MainTab = () => {
             <Tab.Screen
                 name="MyProfile"
                 component={ProfileScreen}
+                // children={() => <ProfileScreen handleScroll={handleScroll} />}
                 options={{
                     title: '프로필',
                     headerShown: true,
