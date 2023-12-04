@@ -3,6 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import SocialLoginScreen from '../screens/auth/SocialLoginScreen';
 import { MaterialIcons } from '@expo/vector-icons';
+import CreateAllPostScreen from '../screens/newPost/CreateAllPostScreen';
+import EditProfileScreen from '../screens/profile/EditProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,9 +35,10 @@ const MainStack = ({ navigation }) => {
                     ),
                 }}
             />
-            {/* <Stack.Screen
+
+            <Stack.Screen
                 name="NewPostStack"
-                component={NewPostStack}
+                component={CreateAllPostScreen}
                 options={{
                     title: '포스트 작성',
                     headerShown: true,
@@ -52,11 +55,12 @@ const MainStack = ({ navigation }) => {
                     ),
                 }}
             />
+
             <Stack.Screen
-                name="DetailScreen"
-                component={DetailScreen}
+                name="EditProfile"
+                component={EditProfileScreen}
                 options={{
-                    title: '상세페이지',
+                    title: '프로필 수정',
                     headerShown: true,
                     headerShadowVisible: false,
                     headerLeft: () => (
@@ -70,7 +74,7 @@ const MainStack = ({ navigation }) => {
                         </BackButton>
                     ),
                 }}
-            /> */}
+            />
         </Stack.Navigator>
     );
 };
