@@ -57,7 +57,7 @@ const MainScreen = ({ handleScroll }) => {
             headerTitle: () => <MaterialIcons name="pets" size={24} color="#243e35" />,
             headerRight: () => (
                 <SetupButton onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}>
-                    <Feather name="plus-square" size={28} color="rgba(36, 62, 53, 0.8)" />
+                    <Feather name="plus-square" size={28} color="#243e35" />
                 </SetupButton>
             ),
         });
