@@ -28,8 +28,8 @@ const MainTab = () => {
             screenOptions={{
                 headerShown: false,
                 tabBarShowLabel: false,
-                tabBarActiveTintColor: '#6b8a47',
-                tabBarInactiveTintColor: '#a7c585',
+                // tabBarActiveTintColor: '#6b8a47',
+                // tabBarInactiveTintColor: '#a7c585',
                 tabBarStyle: { backgroundColor: '#f9f9f7' },
                 headerStyle: { backgroundColor: '#f9f9f7' },
             }}

@@ -13,7 +13,8 @@ const MainStack = ({ navigation }) => {
         <Stack.Navigator
             screenOptions={{
                 headerShown: false,
-                headerTintColor: '#6b8a47',
+                headerTintColor: '#243e35',
+                headerStyle: { backgroundColor: '#f9f9f7' },
             }}
         >
             <Stack.Screen
@@ -28,7 +29,7 @@ const MainStack = ({ navigation }) => {
                             <MaterialIcons
                                 name="arrow-back-ios"
                                 size={25}
-                                color="#6b8a47"
+                                color="#243e35"
                                 onPress={() => navigation.goBack()}
                             />
                         </BackButton>
@@ -48,7 +49,7 @@ const MainStack = ({ navigation }) => {
                             <MaterialIcons
                                 name="arrow-back-ios"
                                 size={25}
-                                color="#6b8a47"
+                                color="#243e35"
                                 onPress={() => navigation.goBack()}
                             />
                         </BackButton>

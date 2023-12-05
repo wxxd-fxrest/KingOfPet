@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, LayoutAnimation, Text } from 'react-native';
+import { Alert, Text } from 'react-native';
 import styled from 'styled-components';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -49,7 +49,7 @@ const ProfileScreen = ({ navigation }) => {
                 headerTitle: () => <UserID>{userData.userid}</UserID>,
                 headerRight: () => (
                     <SetupButton onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}>
-                        <Feather name="plus-square" size={28} color="rgba(36, 62, 53, 0.8)" />
+                        <Feather name="plus-square" size={28} color="#243e35" />
                     </SetupButton>
                 ),
             });
