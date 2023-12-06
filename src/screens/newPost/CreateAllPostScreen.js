@@ -6,6 +6,9 @@ import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
+import { Alert, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
+import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
+import { AntDesign } from '@expo/vector-icons';
 
 // import { MaterialCommunityIcons } from '@expo/vector-icons';
 // <MaterialCommunityIcons name="message-star-outline" size={20} color="#d5d5d4" />
@@ -20,6 +23,13 @@ const CreateAllPostScreen = () => {
     const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     const [saveImgUrl, setSaveImgUrl] = useState('');
 
+    const [totalImg, setTotalImg] = useState([
+        {
+            id: 'select',
+            url: '',
+        },
+    ]);
+
     useEffect(() => {
         const uploadImage = async () => {
             if (!imageUrl) return;
@@ -33,6 +43,8 @@ const CreateAllPostScreen = () => {
                 const IMG_URL = await reference.getDownloadURL();
                 // console.log('IMG_URL', IMG_URL);
                 setSaveImgUrl(IMG_URL);
+                setTotalImg([{ id: asset.assetId, url: IMG_URL }, ...totalImg]);
+                console.log(totalImg);
                 setImageUrl('');
                 // console.log('imageUrl', imageUrl);
                 setLoading(false);
@@ -41,6 +53,7 @@ const CreateAllPostScreen = () => {
                 setLoading(false);
             }
         };
+        console.log(totalImg);
 
         uploadImage(); // 이미지 업로드 실행
     }, [imageUrl]); // imageUrl이 변경될 때마다 실행
@@ -63,76 +76,121 @@ const CreateAllPostScreen = () => {
             aspect: [1, 1],
         });
 
-        // console.log('result', result);
+        console.log('result', result);
         setImageUrl(result);
     };
 
-    return (
-        <Container onPress={() => keyboard.dismiss()}>
-            {/* 이미지 캐러셀 필요 */}
-            {/* 자랑, 일기에 경우 이미지 필수 */}
-            {/* 질문에 경우 선택 */}
-            {/* 이미지 최대 다섯 장 제한 */}
-            {/* 첫 이미지 선택 시 아이콘은 카메라이지만 이후 부터는 플러스 아이콘으로 변경 */}
+    const data = [{ image: '' }];
+
+    const onMaxImgAlert = () => {
+        Alert.alert('최대 다섯장의 사진을 모두 선택했습니다.');
+    };
+
+    const renderItem = ({ item, index }, parallaxProps) => {
+        return (
             <ImageContainer>
-                <ImageSelectBox activeOpacity={0.6} onPress={handleImagePick}>
-                    {saveImgUrl ? (
-                        <PreviewBox>
-                            <PreviewImage source={saveImgUrl && { uri: saveImgUrl }} />
-                            <DeleteImageBtn
-                                activeOpacity={0.6}
-                                onPress={() => {
-                                    setSaveImgUrl('');
-                                }}
-                            >
-                                <Feather name="x-circle" size={22} color="#243e35" />
-                            </DeleteImageBtn>
-                        </PreviewBox>
+                <ImageSelectBox activeOpacity={0.6}>
+                    {totalImg.length > 1 ? (
+                        <>
+                            {item.id === 'select' ? (
+                                <PreviewBox onPress={totalImg.length >= 6 ? onMaxImgAlert : handleImagePick}>
+                                    {loading ? (
+                                        <ActivityIndicator color="#243e35" />
+                                    ) : (
+                                        <AntDesign
+                                            name="plus"
+                                            size={26}
+                                            color={totalImg.length >= 6 ? '#BDBDBD' : '#243e35'}
+                                        />
+                                    )}
+                                </PreviewBox>
+                            ) : (
+                                <PreviewBox>
+                                    <PreviewImage source={item && { uri: item.url }} />
+                                    <DeleteImageBtn
+                                        activeOpacity={0.6}
+                                        onPress={() => {
+                                            let itemID = item.id;
+                                            const updatedTotalImg = totalImg.filter((item) => item.id !== itemID);
+                                            setTotalImg(updatedTotalImg);
+                                        }}
+                                    >
+                                        <Feather name="x-circle" size={22} color="#243e35" />
+                                    </DeleteImageBtn>
+                                </PreviewBox>
+                            )}
+                        </>
                     ) : (
-                        <PreviewBox>
-                            <Feather name="camera" size={24} color="#243e35" />
+                        <PreviewBox onPress={handleImagePick}>
+                            {loading ? (
+                                <ActivityIndicator color="#243e35" />
+                            ) : (
+                                <Feather name="camera" size={24} color="#243e35" />
+                            )}
                         </PreviewBox>
                     )}
                 </ImageSelectBox>
             </ImageContainer>
+        );
+    };
 
-            {/* 카테고리 선택은 필수 */}
-            <SelectBox>
-                <RNPickerSelect
-                    placeholder={{ label: 'Category', value: null }}
-                    onValueChange={(value) => setPickerValue(value)}
-                    items={[
-                        { label: 'Post', value: 'Post' },
-                        { label: 'QnA', value: 'QnA' },
-                        { label: 'Diary', value: 'Diary' },
-                    ]}
-                >
-                    <CategoryBox>
-                        <CategoryText> Category </CategoryText>
-                        <SelectedBox>
-                            <SelectedText>{pickerValue ? pickerValue : 'select'}</SelectedText>
-                        </SelectedBox>
-                    </CategoryBox>
-                </RNPickerSelect>
-            </SelectBox>
+    return (
+        <Container onPress={() => keyboard.dismiss()}>
+            <Box behavior={Platform.select({ ios: 'position', android: 'position' })}>
+                {/* 이미지 캐러셀 필요 */}
+                {/* 자랑, 일기에 경우 이미지 필수 */}
+                {/* 질문에 경우 선택 */}
+                {/* 이미지 최대 다섯 장 제한 */}
+                {/* 첫 이미지 선택 시 아이콘은 카메라이지만 이후 부터는 플러스 아이콘으로 변경 */}
+                <CarouselBox>
+                    <Carousel
+                        layout={'default'}
+                        sliderWidth={300}
+                        sliderHeight={300}
+                        itemWidth={250}
+                        data={totalImg.length > 1 ? totalImg : data}
+                        renderItem={renderItem}
+                    />
+                </CarouselBox>
 
-            {/* 텍스트 입력 필수로 설정 */}
-            <WriteBox>
-                <WriteInput
-                    value={write}
-                    placeholder="Write a note..."
-                    placeholderTextColor="grey"
-                    keyboardType="default"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    returnKeyType="next"
-                    maxLength={300}
-                    multiline={true}
-                    // onSubmitEditing={}
-                    onChangeText={(text) => setWrite(text)}
-                />
-            </WriteBox>
-            {/* 일기에 경우 내용에 대한 간략한 태그(약 다섯개)필요 */}
+                {/* 카테고리 선택은 필수 */}
+                <SelectBox>
+                    <RNPickerSelect
+                        placeholder={{ label: 'Category', value: null }}
+                        onValueChange={(value) => setPickerValue(value)}
+                        items={[
+                            { label: 'Post', value: 'Post' },
+                            { label: 'QnA', value: 'QnA' },
+                            { label: 'Diary', value: 'Diary' },
+                        ]}
+                    >
+                        <CategoryBox>
+                            <CategoryText> 카테고리를 선택해 주세요. </CategoryText>
+                            <SelectedBox>
+                                <SelectedText>{pickerValue ? pickerValue : '선택'}</SelectedText>
+                            </SelectedBox>
+                        </CategoryBox>
+                    </RNPickerSelect>
+                </SelectBox>
+
+                {/* 텍스트 입력 필수로 설정 */}
+                <WriteBox>
+                    <WriteInput
+                        value={write}
+                        placeholder="Write a note..."
+                        placeholderTextColor="grey"
+                        keyboardType="default"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        returnKeyType="next"
+                        maxLength={300}
+                        multiline={true}
+                        // onSubmitEditing={}
+                        onChangeText={(text) => setWrite(text)}
+                    />
+                </WriteBox>
+                {/* 일기에 경우 내용에 대한 간략한 태그(약 다섯개)필요 */}
+            </Box>
         </Container>
     );
 };
@@ -141,22 +199,34 @@ const Container = styled.View`
     flex: 1;
     background-color: #f9f9f7;
     padding: 10px 20px;
-`;
-
-const ImageContainer = styled.View`
-    width: 100%;
     align-items: center;
 `;
 
-const ImageSelectBox = styled.TouchableOpacity`
-    background-color: #d5d5d4;
-    width: 50%;
-    height: 260px;
-    border-radius: 12px;
-    margin-bottom: 20px;
+const Box = styled(KeyboardAvoidingView)`
+    width: 100%;
+    height: 100%;
 `;
 
-const PreviewBox = styled.View`
+const CarouselBox = styled.View`
+    height: 300px;
+    margin: 16px 0px;
+    align-items: center;
+`;
+
+const ImageContainer = styled.View`
+    align-items: center;
+    width: 100%;
+    height: 100%;
+`;
+
+const ImageSelectBox = styled.View`
+    background-color: #d5d5d4;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+`;
+
+const PreviewBox = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
     height: 100%;
@@ -177,6 +247,7 @@ const DeleteImageBtn = styled.TouchableOpacity`
 
 const SelectBox = styled.TouchableOpacity`
     background-color: #d5d5d4;
+    width: 100%;
     padding: 14px;
     border-radius: 12px;
 `;
@@ -188,7 +259,7 @@ const CategoryBox = styled.View`
 `;
 
 const CategoryText = styled.Text`
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
     color: #343c3a;
 `;
@@ -203,16 +274,37 @@ const SelectedBox = styled.View`
 
 const SelectedText = styled.Text`
     color: #d5d5d4;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 16px;
+    /* font-weight: 500; */
     margin-left: 4px;
+`;
+
+const DiaryTagContainer = styled.View`
+    background-color: #d5d5d4;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    margin-top: 16px;
+`;
+
+const DiayTatalTag = styled.Text`
+    font-size: 14px;
+    font-weight: 400;
+    color: #343c3a;
+`;
+
+const DiaryTagInput = styled.TextInput`
+    width: 100%;
+    height: 30px;
+    margin-top: 8px;
 `;
 
 const WriteBox = styled.View`
     background-color: #d5d5d4;
     margin-top: 16px;
     border-radius: 12px;
-    height: 30%;
+    width: 100%;
+    height: 250px;
     padding: 16px;
 `;
 const WriteInput = styled.TextInput`
