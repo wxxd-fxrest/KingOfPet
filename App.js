@@ -45,13 +45,17 @@ export default function App() {
         });
     }, []);
 
+    const [detail, setDetail] = useState(false);
+
+    console.log('detail', detail);
+
     return (
-        <SafeAreaView style={styles.container}>
-            <NavigationContainer>
-                {isAuthentication ? <MainRoot /> : <AuthRoot />}
-                <StatusBar barStyle="auto" />
-            </NavigationContainer>
-        </SafeAreaView>
+        // <SafeAreaView style={styles.container}>
+        <NavigationContainer>
+            {isAuthentication ? <MainRoot setDetail={setDetail} /> : <AuthRoot />}
+            <StatusBar barStyle="auto" />
+        </NavigationContainer>
+        // </SafeAreaView>
     );
 }
 

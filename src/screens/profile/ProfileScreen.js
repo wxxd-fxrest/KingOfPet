@@ -115,6 +115,7 @@ const ProfileScreen = ({ navigation }) => {
                                         style={{
                                             fontSize: 12,
                                             fontWeight: 400,
+                                            color: '#343c3a',
                                         }}
                                     >
                                         님
@@ -219,12 +220,14 @@ const ProfilePetNameTitle = styled.Text`
     margin-bottom: 4px;
     font-size: 12px;
     font-weight: 400;
+    color: #343c3a;
 `;
 
 const ProfilePetName = styled.Text`
     font-size: 16px;
     font-weight: 600;
     /* background-color: yellowgreen; */
+    color: #343c3a;
 `;
 
 const Title = styled.Text``;
