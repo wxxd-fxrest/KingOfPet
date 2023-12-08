@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ActivityIndicator, Image, Pressable } from 'react-native';
+import { ActivityIndicator, Image, Pressable, TouchableOpacity } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import postData from '../../data/postData';
@@ -78,9 +78,6 @@ const RandomCard = ({ item, index, navigation }) => {
                 </QnABox>
             )}
 
-            <FeedDetail numberOfLines={3} ellipsizeMode="tail">
-                {item.description}
-            </FeedDetail>
             <Pressable
                 style={{
                     width: '100%',
@@ -88,7 +85,16 @@ const RandomCard = ({ item, index, navigation }) => {
                     paddingRight: isEven ? 2 : 2,
                     alignItems: 'center',
                 }}
+                onPress={() =>
+                    navigation.navigate('MainStack', {
+                        screen: 'Detail',
+                        params: item,
+                    })
+                }
             >
+                <FeedDetail numberOfLines={3} ellipsizeMode="tail">
+                    {item.description}
+                </FeedDetail>
                 <LinearGradientBox
                     start={{ x: 0, y: 0 }}
                     end={{ x: 0, y: 1 }}
@@ -110,6 +116,7 @@ const RandomCard = ({ item, index, navigation }) => {
                     }}
                 />
             </Pressable>
+
             {item.qna_boolen === false && (
                 <TotalLikeBox>
                     <IconBox>
@@ -120,7 +127,14 @@ const RandomCard = ({ item, index, navigation }) => {
                     </TotalLike>
                 </TotalLikeBox>
             )}
-            <PetNameTag>
+            <PetNameTag
+                onPress={() => {
+                    navigation.navigate('MainStack', {
+                        screen: 'UserProfile',
+                        params: item,
+                    });
+                }}
+            >
                 <PetImageBox>
                     <PetImage source={{ uri: item.userimg }} />
                 </PetImageBox>
@@ -153,7 +167,7 @@ const QnABoolen = styled.Text`
 
 const FeedDetail = styled.Text`
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     bottom: 26px;
     width: 85%;
     margin: 14px 16px;
@@ -192,12 +206,13 @@ const TotalLike = styled.Text`
     margin-left: 4px;
 `;
 
-const PetNameTag = styled.View`
+const PetNameTag = styled.TouchableOpacity`
     position: absolute;
     bottom: 16px;
     right: 16px;
     flex-direction: row;
     align-items: center;
+    z-index: 1;
 `;
 
 const PetImageBox = styled.View`

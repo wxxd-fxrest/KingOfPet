@@ -5,6 +5,8 @@ import SocialLoginScreen from '../screens/auth/SocialLoginScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import CreateAllPostScreen from '../screens/newPost/CreateAllPostScreen';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
+import DetailScreen from '../screens/detail/DetailScreen';
+import UserProfileScreen from '../screens/detail/UserProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,14 +23,14 @@ const MainStack = ({ navigation }) => {
                 name="SocialLogin"
                 component={SocialLoginScreen}
                 options={{
-                    title: '포스트 작성',
+                    title: '프로필 수정',
                     headerShown: true,
                     headerShadowVisible: false,
                     headerLeft: () => (
                         <BackButton>
                             <MaterialIcons
                                 name="arrow-back-ios"
-                                size={25}
+                                size={22}
                                 color="#243e35"
                                 onPress={() => navigation.goBack()}
                             />
@@ -36,7 +38,6 @@ const MainStack = ({ navigation }) => {
                     ),
                 }}
             />
-
             <Stack.Screen
                 name="NewPostStack"
                 component={CreateAllPostScreen}
@@ -48,7 +49,7 @@ const MainStack = ({ navigation }) => {
                         <BackButton>
                             <MaterialIcons
                                 name="arrow-back-ios"
-                                size={25}
+                                size={22}
                                 color="#243e35"
                                 onPress={() => navigation.goBack()}
                             />
@@ -56,7 +57,6 @@ const MainStack = ({ navigation }) => {
                     ),
                 }}
             />
-
             <Stack.Screen
                 name="EditProfile"
                 component={EditProfileScreen}
@@ -68,8 +68,48 @@ const MainStack = ({ navigation }) => {
                         <BackButton>
                             <MaterialIcons
                                 name="arrow-back-ios"
-                                size={25}
-                                color="#6b8a47"
+                                size={22}
+                                color="#243e35"
+                                onPress={() => navigation.goBack()}
+                            />
+                        </BackButton>
+                    ),
+                }}
+            />
+
+            <Stack.Screen
+                name="Detail"
+                component={DetailScreen}
+                options={{
+                    title: '상세페이지',
+                    // headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                        <BackButton>
+                            <MaterialIcons
+                                name="arrow-back-ios"
+                                size={22}
+                                color="#243e35"
+                                onPress={() => navigation.goBack()}
+                            />
+                        </BackButton>
+                    ),
+                }}
+            />
+
+            <Stack.Screen
+                name="UserProfile"
+                component={UserProfileScreen}
+                options={{
+                    title: 'UserProfile',
+                    headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                        <BackButton>
+                            <MaterialIcons
+                                name="arrow-back-ios"
+                                size={22}
+                                color="#243e35"
                                 onPress={() => navigation.goBack()}
                             />
                         </BackButton>
