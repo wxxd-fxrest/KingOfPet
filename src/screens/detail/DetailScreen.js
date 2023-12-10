@@ -1,12 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import Swiper from 'react-native-swiper';
-import { View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
+import Modal from 'react-native-modal';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
     console.log(params);
     const swiperRef = useRef(null);
+    const sheetRef = useRef(null);
+
+    const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+
+    const toggleBottomSheet = () => {
+        setBottomSheetVisible(!isBottomSheetVisible);
+    };
 
     useEffect(() => {
         navigation.setOptions({
@@ -15,7 +24,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
     }, [navigation]);
 
     return (
-        <Container showsVerticalScrollIndicator={false}>
+        <Container>
             <HeaderIconBox>
                 <BackButton>
                     <MaterialIcons
@@ -29,78 +38,100 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                     <MaterialIcons name="pets" size={18} color="rgba(249, 19, 0, 0.8)" />
                 </LikeButton>
             </HeaderIconBox>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <SwiperBox>
+                    <Swiper
+                        ref={swiperRef}
+                        loop
+                        timeout={2}
+                        controlsEnabled={false}
+                        dot={
+                            <View
+                                style={{
+                                    backgroundColor: '#c1ccc8',
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: 4,
+                                    marginLeft: 3,
+                                    marginRight: 3,
+                                    marginTop: 3,
+                                    marginBottom: 3,
+                                }}
+                            />
+                        }
+                        activeDot={
+                            <View
+                                style={{
+                                    backgroundColor: '#243e35',
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: 4,
+                                    marginLeft: 3,
+                                    marginRight: 3,
+                                    marginTop: 3,
+                                    marginBottom: 3,
+                                }}
+                            />
+                        }
+                    >
+                        {params.images.map((item, i) => (
+                            <BannerContainer
+                                key={i}
+                                activeOpacity={0.9}
+                                onPress={() => {
+                                    navigation.navigate('NovelStack', { screen: 'NovelIndex', params: item });
+                                }}
+                            >
+                                <BannerImage source={{ uri: item }} />
+                            </BannerContainer>
+                        ))}
+                    </Swiper>
+                </SwiperBox>
+                <UserProfileBox>
+                    <UerProfileImageBox>
+                        <UserProfileImg source={{ uri: params.image }} />
+                    </UerProfileImageBox>
+                    <UserProfileNameTag>
+                        <UserProfileTitle>옆집 상전</UserProfileTitle>
+                        <UserProfileName>{params.username}</UserProfileName>
+                    </UserProfileNameTag>
+                    <FollowBox>
+                        <Follow>Follow</Follow>
+                    </FollowBox>
+                </UserProfileBox>
 
-            <SwiperBox>
-                <Swiper
-                    ref={swiperRef}
-                    loop
-                    timeout={2}
-                    controlsEnabled={false}
-                    dot={
-                        <View
-                            style={{
-                                backgroundColor: '#c1ccc8',
-                                width: 8,
-                                height: 8,
-                                borderRadius: 4,
-                                marginLeft: 3,
-                                marginRight: 3,
-                                marginTop: 3,
-                                marginBottom: 3,
-                            }}
-                        />
-                    }
-                    activeDot={
-                        <View
-                            style={{
-                                backgroundColor: '#243e35',
-                                width: 8,
-                                height: 8,
-                                borderRadius: 4,
-                                marginLeft: 3,
-                                marginRight: 3,
-                                marginTop: 3,
-                                marginBottom: 3,
-                            }}
-                        />
-                    }
+                <DetailBox>
+                    <Detail>{params.description}</Detail>
+                </DetailBox>
+            </ScrollView>
+
+            <BottomSheetBox>
+                <OpenBottomSheetButton onPress={toggleBottomSheet}>
+                    <MaterialCommunityIcons name="comment-outline" size={20} color="#243E35" />
+                    <OpenBottomSheetText>Comment</OpenBottomSheetText>
+                    <ArrowIcon name="keyboard-arrow-up" size={20} color="#243E35" />
+                </OpenBottomSheetButton>
+                <Modal
+                    isVisible={isBottomSheetVisible}
+                    onBackdropPress={toggleBottomSheet}
+                    swipeDirection={['down']}
+                    style={{ justifyContent: 'flex-end', margin: 0 }}
                 >
-                    {params.images.map((item, i) => (
-                        <BannerContainer
-                            key={i}
-                            activeOpacity={0.9}
-                            onPress={() => {
-                                navigation.navigate('NovelStack', { screen: 'NovelIndex', params: item });
-                            }}
-                        >
-                            <BannerImage source={{ uri: item }} />
-                        </BannerContainer>
-                    ))}
-                </Swiper>
-            </SwiperBox>
-            <UserProfileBox>
-                <UerProfileImageBox>
-                    <UserProfileImg source={{ uri: params.image }} />
-                </UerProfileImageBox>
-                <UserProfileNameTag>
-                    <UserProfileTitle>옆집 상전</UserProfileTitle>
-                    <UserProfileName>{params.username}</UserProfileName>
-                </UserProfileNameTag>
-                <FollowBox>
-                    <Follow>Follow</Follow>
-                </FollowBox>
-            </UserProfileBox>
-
-            <DetailBox>
-                <Detail>{params.description}</Detail>
-            </DetailBox>
+                    <BottomSheetContainer>
+                        <BottomSheetContent>
+                            <Text>Bottom Sheet Content Goes Here</Text>
+                        </BottomSheetContent>
+                    </BottomSheetContainer>
+                </Modal>
+            </BottomSheetBox>
         </Container>
     );
 };
 
-const Container = styled.ScrollView`
+const Container = styled.View`
     background-color: #f9f9f7;
     flex: 1;
+    padding-bottom: 70px;
     /* padding: 10px 20px; */
 `;
 
@@ -148,7 +179,6 @@ const BannerImage = styled.Image`
 `;
 
 const UserProfileBox = styled.View`
-    /* background-color: yellowgreen; */
     padding: 0px 20px;
     margin-top: 20px;
     flex-direction: row;
@@ -182,7 +212,7 @@ const UserProfileName = styled.Text`
 const FollowBox = styled.TouchableOpacity`
     position: absolute;
     right: 20px;
-    background-color: rgba(193, 204, 200, 0.2);
+    background-color: rgba(193, 204, 200, 0.5);
     padding: 8px 12px;
     border-radius: 16px;
     border-width: 1px;
@@ -196,7 +226,6 @@ const Follow = styled.Text`
 `;
 
 const DetailBox = styled.View`
-    /* background-color: yellow; */
     padding: 10px 20px;
 `;
 
@@ -205,5 +234,45 @@ const Detail = styled.Text`
     font-size: 14px;
     font-weight: 400;
 `;
+
+const BottomSheetBox = styled.View`
+    width: 100%;
+    height: 80px;
+    position: absolute;
+    bottom: 0px;
+    justify-content: center;
+    align-items: center;
+`;
+
+const OpenBottomSheetButton = styled.TouchableOpacity`
+    background-color: #c1ccc8;
+    padding: 0px 20px;
+    border-radius: 16px;
+    width: 90%;
+    height: 50%;
+    align-items: center;
+    flex-direction: row;
+`;
+
+const OpenBottomSheetText = styled.Text`
+    color: #243e35;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 10px;
+`;
+
+const ArrowIcon = styled(MaterialIcons)`
+    position: absolute;
+    right: 20px;
+`;
+
+const BottomSheetContainer = styled.View`
+    background-color: white;
+    padding: 16px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+`;
+
+const BottomSheetContent = styled.View``;
 
 export default DetailScreen;
