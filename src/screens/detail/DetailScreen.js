@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import Swiper from 'react-native-swiper';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import CommentScreen from './CommentScreen';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
-    console.log(params);
+    console.log('detail', params);
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
 
@@ -34,9 +35,15 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                         onPress={() => navigation.goBack()}
                     />
                 </BackButton>
-                <LikeButton>
-                    <MaterialIcons name="pets" size={18} color="rgba(249, 19, 0, 0.8)" />
-                </LikeButton>
+                {params.qna_boolen === false ? (
+                    <LikeButton>
+                        <MaterialIcons name="pets" size={18} color="rgba(249, 19, 0, 0.8)" />
+                    </LikeButton>
+                ) : (
+                    <QnABox>
+                        <QnABoolen>Q&A</QnABoolen>
+                    </QnABox>
+                )}
             </HeaderIconBox>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <SwiperBox>
@@ -88,10 +95,24 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                     </Swiper>
                 </SwiperBox>
                 <UserProfileBox>
-                    <UerProfileImageBox>
+                    <UerProfileImageBox
+                        onPress={() => {
+                            navigation.navigate('MainStack', {
+                                screen: 'UserProfile',
+                                params: params,
+                            });
+                        }}
+                    >
                         <UserProfileImg source={{ uri: params.image }} />
                     </UerProfileImageBox>
-                    <UserProfileNameTag>
+                    <UserProfileNameTag
+                        onPress={() => {
+                            navigation.navigate('MainStack', {
+                                screen: 'UserProfile',
+                                params: params,
+                            });
+                        }}
+                    >
                         <UserProfileTitle>옆집 상전</UserProfileTitle>
                         <UserProfileName>{params.username}</UserProfileName>
                     </UserProfileNameTag>
@@ -112,15 +133,14 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                     <ArrowIcon name="keyboard-arrow-up" size={20} color="#243E35" />
                 </OpenBottomSheetButton>
                 <Modal
+                    propagateSwipe
                     isVisible={isBottomSheetVisible}
                     onBackdropPress={toggleBottomSheet}
                     swipeDirection={['down']}
                     style={{ justifyContent: 'flex-end', margin: 0 }}
                 >
                     <BottomSheetContainer>
-                        <BottomSheetContent>
-                            <Text>Bottom Sheet Content Goes Here</Text>
-                        </BottomSheetContent>
+                        <CommentScreen toggleBottomSheet={toggleBottomSheet} />
                     </BottomSheetContainer>
                 </Modal>
             </BottomSheetBox>
@@ -139,6 +159,7 @@ const HeaderIconBox = styled.View`
     flex-direction: row;
     position: absolute;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
     top: 50px;
     z-index: 10;
@@ -154,6 +175,21 @@ const LikeButton = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
     border-radius: 100px;
+`;
+
+const QnABox = styled.View`
+    background-color: rgba(193, 204, 200, 0.5);
+    color: #fc8980;
+    width: 30px;
+    height: 20px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+`;
+
+const QnABoolen = styled.Text`
+    font-size: 10px;
+    color: #243e35;
 `;
 
 const BackButton = styled.TouchableOpacity``;
@@ -185,7 +221,7 @@ const UserProfileBox = styled.View`
     align-items: center;
 `;
 
-const UerProfileImageBox = styled.View``;
+const UerProfileImageBox = styled.TouchableOpacity``;
 
 const UserProfileImg = styled.Image`
     width: 50px;
@@ -194,7 +230,7 @@ const UserProfileImg = styled.Image`
     margin-right: 16px;
 `;
 
-const UserProfileNameTag = styled.View``;
+const UserProfileNameTag = styled.TouchableOpacity``;
 
 const UserProfileTitle = styled.Text`
     margin-bottom: 4px;
@@ -267,12 +303,11 @@ const ArrowIcon = styled(MaterialIcons)`
 `;
 
 const BottomSheetContainer = styled.View`
-    background-color: white;
-    padding: 16px;
+    background-color: #f9f9f7;
+    padding: 14px 20px;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
+    height: 84%;
 `;
-
-const BottomSheetContent = styled.View``;
 
 export default DetailScreen;

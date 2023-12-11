@@ -88,13 +88,13 @@ const ProfileScreen = ({ navigation }) => {
     };
 
     return (
-        // <Container>
-        //     <Title> profile </Title>
-        //     <LogoutBtn onPress={onLogOut}>
-        //         <Logout> 로그아웃 </Logout>
-        //     </LogoutBtn>
-        // </Container>
         <Container>
+            {/* <Container>
+                <Title> profile </Title>
+                <LogoutBtn onPress={onLogOut}>
+                    <Logout> 로그아웃 </Logout>
+                </LogoutBtn>
+            </Container> */}
             {hide === true && (
                 <>
                     {userData && (

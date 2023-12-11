@@ -87,6 +87,12 @@ const RandomCard = ({ item, index, navigation }) => {
                     paddingRight: isEven ? 2 : 2,
                     alignItems: 'center',
                 }}
+                onPress={() =>
+                    navigation.navigate('MainStack', {
+                        screen: 'Detail',
+                        params: item,
+                    })
+                }
             >
                 <LinearGradientBox
                     start={{ x: 0, y: 0 }}
@@ -121,7 +127,14 @@ const RandomCard = ({ item, index, navigation }) => {
                     </TotalLike>
                 </TotalLikeBox>
             )}
-            <PetNameTag>
+            <PetNameTag
+                onPress={() => {
+                    navigation.navigate('MainStack', {
+                        screen: 'UserProfile',
+                        params: item,
+                    });
+                }}
+            >
                 <PetImageBox>
                     <PetImage source={{ uri: item.userimg }} />
                 </PetImageBox>
@@ -193,7 +206,7 @@ const TotalLike = styled.Text`
     margin-left: 4px;
 `;
 
-const PetNameTag = styled.View`
+const PetNameTag = styled.TouchableOpacity`
     position: absolute;
     bottom: 16px;
     right: 16px;

@@ -7,6 +7,7 @@ import CreateAllPostScreen from '../screens/newPost/CreateAllPostScreen';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
 import DetailScreen from '../screens/detail/DetailScreen';
 import UserProfileScreen from '../screens/detail/UserProfileScreen';
+import CommentDetailScreen from '../screens/detail/CommentDetailScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -82,6 +83,26 @@ const MainStack = ({ navigation }) => {
                 component={DetailScreen}
                 options={{
                     title: '상세페이지',
+                    // headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                        <BackButton>
+                            <MaterialIcons
+                                name="arrow-back-ios"
+                                size={22}
+                                color="#243e35"
+                                onPress={() => navigation.goBack()}
+                            />
+                        </BackButton>
+                    ),
+                }}
+            />
+
+            <Stack.Screen
+                name="CommentDetail"
+                component={CommentDetailScreen}
+                options={{
+                    title: 'Comment',
                     // headerShown: true,
                     headerShadowVisible: false,
                     headerLeft: () => (

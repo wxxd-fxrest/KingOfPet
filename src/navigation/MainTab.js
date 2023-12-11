@@ -8,21 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
-const MainTab = () => {
-    const [hide, setHide] = useState(true);
-
-    const handleScroll = (event) => {
-        const offsetY = event.nativeEvent.contentOffset.y;
-        // 여기에 스크롤 감지 시 실행할 코드를 작성합니다.
-        // console.log('Scroll OffsetY:', offsetY);
-
-        if (offsetY > 0) {
-            setHide(false);
-        } else if (offsetY <= 0) {
-            setHide(true);
-        }
-    };
-
+const MainTab = ({ handleScroll, hide }) => {
     return (
         <Tab.Navigator
             screenOptions={{
@@ -36,7 +22,7 @@ const MainTab = () => {
         >
             <Tab.Screen
                 name="Main"
-                children={() => <MainScreen handleScroll={handleScroll} />}
+                children={() => <MainScreen handleScroll={handleScroll} hide={hide} />}
                 options={{
                     title: '홈',
                     headerShown: hide,
@@ -47,10 +33,10 @@ const MainTab = () => {
                     },
                 }}
             />
+
             <Tab.Screen
                 name="MyProfile"
                 component={ProfileScreen}
-                // children={() => <ProfileScreen handleScroll={handleScroll} />}
                 options={{
                     title: '프로필',
                     headerShown: true,

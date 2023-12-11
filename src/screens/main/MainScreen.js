@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
-const MainScreen = ({ handleScroll }) => {
+const MainScreen = ({ handleScroll, hide }) => {
     const navigation = useNavigation();
     const [currentUser, setCurrentUser] = useState([]);
     const [loginUserData, setLoginUserData] = useState([]);
@@ -64,53 +64,61 @@ const MainScreen = ({ handleScroll }) => {
     }, [navigation]);
 
     return (
-        <Tab.Navigator
-            initialRouteName="All"
-            screenOptions={{
-                tabBarActiveTintColor: '#243e35',
-                tabBarInactiveTintColor: 'rgba(36, 62, 53, 0.5)',
-                tabBarStyle: {
-                    backgroundColor: '#f9f9f7',
-                },
-                tabBarLabelStyle: {
-                    textAlign: 'center',
-                    fontSize: 15,
-                },
-                tabBarIndicatorStyle: {
-                    borderBottomColor: '#243e35',
-                    borderBottomWidth: 2.5,
-                    width: 70,
-                    left: 35,
-                },
-            }}
-        >
-            <Tab.Screen
-                name="All"
-                children={() => <RandomFeedScreen navigation={navigation} handleScroll={handleScroll} />}
-                options={{
-                    title: '전체',
-                    unmountOnBlur: true,
+        <Container hide={hide}>
+            <Tab.Navigator
+                initialRouteName="All"
+                screenOptions={{
+                    tabBarActiveTintColor: '#243e35',
+                    tabBarInactiveTintColor: 'rgba(36, 62, 53, 0.5)',
+                    tabBarStyle: {
+                        backgroundColor: '#f9f9f7',
+                    },
+                    tabBarLabelStyle: {
+                        textAlign: 'center',
+                        fontSize: 15,
+                    },
+                    tabBarIndicatorStyle: {
+                        borderBottomColor: '#243e35',
+                        borderBottomWidth: 2.5,
+                        width: 70,
+                        left: 35,
+                    },
                 }}
-            />
-            <Tab.Screen
-                name="Follow"
-                component={FollowFeedScreen}
-                options={{
-                    title: '구독',
-                }}
-            />
-            <Tab.Screen
-                name="QnA"
-                // component={QuestionFeedScreen}
-                children={() => <QuestionFeedScreen navigation={navigation} handleScroll={handleScroll} />}
-                options={{
-                    title: '질문',
-                    unmountOnBlur: true,
-                }}
-            />
-        </Tab.Navigator>
+            >
+                <Tab.Screen
+                    name="All"
+                    children={() => <RandomFeedScreen navigation={navigation} handleScroll={handleScroll} />}
+                    options={{
+                        title: '전체',
+                        unmountOnBlur: true,
+                    }}
+                />
+                <Tab.Screen
+                    name="Follow"
+                    component={FollowFeedScreen}
+                    options={{
+                        title: '구독',
+                    }}
+                />
+                <Tab.Screen
+                    name="QnA"
+                    // component={QuestionFeedScreen}
+                    children={() => <QuestionFeedScreen navigation={navigation} handleScroll={handleScroll} />}
+                    options={{
+                        title: '질문',
+                        unmountOnBlur: true,
+                    }}
+                />
+            </Tab.Navigator>
+        </Container>
     );
 };
+
+const Container = styled.View`
+    background-color: #f9f9f7;
+    flex: 1;
+    padding-top: ${({ hide }) => (hide ? '0' : '14%')};
+`;
 
 const SetupButton = styled.TouchableOpacity`
     margin-right: 20px;
