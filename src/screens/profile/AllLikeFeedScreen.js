@@ -4,14 +4,21 @@ import styled from 'styled-components';
 import postData from '../../data/postData';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const AllLikeFeedScreen = ({ handleScroll }) => {
+const AllLikeFeedScreen = ({ navigation, handleScroll }) => {
     return (
         <Container onScroll={handleScroll}>
             <FlatList
                 data={postData}
                 ItemSeparatorComponent={heightEmpty}
                 renderItem={({ item }) => (
-                    <LikeContainer>
+                    <LikeContainer
+                        onPress={() =>
+                            navigation.navigate('MainStack', {
+                                screen: 'Detail',
+                                params: item,
+                            })
+                        }
+                    >
                         <LikeImgBox>
                             <LikeImg source={{ uri: item.image }} />
                         </LikeImgBox>
@@ -20,14 +27,21 @@ const AllLikeFeedScreen = ({ handleScroll }) => {
                                 {item.description}
                             </LikeDetail>
                             <LikeBottomBox>
-                                <LikeUserBox>
+                                <LikeUserBox
+                                    onPress={() => {
+                                        navigation.navigate('MainStack', {
+                                            screen: 'UserProfile',
+                                            params: item,
+                                        });
+                                    }}
+                                >
                                     <LikeUserImgBox>
                                         <LikeUserImg source={{ uri: item.userimg }} />
                                     </LikeUserImgBox>
                                     <LikeuserName>{item.username} </LikeuserName>
                                 </LikeUserBox>
                                 <LikeBox>
-                                    <MaterialIcons name="pets" size={16} color="#243e35" />
+                                    <MaterialIcons name="pets" size={16} color="rgba(249, 19, 0, 0.8)" />
                                 </LikeBox>
                             </LikeBottomBox>
                         </LikeDetailBox>
@@ -106,7 +120,7 @@ const LikeBottomBox = styled.View`
     width: 100%;
 `;
 
-const LikeUserBox = styled.View`
+const LikeUserBox = styled.TouchableOpacity`
     width: 80%;
     flex-direction: row;
     align-items: center;
@@ -133,7 +147,7 @@ const LikeBox = styled.TouchableOpacity`
     width: 22px;
     height: 22px;
     border-radius: 100px;
-    background-color: rgba(193, 204, 200, 0.6);
+    background-color: rgba(193, 204, 200, 0.2);
 `;
 
 export default AllLikeFeedScreen;
