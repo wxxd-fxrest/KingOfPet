@@ -1,162 +1,64 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import RNPickerSelect from 'react-native-picker-select';
-import { Feather } from '@expo/vector-icons';
-import auth from '@react-native-firebase/auth';
-import storage from '@react-native-firebase/storage';
-import firestore from '@react-native-firebase/firestore';
-import * as ImagePicker from 'expo-image-picker';
 import { Alert, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
-import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
-import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import CreateQuestionScreen from './CreateQuestionScreen';
+import CreateDiaryScreen from './CreateDiaryScreen';
 
 // import { MaterialCommunityIcons } from '@expo/vector-icons';
 // <MaterialCommunityIcons name="message-star-outline" size={20} color="#d5d5d4" />
 // <MaterialCommunityIcons name="message-question-outline" size={20} color="#d5d5d4" />
 // <MaterialCommunityIcons name="message-bookmark-outline" size={20} color="#d5d5d4" />
 
-const CreateAllPostScreen = () => {
+const CreateAllPostScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const [pickerValue, setPickerValue] = useState('');
     const [write, setWrite] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
-    const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
-    const [saveImgUrl, setSaveImgUrl] = useState('');
 
-    const [totalImg, setTotalImg] = useState([
-        {
-            id: 'select',
-            url: '',
-        },
-    ]);
-
-    useEffect(() => {
-        const uploadImage = async () => {
-            if (!imageUrl) return;
-
-            // 이미지 업로드 로직
-            setLoading(true);
-            try {
-                const asset = imageUrl.assets[0];
-                const reference = storage().ref(`/profile/${asset.fileName}`);
-                await reference.putFile(asset.uri);
-                const IMG_URL = await reference.getDownloadURL();
-                // console.log('IMG_URL', IMG_URL);
-                setSaveImgUrl(IMG_URL);
-                setTotalImg([{ id: asset.assetId, url: IMG_URL }, ...totalImg]);
-                console.log(totalImg);
-                setImageUrl('');
-                // console.log('imageUrl', imageUrl);
-                setLoading(false);
-            } catch (e) {
-                console.error(e);
-                setLoading(false);
-            }
-        };
-        console.log(totalImg);
-
-        uploadImage(); // 이미지 업로드 실행
-    }, [imageUrl]); // imageUrl이 변경될 때마다 실행
-
-    const handleImagePick = async () => {
-        if (!status?.granted) {
-            const permission = await requestPermission();
-            if (!permission.granted) {
-                // 권한이 거부된 경우에 대한 처리 로직
-                console.log('권한이 거부되었습니다.');
-                return;
+    const onSubmitPasswordEditing = async () => {
+        if (pickerValue === '' || pickerValue === '선택') {
+            Alert.alert('카테고리를 선택해 주세요!');
+        } else {
+            if (pickerValue === 'Diary' || pickerValue === 'QnA') {
+                if (write === '') {
+                    Alert.alert('텍스트를 입력해 주세요!');
+                } else {
+                    navigation.navigate('MainStack', {
+                        screen: 'CreateSelectImg',
+                        params: [pickerValue, write],
+                    });
+                }
+            } else if (pickerValue === 'Post') {
+                navigation.navigate('MainStack', {
+                    screen: 'CreateSelectImg',
+                    params: [pickerValue, write],
+                });
             }
         }
 
-        // 이미지 선택 로직
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: false,
-            quality: 1,
-            aspect: [1, 1],
-        });
-
-        console.log('result', result);
-        setImageUrl(result);
-    };
-
-    const data = [{ image: '' }];
-
-    const onMaxImgAlert = () => {
-        Alert.alert('최대 다섯장의 사진을 모두 선택했습니다.');
-    };
-
-    const renderItem = ({ item, index }, parallaxProps) => {
-        return (
-            <ImageContainer>
-                <ImageSelectBox activeOpacity={0.6}>
-                    {totalImg.length > 1 ? (
-                        <>
-                            {item.id === 'select' ? (
-                                <PreviewBox onPress={totalImg.length >= 6 ? onMaxImgAlert : handleImagePick}>
-                                    {loading ? (
-                                        <ActivityIndicator color="#243e35" />
-                                    ) : (
-                                        <AntDesign
-                                            name="plus"
-                                            size={26}
-                                            color={totalImg.length >= 6 ? '#BDBDBD' : '#243e35'}
-                                        />
-                                    )}
-                                </PreviewBox>
-                            ) : (
-                                <PreviewBox>
-                                    <PreviewImage source={item && { uri: item.url }} />
-                                    <DeleteImageBtn
-                                        activeOpacity={0.6}
-                                        onPress={() => {
-                                            let itemID = item.id;
-                                            const updatedTotalImg = totalImg.filter((item) => item.id !== itemID);
-                                            setTotalImg(updatedTotalImg);
-                                        }}
-                                    >
-                                        <Feather name="x-circle" size={22} color="#243e35" />
-                                    </DeleteImageBtn>
-                                </PreviewBox>
-                            )}
-                        </>
-                    ) : (
-                        <PreviewBox onPress={handleImagePick}>
-                            {loading ? (
-                                <ActivityIndicator color="#243e35" />
-                            ) : (
-                                <Feather name="camera" size={24} color="#243e35" />
-                            )}
-                        </PreviewBox>
-                    )}
-                </ImageSelectBox>
-            </ImageContainer>
-        );
+        if (loading) {
+            return;
+        }
     };
 
     return (
         <Container onPress={() => keyboard.dismiss()}>
+            <HeaderBox>
+                <BackIcon
+                    onPress={() => {
+                        navigation.goBack();
+                    }}
+                >
+                    <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                </BackIcon>
+                <Title>포스트</Title>
+            </HeaderBox>
             <Box behavior={Platform.select({ ios: 'position', android: 'position' })}>
-                {/* 이미지 캐러셀 필요 */}
-                {/* 자랑, 일기에 경우 이미지 필수 */}
-                {/* 질문에 경우 선택 */}
-                {/* 이미지 최대 다섯 장 제한 */}
-                {/* 첫 이미지 선택 시 아이콘은 카메라이지만 이후 부터는 플러스 아이콘으로 변경 */}
-                <CarouselBox>
-                    <Carousel
-                        layout={'default'}
-                        sliderWidth={300}
-                        sliderHeight={300}
-                        itemWidth={250}
-                        data={totalImg.length > 1 ? totalImg : data}
-                        renderItem={renderItem}
-                    />
-                </CarouselBox>
-
                 {/* 카테고리 선택은 필수 */}
                 <SelectBox>
                     <RNPickerSelect
-                        placeholder={{ label: 'Category', value: null }}
+                        placeholder={{ label: 'Category', value: '선택' }}
                         onValueChange={(value) => setPickerValue(value)}
                         items={[
                             { label: 'Post', value: 'Post' },
@@ -172,6 +74,10 @@ const CreateAllPostScreen = () => {
                         </CategoryBox>
                     </RNPickerSelect>
                 </SelectBox>
+
+                {/* {pickerValue === 'Post' && <CreateRandomScreen />} */}
+                {pickerValue === 'QnA' && <CreateQuestionScreen />}
+                {pickerValue === 'Diary' && <CreateDiaryScreen />}
 
                 {/* 텍스트 입력 필수로 설정 */}
                 <WriteBox>
@@ -191,6 +97,18 @@ const CreateAllPostScreen = () => {
                 </WriteBox>
                 {/* 일기에 경우 내용에 대한 간략한 태그(약 다섯개)필요 */}
             </Box>
+            <NextButtonBox>
+                <Button onPress={onSubmitPasswordEditing}>
+                    {loading ? (
+                        <ActivityIndicator color="white" />
+                    ) : (
+                        <>
+                            <ButtonText>다음</ButtonText>
+                            <NextBtton name="keyboard-arrow-right" size={22} color="#f9f9f7" />
+                        </>
+                    )}
+                </Button>
+            </NextButtonBox>
         </Container>
     );
 };
@@ -198,51 +116,35 @@ const CreateAllPostScreen = () => {
 const Container = styled.View`
     flex: 1;
     background-color: #f9f9f7;
-    padding: 10px 20px;
     align-items: center;
+`;
+
+const HeaderBox = styled.View`
+    background-color: #f9f9f7;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 12%;
+    width: 100%;
+    height: 10%;
+    z-index: 10;
+`;
+
+const BackIcon = styled(MaterialIcons)`
+    left: 20px;
+    position: absolute;
+    bottom: 24%;
+`;
+
+const Title = styled.Text`
+    font-size: 16px;
+    font-weight: 600;
+    color: #343c3a;
 `;
 
 const Box = styled(KeyboardAvoidingView)`
     width: 100%;
-    height: 100%;
-`;
-
-const CarouselBox = styled.View`
-    height: 300px;
-    margin: 16px 0px;
-    align-items: center;
-`;
-
-const ImageContainer = styled.View`
-    align-items: center;
-    width: 100%;
-    height: 100%;
-`;
-
-const ImageSelectBox = styled.View`
-    background-color: #d5d5d4;
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-`;
-
-const PreviewBox = styled.TouchableOpacity`
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-`;
-
-const PreviewImage = styled.Image`
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-`;
-
-const DeleteImageBtn = styled.TouchableOpacity`
-    position: absolute;
-    z-index: 1;
-    top: 8px;
-    right: 8px;
+    padding: 20px 20px;
 `;
 
 const SelectBox = styled.TouchableOpacity`
@@ -275,28 +177,7 @@ const SelectedBox = styled.View`
 const SelectedText = styled.Text`
     color: #d5d5d4;
     font-size: 16px;
-    /* font-weight: 500; */
-    margin-left: 4px;
-`;
-
-const DiaryTagContainer = styled.View`
-    background-color: #d5d5d4;
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    margin-top: 16px;
-`;
-
-const DiayTatalTag = styled.Text`
-    font-size: 14px;
-    font-weight: 400;
-    color: #343c3a;
-`;
-
-const DiaryTagInput = styled.TextInput`
-    width: 100%;
-    height: 30px;
-    margin-top: 8px;
+    margin: 0px 10px;
 `;
 
 const WriteBox = styled.View`
@@ -310,6 +191,33 @@ const WriteBox = styled.View`
 const WriteInput = styled.TextInput`
     color: #343c3a;
     font-size: 14px;
+`;
+
+const NextButtonBox = styled.View`
+    width: 90%;
+    justify-content: center;
+    align-items: center;
+    bottom: 30px;
+    position: absolute;
+`;
+
+const Button = styled.TouchableOpacity`
+    flex-direction: row;
+    background-color: #243e35;
+    width: 100%;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+`;
+
+const ButtonText = styled.Text`
+    color: #f9f9f7;
+`;
+
+const NextBtton = styled(MaterialIcons)`
+    position: absolute;
+    right: 20px;
 `;
 
 export default CreateAllPostScreen;
