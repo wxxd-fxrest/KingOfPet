@@ -8,6 +8,7 @@ import EditProfileScreen from '../screens/profile/EditProfileScreen';
 import DetailScreen from '../screens/detail/DetailScreen';
 import UserProfileScreen from '../screens/detail/UserProfileScreen';
 import CommentDetailScreen from '../screens/detail/CommentDetailScreen';
+import CreateSelectImgScreen from '../screens/newPost/CreateSelectImgScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,20 +45,19 @@ const MainStack = ({ navigation }) => {
                 component={CreateAllPostScreen}
                 options={{
                     title: '포스트 작성',
-                    headerShown: true,
                     headerShadowVisible: false,
-                    headerLeft: () => (
-                        <BackButton>
-                            <MaterialIcons
-                                name="arrow-back-ios"
-                                size={22}
-                                color="#243e35"
-                                onPress={() => navigation.goBack()}
-                            />
-                        </BackButton>
-                    ),
                 }}
             />
+
+            <Stack.Screen
+                name="CreateSelectImg"
+                component={CreateSelectImgScreen}
+                options={{
+                    title: '포스트 작성',
+                    headerShadowVisible: false,
+                }}
+            />
+
             <Stack.Screen
                 name="EditProfile"
                 component={EditProfileScreen}
@@ -83,18 +83,7 @@ const MainStack = ({ navigation }) => {
                 component={DetailScreen}
                 options={{
                     title: '상세페이지',
-                    // headerShown: true,
                     headerShadowVisible: false,
-                    headerLeft: () => (
-                        <BackButton>
-                            <MaterialIcons
-                                name="arrow-back-ios"
-                                size={22}
-                                color="#243e35"
-                                onPress={() => navigation.goBack()}
-                            />
-                        </BackButton>
-                    ),
                 }}
             />
 
@@ -103,18 +92,7 @@ const MainStack = ({ navigation }) => {
                 component={CommentDetailScreen}
                 options={{
                     title: 'Comment',
-                    // headerShown: true,
                     headerShadowVisible: false,
-                    headerLeft: () => (
-                        <BackButton>
-                            <MaterialIcons
-                                name="arrow-back-ios"
-                                size={22}
-                                color="#243e35"
-                                onPress={() => navigation.goBack()}
-                            />
-                        </BackButton>
-                    ),
                 }}
             />
 
