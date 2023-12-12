@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { AntDesign } from '@expo/vector-icons';
 import PostFeedScreen from '../profile/PostFeedScreen';
 import DiaryFeedScreen from '../profile/DiaryFeedScreen';
 import AllLikeFeedScreen from '../profile/AllLikeFeedScreen';
@@ -59,11 +58,6 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                         <ProfileBox>
                             <ProfilePetImgBox>
                                 <ProfilePetImg source={{ uri: userdata.image }} />
-                                <ImageEditBtn
-                                    onPress={() => navigation.navigate('MainStack', { screen: 'EditProfile' })}
-                                >
-                                    <AntDesign name="pluscircle" size={20} color="#243e35" />
-                                </ImageEditBtn>
                             </ProfilePetImgBox>
                             <ProfilePetNameBox>
                                 <ProfilePetNameTitle>상전</ProfilePetNameTitle>
@@ -157,18 +151,6 @@ const ProfilePetImg = styled.Image`
     height: 100px;
     border-radius: 12px;
     margin-right: 20px;
-`;
-
-const ImageEditBtn = styled.TouchableOpacity`
-    position: absolute;
-    right: 12px;
-    bottom: -6px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 100px;
-    width: 24px;
-    height: 24px;
-    justify-content: center;
-    align-items: center;
 `;
 
 const ProfilePetNameBox = styled.View``;
