@@ -92,89 +92,108 @@ const Join = () => {
             return;
         }
 
-        try {
-            const petTypeData =
-                typeDog.current.state.checked === true
-                    ? { type: '강아지' }
-                    : typeCat.current.state.checked === true
-                    ? { type: '고양이' }
-                    : typeDifferent.current.state.checked === true && petType
-                    ? { type: petType }
-                    : null;
+        Alert.alert(
+            '회원가입',
+            '반려동물의 종은 추후 수정이 불가합니다. 이대로 가입을 진행하시겠습니까?',
+            [
+                {
+                    text: 'No',
+                    onPress: () => console.log('no'),
+                    style: 'destructive',
+                },
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        try {
+                            const petTypeData =
+                                typeDog.current.state.checked === true
+                                    ? { type: '강아지' }
+                                    : typeCat.current.state.checked === true
+                                    ? { type: '고양이' }
+                                    : typeDifferent.current.state.checked === true && petType
+                                    ? { type: petType }
+                                    : null;
 
-            if (petTypeData && petName && saveImgUrl) {
-                const userCredential = await auth().createUserWithEmailAndPassword(email, password);
-                firestore()
-                    .collection('Users')
-                    .doc(`${userCredential.user.email}`)
-                    .set({
-                        email: `${userCredential.user.email}`,
-                        userid: `${userCredential.user.email.split('@')[0]}`,
-                        petname: petName,
-                        petimage: saveImgUrl,
-                        ...petTypeData,
-                        createprofile: true,
-                        signType: 'Email',
-                    })
-                    .then(() => {
-                        console.log('User added!');
-                    });
-            } else {
-                Alert.alert('빈칸을 모두 채워주세요!');
+                            if (petTypeData && petName && saveImgUrl) {
+                                const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+                                firestore()
+                                    .collection('Users')
+                                    .doc(`${userCredential.user.email}`)
+                                    .set({
+                                        email: `${userCredential.user.email}`,
+                                        userid: `${userCredential.user.email.split('@')[0]}`,
+                                        petname: petName,
+                                        petimage: saveImgUrl,
+                                        ...petTypeData,
+                                        createprofile: true,
+                                        signType: 'Email',
+                                    })
+                                    .then(() => {
+                                        console.log('User added!');
+                                    });
+                            } else {
+                                Alert.alert('빈칸을 모두 채워주세요!');
+                            }
+                        } catch (e) {
+                            switch (e.code) {
+                                case 'auth/user-not-found' || 'auth/wrong-password':
+                                    return Alert.alert('이메일 혹은 비밀번호가 일치하지 않습니다.', [
+                                        {
+                                            text: '확인',
+                                            onPress: setLoading(false),
+                                        },
+                                    ]);
+                                case 'auth/email-already-in-use':
+                                    return Alert.alert('이미 사용 중인 이메일입니다.', [
+                                        {
+                                            text: '확인',
+                                            onPress: setLoading(false),
+                                        },
+                                    ]);
+                                case 'auth/weak-password':
+                                    return Alert.alert('비밀번호는 6글자 이상이어야 합니다.', [
+                                        {
+                                            text: '확인',
+                                            onPress: setLoading(false),
+                                        },
+                                    ]);
+                                case 'auth/network-request-failed':
+                                    return Alert.alert('네트워크 연결에 실패 하였습니다.', [
+                                        {
+                                            text: '확인',
+                                            onPress: setLoading(false),
+                                        },
+                                    ]);
+                                case 'auth/invalid-email':
+                                    return Alert.alert('잘못된 이메일 형식입니다.', [
+                                        {
+                                            text: '확인',
+                                            onPress: setLoading(false),
+                                        },
+                                    ]);
+                                case 'auth/internal-error':
+                                    return Alert.alert('잘못된 요청입니다.', [
+                                        {
+                                            text: '확인',
+                                            onPress: setLoading(false),
+                                        },
+                                    ]);
+                                default:
+                                    return Alert.alert('로그인에 실패 하였습니다.', [
+                                        {
+                                            text: '확인',
+                                            onPress: setLoading(false),
+                                        },
+                                    ]);
+                            }
+                        }
+                    },
+                },
+            ],
+            {
+                cancelable: true,
             }
-        } catch (e) {
-            switch (e.code) {
-                case 'auth/user-not-found' || 'auth/wrong-password':
-                    return Alert.alert('이메일 혹은 비밀번호가 일치하지 않습니다.', [
-                        {
-                            text: '확인',
-                            onPress: setLoading(false),
-                        },
-                    ]);
-                case 'auth/email-already-in-use':
-                    return Alert.alert('이미 사용 중인 이메일입니다.', [
-                        {
-                            text: '확인',
-                            onPress: setLoading(false),
-                        },
-                    ]);
-                case 'auth/weak-password':
-                    return Alert.alert('비밀번호는 6글자 이상이어야 합니다.', [
-                        {
-                            text: '확인',
-                            onPress: setLoading(false),
-                        },
-                    ]);
-                case 'auth/network-request-failed':
-                    return Alert.alert('네트워크 연결에 실패 하였습니다.', [
-                        {
-                            text: '확인',
-                            onPress: setLoading(false),
-                        },
-                    ]);
-                case 'auth/invalid-email':
-                    return Alert.alert('잘못된 이메일 형식입니다.', [
-                        {
-                            text: '확인',
-                            onPress: setLoading(false),
-                        },
-                    ]);
-                case 'auth/internal-error':
-                    return Alert.alert('잘못된 요청입니다.', [
-                        {
-                            text: '확인',
-                            onPress: setLoading(false),
-                        },
-                    ]);
-                default:
-                    return Alert.alert('로그인에 실패 하였습니다.', [
-                        {
-                            text: '확인',
-                            onPress: setLoading(false),
-                        },
-                    ]);
-            }
-        }
+        );
     };
 
     return (
