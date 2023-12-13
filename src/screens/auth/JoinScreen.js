@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
@@ -197,213 +197,220 @@ const Join = () => {
     };
 
     return (
-        <Container onPress={() => keyboard.dismiss()}>
-            <ScrollView>
-                <TextInputTitle>이메일을 입력해 주세요.</TextInputTitle>
-                <EmailBox>
-                    <EmailInput
-                        value={email}
-                        placeholder="email"
-                        placeholderTextColor="grey"
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        returnKeyType="next"
-                        onSubmitEditing={onSubmitEmailEditing}
-                        onChangeText={(text) => setEmail(text)}
-                    />
-                    <DeleteTextBtn
-                        activeOpacity={0.6}
-                        onPress={() => {
-                            setEmail('');
-                        }}
-                    >
-                        <Feather name="x-circle" size={24} color="#86918d" />
-                    </DeleteTextBtn>
-                </EmailBox>
-
-                <TextInputTitle>비밀번호를 입력해 주세요.</TextInputTitle>
-                <PasswordBox>
-                    <PasswordTextInput
-                        value={password}
-                        ref={passwordInput}
-                        placeholder="password"
-                        placeholderTextColor="grey"
-                        secureTextEntry={eyeOff === true ? false : true}
-                        returnKeyType="done"
-                        onSubmitEditing={onSubmitPasswordEditing}
-                        onChangeText={(text) => setPassword(text)}
-                    />
-                    <ViewPasswordBtn
-                        activeOpacity={0.6}
-                        onPress={() => {
-                            setEyeOff(!eyeOff);
-                        }}
-                    >
-                        <MaterialCommunityIcons
-                            name={eyeOff === false ? 'eye-off-outline' : 'eye-outline'}
-                            size={24}
-                            color="#86918d"
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <Container>
+                <ScrollView>
+                    <TextInputTitle>이메일을 입력해 주세요.</TextInputTitle>
+                    <EmailBox>
+                        <EmailInput
+                            value={email}
+                            placeholder="email"
+                            placeholderTextColor="grey"
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            returnKeyType="next"
+                            onSubmitEditing={onSubmitEmailEditing}
+                            onChangeText={(text) => setEmail(text)}
                         />
-                    </ViewPasswordBtn>
-                </PasswordBox>
+                        <DeleteTextBtn
+                            activeOpacity={0.6}
+                            onPress={() => {
+                                setEmail('');
+                            }}
+                        >
+                            <Feather name="x-circle" size={24} color="#86918d" />
+                        </DeleteTextBtn>
+                    </EmailBox>
 
-                <TextInputTitle>반려동물을 소개해 주세요!</TextInputTitle>
-                <PetInfoContainer>
-                    <PetInfoBox>
-                        <PetInputTitle>사진을 선택해 주세요.</PetInputTitle>
-                        <PetImageSelectBox activeOpacity={0.6} onPress={handleImagePick}>
-                            {saveImgUrl ? (
-                                <PreviewBox>
-                                    <PreviewImage source={saveImgUrl && { uri: saveImgUrl }} />
-                                    <DeleteImageBtn
-                                        activeOpacity={0.6}
-                                        onPress={() => {
-                                            setSaveImgUrl('');
-                                        }}
-                                    >
-                                        <Feather name="x-circle" size={22} color="#243e35" />
-                                    </DeleteImageBtn>
-                                </PreviewBox>
-                            ) : (
-                                <PreviewBox>
-                                    <Feather name="camera" size={24} color="#86918d" />
-                                </PreviewBox>
-                            )}
-                        </PetImageSelectBox>
-                    </PetInfoBox>
-                    <PetInfoBox>
-                        <PetInputTitle>이름을 알려주세요.</PetInputTitle>
-                        <PetNameInputBox>
-                            <PetNameTextInput
-                                value={petName}
-                                placeholder="Pet Name"
-                                placeholderTextColor="grey"
-                                keyboardType="default"
-                                returnKeyType="done"
-                                onSubmitEditing={onSubmitPasswordEditing}
-                                onChangeText={(text) => {
-                                    setPetName(text);
+                    <TextInputTitle>비밀번호를 입력해 주세요.</TextInputTitle>
+                    <PasswordBox>
+                        <PasswordTextInput
+                            value={password}
+                            ref={passwordInput}
+                            placeholder="password"
+                            placeholderTextColor="grey"
+                            secureTextEntry={eyeOff === true ? false : true}
+                            returnKeyType="done"
+                            onSubmitEditing={onSubmitPasswordEditing}
+                            onChangeText={(text) => setPassword(text)}
+                        />
+                        <ViewPasswordBtn
+                            activeOpacity={0.6}
+                            onPress={() => {
+                                setEyeOff(!eyeOff);
+                            }}
+                        >
+                            <MaterialCommunityIcons
+                                name={eyeOff === false ? 'eye-off-outline' : 'eye-outline'}
+                                size={24}
+                                color="#86918d"
+                            />
+                        </ViewPasswordBtn>
+                    </PasswordBox>
+
+                    <TextInputTitle>반려동물을 소개해 주세요!</TextInputTitle>
+                    <PetInfoContainer>
+                        <PetInfoBox>
+                            <PetInputTitle>사진을 선택해 주세요.</PetInputTitle>
+                            <PetImageSelectBox activeOpacity={0.6} onPress={handleImagePick}>
+                                {saveImgUrl ? (
+                                    <PreviewBox>
+                                        <PreviewImage source={saveImgUrl && { uri: saveImgUrl }} />
+                                        <DeleteImageBtn
+                                            activeOpacity={0.6}
+                                            onPress={() => {
+                                                setSaveImgUrl('');
+                                            }}
+                                        >
+                                            <Feather name="x-circle" size={22} color="#243e35" />
+                                        </DeleteImageBtn>
+                                    </PreviewBox>
+                                ) : (
+                                    <PreviewBox>
+                                        <Feather name="camera" size={24} color="#86918d" />
+                                    </PreviewBox>
+                                )}
+                            </PetImageSelectBox>
+                        </PetInfoBox>
+                        <PetInfoBox>
+                            <PetInputTitle>이름을 알려주세요.</PetInputTitle>
+                            <PetNameInputBox>
+                                <PetNameTextInput
+                                    value={petName}
+                                    placeholder="Pet Name"
+                                    placeholderTextColor="grey"
+                                    keyboardType="default"
+                                    returnKeyType="done"
+                                    onSubmitEditing={onSubmitPasswordEditing}
+                                    onChangeText={(text) => {
+                                        setPetName(text);
+                                    }}
+                                />
+                                <DeletePetNameBtn
+                                    activeOpacity={0.6}
+                                    onPress={() => {
+                                        setPetName('');
+                                    }}
+                                >
+                                    <Feather name="x-circle" size={24} color="#86918d" />
+                                </DeletePetNameBtn>
+                            </PetNameInputBox>
+                            <PetInputTitle>종을 선택해 주세요.</PetInputTitle>
+                            <PetCheckBox
+                                size={20}
+                                fillColor="#243e35"
+                                unfillColor="#f9f9f7"
+                                text="강아지"
+                                ref={typeDog}
+                                isChecked={dog}
+                                innerIconStyle={{ borderWidth: 2 }}
+                                textStyle={{
+                                    textDecorationLine: 'none',
+                                    fontSize: 14,
+                                }}
+                                onPress={() => {
+                                    if (typeDog.current.state.checked === true) {
+                                        if (typeCat.current.state.checked === true) {
+                                            typeCat.current.onPress();
+                                        }
+                                        if (typeDifferent.current.state.checked === true) {
+                                            typeDifferent.current.onPress();
+                                            setDifferent(false);
+                                        }
+                                        setDog(!dog);
+                                    }
+                                    console.log('dog', typeDog.current.state.checked);
                                 }}
                             />
-                            <DeletePetNameBtn
-                                activeOpacity={0.6}
-                                onPress={() => {
-                                    setPetName('');
+                            <PetCheckBox
+                                size={20}
+                                fillColor="#243e35"
+                                unfillColor="#f9f9f7"
+                                text="고양이"
+                                ref={typeCat}
+                                isChecked={cat}
+                                innerIconStyle={{ borderWidth: 2 }}
+                                textStyle={{
+                                    textDecorationLine: 'none',
+                                    fontSize: 14,
                                 }}
-                            >
-                                <Feather name="x-circle" size={24} color="#86918d" />
-                            </DeletePetNameBtn>
-                        </PetNameInputBox>
-                        <PetInputTitle>종을 선택해 주세요.</PetInputTitle>
-                        <PetCheckBox
-                            size={20}
-                            fillColor="#243e35"
-                            unfillColor="#f9f9f7"
-                            text="강아지"
-                            ref={typeDog}
-                            isChecked={dog}
-                            innerIconStyle={{ borderWidth: 2 }}
-                            textStyle={{
-                                textDecorationLine: 'none',
-                            }}
-                            onPress={() => {
-                                if (typeDog.current.state.checked === true) {
+                                onPress={() => {
                                     if (typeCat.current.state.checked === true) {
-                                        typeCat.current.onPress();
+                                        if (typeDog.current.state.checked === true) {
+                                            typeDog.current.onPress();
+                                        }
+                                        if (typeDifferent.current.state.checked === true) {
+                                            typeDifferent.current.onPress();
+                                            setDifferent(false);
+                                        }
+                                        setCat(!cat);
                                     }
+                                    console.log('cat', typeCat.current.state.checked);
+                                }}
+                            />
+                            <PetCheckBox
+                                size={20}
+                                fillColor="#243e35"
+                                unfillColor="#f9f9f7"
+                                text="기타"
+                                ref={typeDifferent}
+                                isChecked={different}
+                                innerIconStyle={{ borderWidth: 2 }}
+                                textStyle={{
+                                    textDecorationLine: 'none',
+                                    fontSize: 14,
+                                }}
+                                onPress={() => {
                                     if (typeDifferent.current.state.checked === true) {
-                                        typeDifferent.current.onPress();
-                                        setDifferent(false);
+                                        if (typeDog.current.state.checked === true) {
+                                            typeDog.current.onPress();
+                                        }
+                                        if (typeCat.current.state.checked === true) {
+                                            typeCat.current.onPress();
+                                        }
+                                        setDifferent(!different);
                                     }
-                                    setDog(!dog);
-                                }
-                                console.log(typeDog.current.state.checked);
-                            }}
-                        />
-                        <PetCheckBox
-                            size={20}
-                            fillColor="#243e35"
-                            unfillColor="#f9f9f7"
-                            text="고양이"
-                            ref={typeCat}
-                            isChecked={cat}
-                            innerIconStyle={{ borderWidth: 2 }}
-                            textStyle={{
-                                textDecorationLine: 'none',
-                            }}
-                            onPress={() => {
-                                if (typeCat.current.state.checked === true) {
-                                    if (typeDog.current.state.checked === true) {
-                                        typeDog.current.onPress();
-                                    }
-                                    if (typeDifferent.current.state.checked === true) {
-                                        typeDifferent.current.onPress();
-                                        setDifferent(false);
-                                    }
-                                    setCat(!dog);
-                                }
-                            }}
-                        />
-                        <PetCheckBox
-                            size={20}
-                            fillColor="#243e35"
-                            unfillColor="#f9f9f7"
-                            text="기타"
-                            ref={typeDifferent}
-                            isChecked={different}
-                            innerIconStyle={{ borderWidth: 2 }}
-                            textStyle={{
-                                textDecorationLine: 'none',
-                            }}
-                            onPress={() => {
-                                if (typeDifferent.current.state.checked === true) {
-                                    if (typeDog.current.state.checked === true) {
-                                        typeDog.current.onPress();
-                                    }
-                                    if (typeCat.current.state.checked === true) {
-                                        typeCat.current.onPress();
-                                    }
-                                    setDifferent(!different);
-                                }
-                            }}
-                        />
-                        {different === true && (
-                            <Animatable.View animation="fadeInUp" duration={600}>
-                                <PetInputTitle>반려동물의 종을 입력해 주세요.</PetInputTitle>
-                                <PetNameInputBox>
-                                    <PetNameTextInput
-                                        value={petType}
-                                        keyboardType="default"
-                                        placeholder="Pet Type"
-                                        placeholderTextColor="grey"
-                                        returnKeyType="done"
-                                        onSubmitEditing={onSubmitPasswordEditing}
-                                        onChangeText={(text) => {
-                                            setPetType(text);
-                                        }}
-                                    />
-                                    <DeletePetNameBtn
-                                        activeOpacity={0.6}
-                                        onPress={() => {
-                                            setPetType('');
-                                        }}
-                                    >
-                                        <Feather name="x-circle" size={24} color="#86918d" />
-                                    </DeletePetNameBtn>
-                                </PetNameInputBox>
-                            </Animatable.View>
-                        )}
-                    </PetInfoBox>
-                </PetInfoContainer>
-            </ScrollView>
+                                    console.log('different', typeDifferent.current.state.checked);
+                                }}
+                            />
+                            {different === true && (
+                                <Animatable.View animation="fadeInUp" duration={600}>
+                                    <PetInputTitle>반려동물의 종을 입력해 주세요.</PetInputTitle>
+                                    <PetNameInputBox>
+                                        <PetNameTextInput
+                                            value={petType}
+                                            keyboardType="default"
+                                            placeholder="Pet Type"
+                                            placeholderTextColor="grey"
+                                            returnKeyType="done"
+                                            onSubmitEditing={onSubmitPasswordEditing}
+                                            onChangeText={(text) => {
+                                                setPetType(text);
+                                            }}
+                                        />
+                                        <DeletePetNameBtn
+                                            activeOpacity={0.6}
+                                            onPress={() => {
+                                                setPetType('');
+                                            }}
+                                        >
+                                            <Feather name="x-circle" size={24} color="#86918d" />
+                                        </DeletePetNameBtn>
+                                    </PetNameInputBox>
+                                </Animatable.View>
+                            )}
+                        </PetInfoBox>
+                    </PetInfoContainer>
+                </ScrollView>
 
-            <JoinButton>
-                <Button onPress={onSubmitPasswordEditing}>
-                    {loading ? <ActivityIndicator color="white" /> : <ButtonText> 가입하기 </ButtonText>}
-                </Button>
-            </JoinButton>
-        </Container>
+                <JoinButton>
+                    <Button onPress={onSubmitPasswordEditing}>
+                        {loading ? <ActivityIndicator color="white" /> : <ButtonText> 가입하기 </ButtonText>}
+                    </Button>
+                </JoinButton>
+            </Container>
+        </TouchableWithoutFeedback>
     );
 };
 

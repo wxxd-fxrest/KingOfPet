@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { styled } from 'styled-components';
 import { Feather } from '@expo/vector-icons';
@@ -88,64 +88,66 @@ const LoginScreen = () => {
     };
 
     return (
-        <Container onPress={() => keyboard.dismiss()}>
-            <ScrollView>
-                <TextInputTitle>이메일을 입력해 주세요.</TextInputTitle>
-                <EmailBox>
-                    <EmailInput
-                        value={email}
-                        placeholder="email"
-                        placeholderTextColor="grey"
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        returnKeyType="next"
-                        onSubmitEditing={onSubmitEmailEditing}
-                        onChangeText={(text) => setEmail(text)}
-                    />
-                    <DeleteTextBtn
-                        activeOpacity={0.6}
-                        onPress={() => {
-                            setEmail('');
-                        }}
-                    >
-                        <Feather name="x-circle" size={24} color="#86918d" />
-                    </DeleteTextBtn>
-                </EmailBox>
-
-                <TextInputTitle>비밀번호를 입력해 주세요.</TextInputTitle>
-                <PasswordBox>
-                    <PasswordTextInput
-                        value={password}
-                        ref={passwordInput}
-                        placeholder="password"
-                        placeholderTextColor="grey"
-                        secureTextEntry={eyeOff === true ? false : true}
-                        returnKeyType="done"
-                        onSubmitEditing={onSubmitPasswordEditing}
-                        onChangeText={(text) => setPassword(text)}
-                    />
-                    <ViewPasswordBtn
-                        activeOpacity={0.6}
-                        onPress={() => {
-                            setEyeOff(!eyeOff);
-                        }}
-                    >
-                        <MaterialCommunityIcons
-                            name={eyeOff === false ? 'eye-off-outline' : 'eye-outline'}
-                            size={24}
-                            color="#86918d"
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <Container>
+                <ScrollView>
+                    <TextInputTitle>이메일을 입력해 주세요.</TextInputTitle>
+                    <EmailBox>
+                        <EmailInput
+                            value={email}
+                            placeholder="email"
+                            placeholderTextColor="grey"
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            returnKeyType="next"
+                            onSubmitEditing={onSubmitEmailEditing}
+                            onChangeText={(text) => setEmail(text)}
                         />
-                    </ViewPasswordBtn>
-                </PasswordBox>
-            </ScrollView>
+                        <DeleteTextBtn
+                            activeOpacity={0.6}
+                            onPress={() => {
+                                setEmail('');
+                            }}
+                        >
+                            <Feather name="x-circle" size={24} color="#86918d" />
+                        </DeleteTextBtn>
+                    </EmailBox>
 
-            <JoinButton>
-                <Button onPress={onSubmitPasswordEditing}>
-                    {loading ? <ActivityIndicator color="white" /> : <ButtonText> 로그인 </ButtonText>}
-                </Button>
-            </JoinButton>
-        </Container>
+                    <TextInputTitle>비밀번호를 입력해 주세요.</TextInputTitle>
+                    <PasswordBox>
+                        <PasswordTextInput
+                            value={password}
+                            ref={passwordInput}
+                            placeholder="password"
+                            placeholderTextColor="grey"
+                            secureTextEntry={eyeOff === true ? false : true}
+                            returnKeyType="done"
+                            onSubmitEditing={onSubmitPasswordEditing}
+                            onChangeText={(text) => setPassword(text)}
+                        />
+                        <ViewPasswordBtn
+                            activeOpacity={0.6}
+                            onPress={() => {
+                                setEyeOff(!eyeOff);
+                            }}
+                        >
+                            <MaterialCommunityIcons
+                                name={eyeOff === false ? 'eye-off-outline' : 'eye-outline'}
+                                size={24}
+                                color="#86918d"
+                            />
+                        </ViewPasswordBtn>
+                    </PasswordBox>
+                </ScrollView>
+
+                <JoinButton>
+                    <Button onPress={onSubmitPasswordEditing}>
+                        {loading ? <ActivityIndicator color="white" /> : <ButtonText> 로그인 </ButtonText>}
+                    </Button>
+                </JoinButton>
+            </Container>
+        </TouchableWithoutFeedback>
     );
 };
 
