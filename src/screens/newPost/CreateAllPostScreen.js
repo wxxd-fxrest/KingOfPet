@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import RNPickerSelect from 'react-native-picker-select';
-import { Alert, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
+import { Alert, ActivityIndicator, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import CreateQuestionScreen from './CreateQuestionScreen';
 import CreateDiaryScreen from './CreateDiaryScreen';
@@ -43,73 +43,77 @@ const CreateAllPostScreen = ({ navigation }) => {
     };
 
     return (
-        <Container onPress={() => keyboard.dismiss()}>
-            <HeaderBox>
-                <BackIcon
-                    onPress={() => {
-                        navigation.goBack();
-                    }}
-                >
-                    <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
-                </BackIcon>
-                <Title>포스트</Title>
-            </HeaderBox>
-            <Box behavior={Platform.select({ ios: 'position', android: 'position' })}>
-                {/* 카테고리 선택은 필수 */}
-                <SelectBox>
-                    <RNPickerSelect
-                        placeholder={{ label: 'Category', value: '선택' }}
-                        onValueChange={(value) => setPickerValue(value)}
-                        items={[
-                            { label: 'Post', value: 'Post' },
-                            { label: 'QnA', value: 'QnA' },
-                            { label: 'Diary', value: 'Diary' },
-                        ]}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <Container>
+                <HeaderBox>
+                    <BackIcon
+                        onPress={() => {
+                            navigation.goBack();
+                        }}
                     >
-                        <CategoryBox>
-                            <CategoryText> 카테고리를 선택해 주세요. </CategoryText>
-                            <SelectedBox>
-                                <SelectedText>{pickerValue ? pickerValue : '선택'}</SelectedText>
-                            </SelectedBox>
-                        </CategoryBox>
-                    </RNPickerSelect>
-                </SelectBox>
+                        <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                    </BackIcon>
+                    <Title>포스트</Title>
+                </HeaderBox>
+                <Box behavior={Platform.select({ ios: 'position', android: 'position' })}>
+                    {/* 카테고리 선택은 필수 */}
+                    <SelectBox>
+                        <RNPickerSelect
+                            placeholder={{ label: 'Category', value: '선택' }}
+                            onValueChange={(value) => setPickerValue(value)}
+                            items={[
+                                { label: 'Post', value: 'Post' },
+                                { label: 'QnA', value: 'QnA' },
+                                { label: 'Diary', value: 'Diary' },
+                            ]}
+                        >
+                            <CategoryBox>
+                                <CategoryText> 카테고리를 선택해 주세요. </CategoryText>
+                                <SelectedBox>
+                                    <SelectedText>{pickerValue ? pickerValue : '선택'}</SelectedText>
+                                </SelectedBox>
+                            </CategoryBox>
+                        </RNPickerSelect>
+                    </SelectBox>
 
-                {/* {pickerValue === 'Post' && <CreateRandomScreen />} */}
-                {pickerValue === 'QnA' && <CreateQuestionScreen />}
-                {pickerValue === 'Diary' && <CreateDiaryScreen />}
+                    {/* {pickerValue === 'Post' && <CreateRandomScreen />} */}
+                    {pickerValue === 'QnA' && <CreateQuestionScreen />}
+                    {pickerValue === 'Diary' && <CreateDiaryScreen />}
 
-                {/* 텍스트 입력 필수로 설정 */}
-                <WriteBox>
-                    <WriteInput
-                        value={write}
-                        placeholder="Write a note..."
-                        placeholderTextColor="grey"
-                        keyboardType="default"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        returnKeyType="next"
-                        maxLength={300}
-                        multiline={true}
-                        // onSubmitEditing={}
-                        onChangeText={(text) => setWrite(text)}
-                    />
-                </WriteBox>
-                {/* 일기에 경우 내용에 대한 간략한 태그(약 다섯개)필요 */}
-            </Box>
-            <NextButtonBox>
-                <Button onPress={onSubmitPasswordEditing}>
-                    {loading ? (
-                        <ActivityIndicator color="white" />
-                    ) : (
-                        <>
-                            <ButtonText>다음</ButtonText>
-                            <NextBtton name="keyboard-arrow-right" size={22} color="#f9f9f7" />
-                        </>
+                    {/* 텍스트 입력 필수로 설정 */}
+                    {pickerValue !== '' && pickerValue !== '선택' && (
+                        <WriteBox>
+                            <WriteInput
+                                value={write}
+                                placeholder="Write a note..."
+                                placeholderTextColor="grey"
+                                keyboardType="default"
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                returnKeyType="next"
+                                maxLength={300}
+                                multiline={true}
+                                // onSubmitEditing={}
+                                onChangeText={(text) => setWrite(text)}
+                            />
+                        </WriteBox>
                     )}
-                </Button>
-            </NextButtonBox>
-        </Container>
+                    {/* 일기에 경우 내용에 대한 간략한 태그(약 다섯개)필요 */}
+                </Box>
+                <NextButtonBox>
+                    <Button onPress={onSubmitPasswordEditing} pickerValue={pickerValue}>
+                        {loading ? (
+                            <ActivityIndicator color="white" />
+                        ) : (
+                            <>
+                                <ButtonText>다음</ButtonText>
+                                <NextBtton name="keyboard-arrow-right" size={22} color="#f9f9f7" />
+                            </>
+                        )}
+                    </Button>
+                </NextButtonBox>
+            </Container>
+        </TouchableWithoutFeedback>
     );
 };
 
@@ -148,10 +152,13 @@ const Box = styled(KeyboardAvoidingView)`
 `;
 
 const SelectBox = styled.TouchableOpacity`
-    background-color: #d5d5d4;
+    /* background-color: #d5d5d4; */
+    border-width: 1px;
+    border-color: #d5d5d4;
     width: 100%;
     padding: 14px;
     border-radius: 12px;
+    /* margin-bottom: 16px; */
 `;
 
 const CategoryBox = styled.View`
@@ -169,19 +176,24 @@ const CategoryText = styled.Text`
 const SelectedBox = styled.View`
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     background-color: rgba(36, 62, 53, 0.8);
     border-radius: 4px;
-    padding: 6px;
+    padding: 6px 0px;
+    width: 60px;
+    height: 30px;
 `;
 
 const SelectedText = styled.Text`
     color: #d5d5d4;
-    font-size: 16px;
+    /* font-size: 16px; */
     margin: 0px 10px;
 `;
 
 const WriteBox = styled.View`
-    background-color: #d5d5d4;
+    /* background-color: #d5d5d4; */
+    border-width: 1px;
+    border-color: #d5d5d4;
     margin-top: 16px;
     border-radius: 12px;
     width: 100%;
@@ -203,7 +215,7 @@ const NextButtonBox = styled.View`
 
 const Button = styled.TouchableOpacity`
     flex-direction: row;
-    background-color: #243e35;
+    background-color: ${({ pickerValue }) => (pickerValue !== '' && pickerValue !== '선택' ? '#243e35' : '#839891')};
     width: 100%;
     height: 50px;
     justify-content: center;
