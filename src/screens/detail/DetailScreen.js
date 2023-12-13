@@ -152,7 +152,6 @@ const Container = styled.View`
     background-color: #f9f9f7;
     flex: 1;
     padding-bottom: 70px;
-    /* padding: 10px 20px; */
 `;
 
 const HeaderIconBox = styled.View`
@@ -164,8 +163,6 @@ const HeaderIconBox = styled.View`
     top: 50px;
     z-index: 10;
     padding: 0px 20px;
-    /* left: 20px;
-    top: 50px; */
 `;
 
 const LikeButton = styled.TouchableOpacity`
@@ -248,17 +245,17 @@ const UserProfileName = styled.Text`
 const FollowBox = styled.TouchableOpacity`
     position: absolute;
     right: 20px;
-    background-color: rgba(193, 204, 200, 0.5);
+    background-color: rgba(193, 204, 200, 0.2);
     padding: 8px 12px;
     border-radius: 16px;
     border-width: 1px;
-    border-color: #929f9a;
+    border-color: #243e35;
 `;
 
 const Follow = styled.Text`
     font-size: 12px;
     font-weight: 500;
-    color: #343c3a;
+    color: #243e35;
 `;
 
 const DetailBox = styled.View`

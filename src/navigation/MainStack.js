@@ -9,6 +9,8 @@ import DetailScreen from '../screens/detail/DetailScreen';
 import UserProfileScreen from '../screens/detail/UserProfileScreen';
 import CommentDetailScreen from '../screens/detail/CommentDetailScreen';
 import CreateSelectImgScreen from '../screens/newPost/CreateSelectImgScreen';
+import FollowingScreen from '../screens/follow/FollowingScreen';
+import FollowerScreen from '../screens/follow/FollowerScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -101,6 +103,46 @@ const MainStack = ({ navigation }) => {
                 component={UserProfileScreen}
                 options={{
                     title: 'UserProfile',
+                    headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                        <BackButton>
+                            <MaterialIcons
+                                name="arrow-back-ios"
+                                size={22}
+                                color="#243e35"
+                                onPress={() => navigation.goBack()}
+                            />
+                        </BackButton>
+                    ),
+                }}
+            />
+
+            <Stack.Screen
+                name="Follower"
+                component={FollowerScreen}
+                options={{
+                    title: '팔로워',
+                    headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                        <BackButton>
+                            <MaterialIcons
+                                name="arrow-back-ios"
+                                size={22}
+                                color="#243e35"
+                                onPress={() => navigation.goBack()}
+                            />
+                        </BackButton>
+                    ),
+                }}
+            />
+
+            <Stack.Screen
+                name="Following"
+                component={FollowingScreen}
+                options={{
+                    title: '팔로잉',
                     headerShown: true,
                     headerShadowVisible: false,
                     headerLeft: () => (

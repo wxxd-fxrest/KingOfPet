@@ -124,11 +124,13 @@ const ProfileScreen = ({ navigation }) => {
                                     </ProfilePetName>
                                 </ProfilePetNameBox>
                                 <FollowContainer>
-                                    <FollowBox>
+                                    <FollowBox onPress={() => navigation.navigate('MainStack', { screen: 'Follower' })}>
                                         <Follow>203</Follow>
-                                        <FollowText>팔로우</FollowText>
+                                        <FollowText>팔로워</FollowText>
                                     </FollowBox>
-                                    <FollowingBox>
+                                    <FollowingBox
+                                        onPress={() => navigation.navigate('MainStack', { screen: 'Following' })}
+                                    >
                                         <Following>105</Following>
                                         <FollowText>팔로잉</FollowText>
                                     </FollowingBox>
