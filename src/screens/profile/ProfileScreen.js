@@ -107,21 +107,33 @@ const ProfileScreen = ({ navigation }) => {
                                     <AntDesign name="pluscircle" size={20} color="#243e35" />
                                 </ImageEditBtn>
                             </ProfilePetImgBox>
-                            <ProfilePetNameBox>
-                                <ProfilePetNameTitle>상전</ProfilePetNameTitle>
-                                <ProfilePetName>
-                                    {userData.petname}
-                                    <Text
-                                        style={{
-                                            fontSize: 12,
-                                            fontWeight: 400,
-                                            color: '#343c3a',
-                                        }}
-                                    >
-                                        님
-                                    </Text>
-                                </ProfilePetName>
-                            </ProfilePetNameBox>
+                            <ProfileRightBox>
+                                <ProfilePetNameBox>
+                                    <ProfilePetNameTitle>상전</ProfilePetNameTitle>
+                                    <ProfilePetName>
+                                        {userData.petname}
+                                        <Text
+                                            style={{
+                                                fontSize: 12,
+                                                fontWeight: 400,
+                                                color: '#343c3a',
+                                            }}
+                                        >
+                                            님
+                                        </Text>
+                                    </ProfilePetName>
+                                </ProfilePetNameBox>
+                                <FollowContainer>
+                                    <FollowBox>
+                                        <Follow>203</Follow>
+                                        <FollowText>팔로우</FollowText>
+                                    </FollowBox>
+                                    <FollowingBox>
+                                        <Following>105</Following>
+                                        <FollowText>팔로잉</FollowText>
+                                    </FollowingBox>
+                                </FollowContainer>
+                            </ProfileRightBox>
                         </ProfileBox>
                     )}
                 </>
@@ -190,7 +202,7 @@ const ProfileBox = styled.View`
 `;
 
 const ProfilePetImgBox = styled.View`
-    /* background-color: yellowgreen; */
+    width: 34%;
 `;
 
 const ProfilePetImg = styled.Image`
@@ -212,9 +224,13 @@ const ImageEditBtn = styled.TouchableOpacity`
     align-items: center;
 `;
 
-const ProfilePetNameBox = styled.View`
-    /* background-color: yellowgreen; */
+const ProfileRightBox = styled.View`
+    flex-direction: row;
+    width: 66%;
+    justify-content: space-between;
 `;
+
+const ProfilePetNameBox = styled.View``;
 
 const ProfilePetNameTitle = styled.Text`
     margin-bottom: 4px;
@@ -226,7 +242,39 @@ const ProfilePetNameTitle = styled.Text`
 const ProfilePetName = styled.Text`
     font-size: 16px;
     font-weight: 600;
-    /* background-color: yellowgreen; */
+    color: #343c3a;
+`;
+
+const FollowContainer = styled.View`
+    flex-direction: row;
+    align-items: center;
+`;
+
+const FollowText = styled.Text`
+    font-size: 12px;
+    font-weight: 400;
+    color: #343c3a;
+`;
+
+const FollowBox = styled.TouchableOpacity`
+    align-items: center;
+    margin-right: 16px;
+`;
+
+const Follow = styled.Text`
+    font-size: 16px;
+    font-weight: 600;
+    color: #343c3a;
+`;
+
+const FollowingBox = styled.TouchableOpacity`
+    align-items: center;
+    margin-right: 16px;
+`;
+
+const Following = styled.Text`
+    font-size: 16px;
+    font-weight: 600;
     color: #343c3a;
 `;
 

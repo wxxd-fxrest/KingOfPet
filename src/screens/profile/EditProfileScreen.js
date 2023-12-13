@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, View } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
@@ -13,6 +13,9 @@ const EditProfileScreen = ({ navigation }) => {
 
     const [userid, setUserid] = useState('');
     const [petName, setPetName] = useState('');
+
+    const [diary, setDiary] = useState(false);
+    const typeDiary = useRef();
 
     const [imageUrl, setImageUrl] = useState('');
     const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
@@ -90,6 +93,7 @@ const EditProfileScreen = ({ navigation }) => {
                 userid: userid ? userid : userData.userid,
                 petname: petName ? petName : userData.petname,
                 petimage: saveImgUrl ? saveImgUrl : userData.petimage,
+                diary: diary,
             })
             .then(() => {
                 console.log('User added!');
@@ -97,6 +101,7 @@ const EditProfileScreen = ({ navigation }) => {
         navigation.goBack();
         Alert.alert('프로필이 완성되었습니다!');
     };
+
     return (
         <Container onPress={() => keyboard.dismiss()}>
             <TextInputTitle>닉네임을 입력해 주세요.</TextInputTitle>
@@ -144,29 +149,52 @@ const EditProfileScreen = ({ navigation }) => {
                             )}
                         </PetImageSelectBox>
                     </PetInfoBox>
-                    <PetInfoBox>
-                        <PetInputTitle>이름을 알려주세요.</PetInputTitle>
-                        <PetNameInputBox>
-                            <PetNameTextInput
-                                value={petName}
-                                placeholder={userData ? userData.petname : '반려동물 이름'}
-                                placeholderTextColor="grey"
-                                keyboardType="default"
-                                returnKeyType="done"
-                                onChangeText={(text) => {
-                                    setPetName(text);
+                    <PetNameDiaryBox>
+                        <PetNameDiary>
+                            <PetInputTitle>이름을 알려주세요.</PetInputTitle>
+                            <PetNameInputBox>
+                                <PetNameTextInput
+                                    value={petName}
+                                    placeholder={userData ? userData.petname : '반려동물 이름'}
+                                    placeholderTextColor="grey"
+                                    keyboardType="default"
+                                    returnKeyType="done"
+                                    onChangeText={(text) => {
+                                        setPetName(text);
+                                    }}
+                                />
+                                <DeletePetNameBtn
+                                    activeOpacity={0.6}
+                                    onPress={() => {
+                                        setPetName('');
+                                    }}
+                                >
+                                    <Feather name="x-circle" size={24} color="#86918d" />
+                                </DeletePetNameBtn>
+                            </PetNameInputBox>
+                        </PetNameDiary>
+                        <PetNameDiary>
+                            <PetInputTitle>일기 공개여부 설정</PetInputTitle>
+                            <PetCheckBox
+                                size={20}
+                                fillColor="#243e35"
+                                unfillColor="#f9f9f7"
+                                text={diary ? '공개' : '비공개'}
+                                ref={typeDiary}
+                                isChecked={diary}
+                                innerIconStyle={{ borderWidth: 2 }}
+                                textStyle={{
+                                    textDecorationLine: 'none',
+                                    fontSize: 14,
+                                }}
+                                onPress={() => {
+                                    setDiary(!diary);
+
+                                    console.log(typeDiary.current.state.checked);
                                 }}
                             />
-                            <DeletePetNameBtn
-                                activeOpacity={0.6}
-                                onPress={() => {
-                                    setPetName('');
-                                }}
-                            >
-                                <Feather name="x-circle" size={24} color="#86918d" />
-                            </DeletePetNameBtn>
-                        </PetNameInputBox>
-                    </PetInfoBox>
+                        </PetNameDiary>
+                    </PetNameDiaryBox>
                 </PetInfoContainer>
             </ScrollView>
 
@@ -258,6 +286,15 @@ const EditImageBtn = styled.View`
     z-index: 1;
     top: 8px;
     right: 8px;
+`;
+
+const PetNameDiaryBox = styled.View`
+    align-items: center;
+    width: 50%;
+`;
+
+const PetNameDiary = styled.View`
+    width: 90%;
 `;
 
 const PetNameInputBox = styled.View`
