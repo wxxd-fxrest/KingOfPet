@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FlatList } from 'react-native';
 import styled from 'styled-components';
 import postData from '../../data/postData';
@@ -6,6 +6,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const DiaryFeedScreen = ({ handleScroll }) => {
+    const [star, setStar] = useState(false);
+
     return (
         <Container onScroll={handleScroll}>
             {/* 일기장 비공개일 경우 */}
@@ -22,13 +24,23 @@ const DiaryFeedScreen = ({ handleScroll }) => {
                             <DiaryImg source={{ uri: item.image }} />
                         </DiaryImgBox>
                         <DiaryDetailBox>
-                            <DiaryDetail numberOfLines={7} ellipsizeMode="tail">
+                            <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
                                 {item.description}
                             </DiaryDetail>
-                            <DiaryDateBox>
-                                <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
-                                <DiayrDate>2023.02.31</DiayrDate>
-                            </DiaryDateBox>
+
+                            <LikeBottomBox>
+                                <DiaryDateBox>
+                                    <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
+                                    <DiayrDate>2023.02.31</DiayrDate>
+                                </DiaryDateBox>
+                                <LikeBox onPress={() => setStar(!star)}>
+                                    <MaterialIcons
+                                        name={star === true ? 'star' : 'star-outline'}
+                                        size={20}
+                                        color="#243e35"
+                                    />
+                                </LikeBox>
+                            </LikeBottomBox>
                         </DiaryDetailBox>
                     </DiaryContainer>
                 )}
@@ -110,14 +122,33 @@ const DiaryDetail = styled.Text`
     height: 84%;
 `;
 
+const LikeBottomBox = styled.View`
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 14px;
+    right: 10px;
+    width: 100%;
+`;
+
+const LikeBox = styled.TouchableOpacity`
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 100px;
+    background-color: rgba(193, 204, 200, 0.2);
+`;
+
 const DiaryDateBox = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    margin-top: 4px;
-    position: absolute;
+    /* position: absolute;
     right: 10px;
-    bottom: 14px;
+    bottom: 14px; */
 `;
 
 const DiayrDate = styled.Text`
