@@ -1,8 +1,8 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 import styled from 'styled-components';
-import postData from '../../data/postData';
 import { MaterialIcons } from '@expo/vector-icons';
+import postData from '../../../data/postData';
 
 const AllLikeFeedScreen = ({ navigation, handleScroll }) => {
     return (

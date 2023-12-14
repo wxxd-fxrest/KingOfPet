@@ -4,12 +4,13 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { Alert } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import QuestionFeedScreen from './QuestionFeedScreen';
-import RandomFeedScreen from './RandomFeedScreen';
-import FollowFeedScreen from './FollowFeedScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { Foundation } from '@expo/vector-icons';
+import RandomFeedScreen from '../feed/main/RandomFeedScreen';
+import QuestionFeedScreen from '../feed/main/QuestionFeedScreen';
+import FollowFeedScreen from '../feed/main/FollowFeedScreen';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -59,6 +60,11 @@ const MainScreen = ({ handleScroll, hide }) => {
                 <SetupButton onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}>
                     <Feather name="plus-square" size={28} color="#243e35" />
                 </SetupButton>
+            ),
+            headerLeft: () => (
+                <DrawerButton onPress={() => navigation.openDrawer()}>
+                    <Foundation name="indent-more" size={28} color="#243e35" />
+                </DrawerButton>
             ),
         });
     }, [navigation]);
@@ -118,6 +124,10 @@ const Container = styled.View`
     background-color: #f9f9f7;
     flex: 1;
     padding-top: ${({ hide }) => (hide ? '0' : '14%')};
+`;
+
+const DrawerButton = styled.TouchableOpacity`
+    margin-left: 20px;
 `;
 
 const SetupButton = styled.TouchableOpacity`
