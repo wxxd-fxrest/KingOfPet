@@ -10,6 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import PostFeedScreen from '../feed/profile/PostFeedScreen';
 import DiaryFeedScreen from '../diary/DiaryFeedScreen';
 import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
+import { Foundation } from '@expo/vector-icons';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -51,6 +52,11 @@ const ProfileScreen = ({ navigation }) => {
                     <SetupButton onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}>
                         <Feather name="plus-square" size={28} color="#243e35" />
                     </SetupButton>
+                ),
+                headerLeft: () => (
+                    <DrawerButton onPress={() => navigation.openDrawer()}>
+                        <Foundation name="indent-more" size={28} color="#243e35" />
+                    </DrawerButton>
                 ),
             });
         }
@@ -298,6 +304,10 @@ const UserID = styled.Text`
 
 const SetupButton = styled.TouchableOpacity`
     margin-right: 20px;
+`;
+
+const DrawerButton = styled.TouchableOpacity`
+    margin-left: 20px;
 `;
 
 export default ProfileScreen;
