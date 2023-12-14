@@ -43,36 +43,9 @@ const CreateAllPostScreen = ({ navigation }) => {
         }
     };
 
-    // headerLeft: () =>
-    // Platform.OS === 'ios' ? (
-    //     <BackButton onPress={() => navigation.goBack()}>
-    //         <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
-    //     </BackButton>
-    // ) : null,
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <Container>
-                {/* <HeaderBox>
-                    {Platform.OS === 'ios' ? (
-                        <BackIcon
-                            onPress={() => {
-                                navigation.goBack();
-                            }}
-                        >
-                            <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
-                        </BackIcon>
-                    ) : (
-                        <BackIcon
-                            onPress={() => {
-                                navigation.goBack();
-                            }}
-                        >
-                            <AntDesign name="arrowleft" size={22} color="#243e35" />
-                        </BackIcon>
-                    )}
-                    <Title>포스트</Title>
-                </HeaderBox> */}
-                {/* <ScrollView> */}
                 <Box behavior={Platform.select({ ios: 'position', android: 'position' })}>
                     {/* 카테고리 선택은 필수 */}
                     <SelectBox>
@@ -155,33 +128,17 @@ const HeaderBox = styled.View`
     z-index: 10;
 `;
 
-const BackIcon = styled(MaterialIcons)`
-    left: 20px;
-    position: absolute;
-    bottom: 30%;
-`;
-
-const Title = styled.Text`
-    font-size: 16px;
-    font-weight: 600;
-    color: #343c3a;
-`;
-
 const Box = styled(KeyboardAvoidingView)`
-    /* width: 100%;
-    height: 100%; */
-    flex: 1;
+    width: 100%;
     padding: 20px 20px;
 `;
 
 const SelectBox = styled.TouchableOpacity`
-    /* background-color: #d5d5d4; */
     border-width: 1px;
     border-color: #d5d5d4;
     width: 100%;
     padding: 14px;
     border-radius: 12px;
-    /* margin-bottom: 16px; */
 `;
 
 const CategoryBox = styled.View`
@@ -214,7 +171,6 @@ const SelectedText = styled.Text`
 `;
 
 const WriteBox = styled.View`
-    /* background-color: #d5d5d4; */
     border-top-width: 1px;
     border-color: #d5d5d4;
     margin-top: 16px;

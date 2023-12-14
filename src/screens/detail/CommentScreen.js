@@ -1,18 +1,46 @@
-import React from 'react';
-import { FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, KeyboardAvoidingView } from 'react-native';
 import styled from 'styled-components';
 import postData from '../../data/postData';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { MaterialIcons } from '@expo/vector-icons';
 
-const CommentScreen = ({ toggleBottomSheet }) => {
+const CommentScreen = ({ toggleBottomSheet, userData }) => {
     const navigation = useNavigation();
+    const [comment, setComment] = useState('');
+
     return (
         <Container>
             <HeaderBox>
                 <Bar />
             </HeaderBox>
-            <FlatList
+            <KeyboardAvoidingBox behavior={Platform.select({ ios: 'position', android: 'height' })}>
+                <CurrentUerProfile>
+                    <CurrentUserImgBox>
+                        <CurrentUserProfileImg source={{ uri: userData.petimage }} />
+                    </CurrentUserImgBox>
+                    <CommentInputBox>
+                        <CommentInput
+                            value={comment}
+                            placeholder="Write a note..."
+                            placeholderTextColor="grey"
+                            keyboardType="default"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            returnKeyType="next"
+                            maxLength={300}
+                            multiline={true}
+                            // onSubmitEditing={}
+                            onChangeText={(text) => setComment(text)}
+                        />
+                        <SaveIcon>
+                            <MaterialIcons name="pets" size={22} color="#243e35" />
+                        </SaveIcon>
+                    </CommentInputBox>
+                </CurrentUerProfile>
+            </KeyboardAvoidingBox>
+            <FlatListBox
                 data={postData}
                 keyExtractor={(item) => item.id + ''}
                 showsVerticalScrollIndicator={false}
@@ -80,7 +108,7 @@ const HeaderBox = styled.View`
     width: 100%;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 `;
 
 const Bar = styled.View`
@@ -88,6 +116,62 @@ const Bar = styled.View`
     width: 44px;
     height: 4px;
     border-radius: 10px;
+`;
+
+const KeyboardAvoidingBox = styled(KeyboardAvoidingView)`
+    width: 100%;
+    height: 8%;
+`;
+
+const CurrentUerProfile = styled.View`
+    /* background-color: tomato; */
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 10px;
+    border-bottom-width: 1px;
+    border-color: #d5d5d4;
+`;
+
+const CurrentUserImgBox = styled.View`
+    width: 34px;
+    height: 34px;
+`;
+
+const CurrentUserProfileImg = styled.Image`
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+`;
+
+const CommentInputBox = styled.View`
+    background-color: #f9f9f7;
+    justify-content: center;
+    width: 86%;
+    justify-content: center;
+    align-items: flex-end;
+`;
+
+const CommentInput = styled.TextInput`
+    background-color: rgba(193, 204, 200, 0.3);
+    padding: 10px 20px;
+    padding-right: 40px;
+    border-radius: 12px;
+    font-size: 12px;
+    width: 100%;
+    height: 36px;
+`;
+
+const SaveIcon = styled.TouchableOpacity`
+    position: absolute;
+    right: 10px;
+`;
+
+const FlatListBox = styled(FlatList)`
+    height: 80%;
+    margin-top: 20px;
 `;
 
 const CommentContainer = styled.TouchableOpacity`

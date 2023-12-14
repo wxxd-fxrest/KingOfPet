@@ -100,7 +100,14 @@ const MainStack = ({ navigation }) => {
                 component={CommentDetailScreen}
                 options={{
                     title: 'Comment',
+                    headerShown: true,
                     headerShadowVisible: false,
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
                 }}
             />
 
