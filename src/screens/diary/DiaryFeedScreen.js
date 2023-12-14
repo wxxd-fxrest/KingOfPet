@@ -19,7 +19,9 @@ const DiaryFeedScreen = ({ navigation, handleScroll }) => {
                 data={postData}
                 ItemSeparatorComponent={heightEmpty}
                 renderItem={({ item }) => (
-                    <DiaryContainer onPress={() => navigation.navigate('MainStack', { screen: 'DiaryDetail' })}>
+                    <DiaryContainer
+                        onPress={() => navigation.navigate('MainStack', { screen: 'DiaryDetail', params: item })}
+                    >
                         <DiaryImgBox>
                             <DiaryImg source={{ uri: item.image }} />
                         </DiaryImgBox>

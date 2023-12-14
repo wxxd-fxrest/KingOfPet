@@ -35,12 +35,6 @@ const DetailScreen = ({ navigation, route: { params } }) => {
         setBottomSheetVisible(!isBottomSheetVisible);
     };
 
-    useEffect(() => {
-        navigation.setOptions({
-            headerTitle: () => <MaterialIcons name="pets" size={24} color="#243e35" />,
-        });
-    }, [navigation]);
-
     return (
         <Container>
             <HeaderIconBox>
