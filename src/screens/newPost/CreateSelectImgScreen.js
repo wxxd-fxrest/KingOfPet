@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import storage from '@react-native-firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
-import { AntDesign } from '@expo/vector-icons';
 import { Alert, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
@@ -135,16 +134,6 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
 
     return (
         <Container>
-            <HeaderBox>
-                <BackIcon
-                    onPress={() => {
-                        navigation.goBack();
-                    }}
-                >
-                    <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
-                </BackIcon>
-                <Title>포스트</Title>
-            </HeaderBox>
             {/* 이미지 캐러셀 필요 */}
             {/* 자랑, 일기에 경우 이미지 필수 */}
             {/* 질문에 경우 선택 */}

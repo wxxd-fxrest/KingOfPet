@@ -6,6 +6,7 @@ import { ScrollView, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CommentScreen from './CommentScreen';
+import { AntDesign } from '@expo/vector-icons';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
     console.log('detail', params);
@@ -27,14 +28,24 @@ const DetailScreen = ({ navigation, route: { params } }) => {
     return (
         <Container>
             <HeaderIconBox>
-                <BackButton>
-                    <MaterialIcons
-                        name="arrow-back-ios"
-                        size={22}
-                        color="#0e1815"
-                        onPress={() => navigation.goBack()}
-                    />
-                </BackButton>
+                {Platform.OS === 'ios' ? (
+                    <BackButton
+                        onPress={() => {
+                            navigation.goBack();
+                        }}
+                    >
+                        <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                    </BackButton>
+                ) : (
+                    <BackButton
+                        onPress={() => {
+                            navigation.goBack();
+                        }}
+                    >
+                        <AntDesign name="arrowleft" size={22} color="#243e35" />
+                    </BackButton>
+                )}
+
                 {params.qna_boolen === false ? (
                     <LikeButton>
                         <MaterialIcons name="pets" size={18} color="rgba(249, 19, 0, 0.8)" />

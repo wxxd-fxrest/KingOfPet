@@ -30,16 +30,12 @@ const MainStack = ({ navigation }) => {
                     title: '프로필 수정',
                     headerShown: true,
                     headerShadowVisible: false,
-                    headerLeft: () => (
-                        <BackButton>
-                            <MaterialIcons
-                                name="arrow-back-ios"
-                                size={22}
-                                color="#243e35"
-                                onPress={() => navigation.goBack()}
-                            />
-                        </BackButton>
-                    ),
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
                 }}
             />
             <Stack.Screen
@@ -47,7 +43,14 @@ const MainStack = ({ navigation }) => {
                 component={CreateAllPostScreen}
                 options={{
                     title: '포스트 작성',
+                    headerShown: true,
                     headerShadowVisible: false,
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
                 }}
             />
 
@@ -56,7 +59,14 @@ const MainStack = ({ navigation }) => {
                 component={CreateSelectImgScreen}
                 options={{
                     title: '포스트 작성',
+                    headerShown: true,
                     headerShadowVisible: false,
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
                 }}
             />
 
@@ -67,16 +77,12 @@ const MainStack = ({ navigation }) => {
                     title: '프로필 수정',
                     headerShown: true,
                     headerShadowVisible: false,
-                    headerLeft: () => (
-                        <BackButton>
-                            <MaterialIcons
-                                name="arrow-back-ios"
-                                size={22}
-                                color="#243e35"
-                                onPress={() => navigation.goBack()}
-                            />
-                        </BackButton>
-                    ),
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
                 }}
             />
 
@@ -105,16 +111,12 @@ const MainStack = ({ navigation }) => {
                     title: 'UserProfile',
                     headerShown: true,
                     headerShadowVisible: false,
-                    headerLeft: () => (
-                        <BackButton>
-                            <MaterialIcons
-                                name="arrow-back-ios"
-                                size={22}
-                                color="#243e35"
-                                onPress={() => navigation.goBack()}
-                            />
-                        </BackButton>
-                    ),
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
                 }}
             />
 
@@ -126,13 +128,8 @@ const MainStack = ({ navigation }) => {
                     headerShown: true,
                     headerShadowVisible: false,
                     headerLeft: () => (
-                        <BackButton>
-                            <MaterialIcons
-                                name="arrow-back-ios"
-                                size={22}
-                                color="#243e35"
-                                onPress={() => navigation.goBack()}
-                            />
+                        <BackButton onPress={() => navigation.goBack()}>
+                            <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
                         </BackButton>
                     ),
                 }}
@@ -146,13 +143,8 @@ const MainStack = ({ navigation }) => {
                     headerShown: true,
                     headerShadowVisible: false,
                     headerLeft: () => (
-                        <BackButton>
-                            <MaterialIcons
-                                name="arrow-back-ios"
-                                size={22}
-                                color="#243e35"
-                                onPress={() => navigation.goBack()}
-                            />
+                        <BackButton onPress={() => navigation.goBack()}>
+                            <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
                         </BackButton>
                     ),
                 }}

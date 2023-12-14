@@ -5,6 +5,7 @@ import { Alert, ActivityIndicator, KeyboardAvoidingView, TouchableWithoutFeedbac
 import { MaterialIcons } from '@expo/vector-icons';
 import CreateQuestionScreen from './CreateQuestionScreen';
 import CreateDiaryScreen from './CreateDiaryScreen';
+import { AntDesign } from '@expo/vector-icons';
 
 // import { MaterialCommunityIcons } from '@expo/vector-icons';
 // <MaterialCommunityIcons name="message-star-outline" size={20} color="#d5d5d4" />
@@ -42,19 +43,36 @@ const CreateAllPostScreen = ({ navigation }) => {
         }
     };
 
+    // headerLeft: () =>
+    // Platform.OS === 'ios' ? (
+    //     <BackButton onPress={() => navigation.goBack()}>
+    //         <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+    //     </BackButton>
+    // ) : null,
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <Container>
-                <HeaderBox>
-                    <BackIcon
-                        onPress={() => {
-                            navigation.goBack();
-                        }}
-                    >
-                        <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
-                    </BackIcon>
+                {/* <HeaderBox>
+                    {Platform.OS === 'ios' ? (
+                        <BackIcon
+                            onPress={() => {
+                                navigation.goBack();
+                            }}
+                        >
+                            <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                        </BackIcon>
+                    ) : (
+                        <BackIcon
+                            onPress={() => {
+                                navigation.goBack();
+                            }}
+                        >
+                            <AntDesign name="arrowleft" size={22} color="#243e35" />
+                        </BackIcon>
+                    )}
                     <Title>포스트</Title>
-                </HeaderBox>
+                </HeaderBox> */}
+                {/* <ScrollView> */}
                 <Box behavior={Platform.select({ ios: 'position', android: 'position' })}>
                     {/* 카테고리 선택은 필수 */}
                     <SelectBox>
@@ -81,6 +99,8 @@ const CreateAllPostScreen = ({ navigation }) => {
                     {pickerValue === 'Diary' && <CreateDiaryScreen />}
 
                     {/* 텍스트 입력 필수로 설정 */}
+
+                    {/* 카테고리 선택 후 각자 맞는 세부 사항 체크 후에 텍스트 입력창이 보이도록 수정  */}
                     {pickerValue !== '' && pickerValue !== '선택' && (
                         <WriteBox>
                             <WriteInput
@@ -100,6 +120,7 @@ const CreateAllPostScreen = ({ navigation }) => {
                     )}
                     {/* 일기에 경우 내용에 대한 간략한 태그(약 다섯개)필요 */}
                 </Box>
+                {/* </ScrollView> */}
                 <NextButtonBox>
                     <Button onPress={onSubmitPasswordEditing} pickerValue={pickerValue}>
                         {loading ? (
@@ -128,7 +149,7 @@ const HeaderBox = styled.View`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-top: 12%;
+    padding-top: 10%;
     width: 100%;
     height: 10%;
     z-index: 10;
@@ -137,7 +158,7 @@ const HeaderBox = styled.View`
 const BackIcon = styled(MaterialIcons)`
     left: 20px;
     position: absolute;
-    bottom: 24%;
+    bottom: 30%;
 `;
 
 const Title = styled.Text`
@@ -147,7 +168,9 @@ const Title = styled.Text`
 `;
 
 const Box = styled(KeyboardAvoidingView)`
-    width: 100%;
+    /* width: 100%;
+    height: 100%; */
+    flex: 1;
     padding: 20px 20px;
 `;
 
@@ -181,7 +204,7 @@ const SelectedBox = styled.View`
     border-radius: 4px;
     padding: 6px 0px;
     width: 60px;
-    height: 30px;
+    height: 34px;
 `;
 
 const SelectedText = styled.Text`
@@ -192,7 +215,7 @@ const SelectedText = styled.Text`
 
 const WriteBox = styled.View`
     /* background-color: #d5d5d4; */
-    border-width: 1px;
+    border-top-width: 1px;
     border-color: #d5d5d4;
     margin-top: 16px;
     border-radius: 12px;

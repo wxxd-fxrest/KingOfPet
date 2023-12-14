@@ -194,4 +194,8 @@ const SetupButton = styled.TouchableOpacity`
     margin-right: 20px;
 `;
 
+const BackButton = styled.TouchableOpacity`
+    margin-right: 20px;
+`;
+
 export default UserProfileScreen;

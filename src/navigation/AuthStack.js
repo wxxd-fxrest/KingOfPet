@@ -30,11 +30,12 @@ const AuthStack = ({ navigation }) => {
                     headerTitleStyle: {
                         fontWeight: 'bold',
                     },
-                    headerLeft: () => (
-                        <SetupButton onPress={() => navigation.goBack()}>
-                            <MaterialIcons name="arrow-back-ios" size={25} color="#243e35" />
-                        </SetupButton>
-                    ),
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
                     headerRight: () => (
                         <LoginButton onPress={() => navigation.navigate('Join')}>
                             <LoginText>회원가입</LoginText>
@@ -56,11 +57,12 @@ const AuthStack = ({ navigation }) => {
                     headerTitleStyle: {
                         fontWeight: 'bold',
                     },
-                    headerLeft: () => (
-                        <SetupButton onPress={() => navigation.goBack()}>
-                            <MaterialIcons name="arrow-back-ios" size={25} color="#243e35" />
-                        </SetupButton>
-                    ),
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
                 }}
             />
         </Stack.Navigator>
@@ -68,6 +70,10 @@ const AuthStack = ({ navigation }) => {
 };
 
 const SetupButton = styled.TouchableOpacity`
+    margin-right: 20px;
+`;
+
+const BackButton = styled.TouchableOpacity`
     margin-right: 20px;
 `;
 

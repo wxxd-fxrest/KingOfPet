@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import styled from 'styled-components';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 const CommentDetailScreen = ({ navigation, route: { params } }) => {
     console.log('params', params);
@@ -11,13 +12,24 @@ const CommentDetailScreen = ({ navigation, route: { params } }) => {
     return (
         <Container onPress={() => keyboard.dismiss()}>
             <HeaderBox>
-                <BackIcon
-                    onPress={() => {
-                        navigation.goBack();
-                    }}
-                >
-                    <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
-                </BackIcon>
+                {Platform.OS === 'ios' ? (
+                    <BackIcon
+                        onPress={() => {
+                            navigation.goBack();
+                        }}
+                    >
+                        <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                    </BackIcon>
+                ) : (
+                    <BackIcon
+                        onPress={() => {
+                            navigation.goBack();
+                        }}
+                    >
+                        <AntDesign name="arrowleft" size={22} color="#243e35" />
+                    </BackIcon>
+                )}
+
                 <Title>답글</Title>
             </HeaderBox>
             <Box>
@@ -40,7 +52,7 @@ const CommentDetailScreen = ({ navigation, route: { params } }) => {
                     </CommentContainer>
                 </ScrollView>
             </Box>
-            <KeyboardAvoidingBox behavior={Platform.select({ ios: 'position', android: 'position' })}>
+            <KeyboardAvoidingBox behavior={Platform.select({ ios: 'position', android: 'height' })}>
                 <CommentInputBox>
                     <CommentInput
                         value={comment}
