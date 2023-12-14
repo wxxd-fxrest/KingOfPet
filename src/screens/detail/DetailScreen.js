@@ -7,11 +7,27 @@ import Modal from 'react-native-modal';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CommentScreen from './CommentScreen';
 import { AntDesign } from '@expo/vector-icons';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
     console.log('detail', params);
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
+    const [currentUser, setCurrentUser] = useState([]);
+    const [userData, setUserData] = useState([]);
+
+    useEffect(() => {
+        setCurrentUser(auth().currentUser);
+        // console.log('profile', currentUser);
+        firestore()
+            .collection('Users')
+            .doc(`${currentUser.email}`)
+            .onSnapshot((documentSnapshot) => {
+                setUserData(documentSnapshot.data());
+                console.log('profile User data: ', documentSnapshot.data());
+            });
+    }, [currentUser]);
 
     const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
 
@@ -151,7 +167,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                     style={{ justifyContent: 'flex-end', margin: 0 }}
                 >
                     <BottomSheetContainer>
-                        <CommentScreen toggleBottomSheet={toggleBottomSheet} />
+                        <CommentScreen toggleBottomSheet={toggleBottomSheet} userData={userData} />
                     </BottomSheetContainer>
                 </Modal>
             </BottomSheetBox>
@@ -280,6 +296,7 @@ const Detail = styled.Text`
 `;
 
 const BottomSheetBox = styled.View`
+    background-color: #f9f9f7;
     width: 100%;
     height: 80px;
     position: absolute;
@@ -293,7 +310,8 @@ const OpenBottomSheetButton = styled.TouchableOpacity`
     padding: 0px 20px;
     border-radius: 16px;
     width: 90%;
-    height: 50%;
+    height: 60%;
+    margin-bottom: 10px;
     align-items: center;
     flex-direction: row;
 `;

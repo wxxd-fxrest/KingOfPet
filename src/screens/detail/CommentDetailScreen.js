@@ -1,40 +1,31 @@
-import React, { useState } from 'react';
-import { KeyboardAvoidingView, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { KeyboardAvoidingView, NativeModules } from 'react-native';
 import styled from 'styled-components';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+
+const { StatusBarManager } = NativeModules;
 
 const CommentDetailScreen = ({ navigation, route: { params } }) => {
-    console.log('params', params);
     const [comment, setComment] = useState('');
+    const [statusBarHeight, setStatusBarHeight] = useState(0);
+
+    useEffect(() => {
+        Platform.OS == 'ios'
+            ? StatusBarManager.getHeight((statusBarFrameData) => {
+                  setStatusBarHeight(statusBarFrameData.height);
+              })
+            : null;
+    }, []);
 
     return (
-        <Container onPress={() => keyboard.dismiss()}>
-            <HeaderBox>
-                {Platform.OS === 'ios' ? (
-                    <BackIcon
-                        onPress={() => {
-                            navigation.goBack();
-                        }}
-                    >
-                        <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
-                    </BackIcon>
-                ) : (
-                    <BackIcon
-                        onPress={() => {
-                            navigation.goBack();
-                        }}
-                    >
-                        <AntDesign name="arrowleft" size={22} color="#243e35" />
-                    </BackIcon>
-                )}
-
-                <Title>답글</Title>
-            </HeaderBox>
-            <Box>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <CommentContainer onStartShouldSetResponder={() => true}>
+        <Container>
+            <KeyboardView
+                behavior={Platform.select({ ios: 'padding', android: undefined })}
+                keyboardVerticalOffset={statusBarHeight + 44}
+            >
+                <ContentsContainer>
+                    <CommentContainer>
                         <ProfileImgBox activeOpacity={0.8}>
                             <ProfileImg source={{ uri: params.image }} />
                         </ProfileImgBox>
@@ -50,9 +41,8 @@ const CommentDetailScreen = ({ navigation, route: { params } }) => {
                             <Feather name="more-vertical" size={16} color="#243E35" />
                         </MoreIcon>
                     </CommentContainer>
-                </ScrollView>
-            </Box>
-            <KeyboardAvoidingBox behavior={Platform.select({ ios: 'position', android: 'height' })}>
+                </ContentsContainer>
+
                 <CommentInputBox>
                     <CommentInput
                         value={comment}
@@ -61,59 +51,38 @@ const CommentDetailScreen = ({ navigation, route: { params } }) => {
                         keyboardType="default"
                         autoCapitalize="none"
                         autoCorrect={false}
-                        returnKeyType="next"
+                        returnKeyType="send"
                         maxLength={300}
                         multiline={true}
-                        // onSubmitEditing={}
+                        onSubmitEditing={() => {
+                            // Handle submit action here
+                        }}
                         onChangeText={(text) => setComment(text)}
                     />
                     <SaveIcon>
                         <MaterialIcons name="pets" size={22} color="#243e35" />
                     </SaveIcon>
                 </CommentInputBox>
-            </KeyboardAvoidingBox>
+            </KeyboardView>
         </Container>
     );
 };
 
 const Container = styled.View`
+    background-color: #f9f9f7;
     flex: 1;
-    background-color: #f9f9f7;
 `;
 
-const HeaderBox = styled.View`
-    background-color: #f9f9f7;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding-top: 12%;
-    width: 100%;
-    height: 10%;
-    z-index: 10;
+const ContentsContainer = styled.ScrollView`
+    flex: 1;
 `;
 
-const BackIcon = styled(MaterialIcons)`
-    left: 20px;
-    position: absolute;
-    bottom: 24%;
-`;
-
-const Title = styled.Text`
-    font-size: 16px;
-    font-weight: 600;
-    color: #343c3a;
-`;
-
-const Box = styled.View`
-    width: 100%;
-    height: 82%;
-`;
-
-const KeyboardAvoidingBox = styled(KeyboardAvoidingView)`
+const KeyboardView = styled(KeyboardAvoidingView)`
     flex: 1;
 `;
 
 const CommentContainer = styled.View`
+    /* background-color: yellowgreen; */
     flex-direction: row;
     justify-content: space-between;
     padding: 20px;
@@ -158,27 +127,32 @@ const MoreIcon = styled.TouchableOpacity`
 `;
 
 const CommentInputBox = styled.View`
-    background-color: #f9f9f7;
-    justify-content: center;
-    width: 100%;
-    height: 120px;
+    background-color: white;
+    margin-top: auto;
+    border-top-width: 1px;
+    border-top-color: #eaeaea;
     padding: 0px 20px;
-    padding-bottom: 60px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 `;
 
 const CommentInput = styled.TextInput`
     background-color: rgba(193, 204, 200, 0.3);
+    margin-bottom: 30px;
+    margin-top: 10px;
     padding: 10px 20px;
     padding-right: 40px;
     border-radius: 12px;
     font-size: 12px;
     width: 100%;
+    height: 40px;
 `;
 
 const SaveIcon = styled.TouchableOpacity`
     position: absolute;
-    right: 26px;
-    top: 18px;
+    right: 30px;
+    top: 22%;
 `;
 
 export default CommentDetailScreen;

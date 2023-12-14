@@ -34,6 +34,28 @@ export default [
             - Proven efficacy
             
             A timeless rubber sole combines with a soft sockliner and encapsulated Nike Air cushioning for all-day comfort. The rubber outsole offers durable traction on a variety of surfaces.
+            Inspired by the original that debuted in 1985, the Air Jordan 1 Low delivers a clean, classic look that's familiar yet fresh. With an iconic design that blends seamlessly with any fit, these shoes are perfect for taking charge.
+    
+            Advantages:
+            - Encapsulated Air-Sole unit for lightweight cushioning.
+            - Genuine leather on the upper for durability and a premium look.
+            - Solid rubber outsole for greater traction on different types of surfaces.
+            - Color Shown: Palomino/White/Wild Berry
+            - Model: 553558-215
+            - Proven efficacy
+            
+            A timeless rubber sole combines with a soft sockliner and encapsulated Nike Air cushioning for all-day comfort. The rubber outsole offers durable traction on a variety of surfaces.
+            Inspired by the original that debuted in 1985, the Air Jordan 1 Low delivers a clean, classic look that's familiar yet fresh. With an iconic design that blends seamlessly with any fit, these shoes are perfect for taking charge.
+    
+            Advantages:
+            - Encapsulated Air-Sole unit for lightweight cushioning.
+            - Genuine leather on the upper for durability and a premium look.
+            - Solid rubber outsole for greater traction on different types of surfaces.
+            - Color Shown: Palomino/White/Wild Berry
+            - Model: 553558-215
+            - Proven efficacy
+            
+            A timeless rubber sole combines with a soft sockliner and encapsulated Nike Air cushioning for all-day comfort. The rubber outsole offers durable traction on a variety of surfaces.
             `,
     },
     {
@@ -48,11 +70,7 @@ export default [
             'https://i.pinimg.com/736x/96/d4/43/96d443c92059f2b3a240a7ff74692bbf.jpg',
             'https://i.pinimg.com/564x/ec/48/05/ec48054b6b71e7f67cc9aed123c352cd.jpg',
         ],
-        description: `Inspired by the original that debuted in 1985, the Air Jordan 1 Low delivers a clean, classic look that's familiar yet fresh. With an iconic design that blends seamlessly with any fit, these shoes are perfect for taking charge.
-    
-            Advantages: rubber sole combines with a soft sockliner and encapsulated Nike Air cushioning for all-day comfort. The rubber outsole offers durable traction on a variety of surfaces.Inspired by the original that debuted in 1985, the Air Jordan 1 Low delivers a clean, classic look that's familiar yet fresh. With an iconic design that blends seamlessly with any fit, these shoes are perfect for taking charge.
-    
-            Advantages: rubber sole combines with a soft sockliner and encapsulated Nike Air cushioning for all-day comfort. The rubber outsole offers durable traction on a variety of surfaces.`,
+        description: `- Encapsulated Air-Sole unit for lightweight cushioning.- Genuine leather on the upper for durability and a premium look.- Solid rubber outsole for greater traction on different types of surfaces.- Color Shown: Palomino/White/Wild Berry- Encapsulated Air-Sole unit for - Enca             - Encapsulat`,
     },
     {
         id: '3',
