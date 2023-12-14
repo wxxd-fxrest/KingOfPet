@@ -5,7 +5,7 @@ import postData from '../../data/postData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const DiaryFeedScreen = ({ handleScroll }) => {
+const DiaryFeedScreen = ({ navigation, handleScroll }) => {
     const [star, setStar] = useState(false);
 
     return (
@@ -19,7 +19,7 @@ const DiaryFeedScreen = ({ handleScroll }) => {
                 data={postData}
                 ItemSeparatorComponent={heightEmpty}
                 renderItem={({ item }) => (
-                    <DiaryContainer>
+                    <DiaryContainer onPress={() => navigation.navigate('MainStack', { screen: 'DiaryDetail' })}>
                         <DiaryImgBox>
                             <DiaryImg source={{ uri: item.image }} />
                         </DiaryImgBox>

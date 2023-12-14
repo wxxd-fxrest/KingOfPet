@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { ActivityIndicator, Image, Pressable } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import postData from '../../data/postData';
 import LinearGradient from 'react-native-linear-gradient';
+import postData from '../../../data/postData';
 
 const QuestionFeedScreen = ({ navigation, handleScroll }) => {
     // 랜덤한 dimensions 값을 생성하는 함수

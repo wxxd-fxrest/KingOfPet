@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ActivityIndicator, Image, Pressable } from 'react-native';
+import { ActivityIndicator, Image, Pressable, TouchableOpacity } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import postData from '../../data/postData';
 import LinearGradient from 'react-native-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
+import postData from '../../../data/postData';
 
-const PostFeedScreen = ({ navigation, handleScroll }) => {
+const RandomFeedScreen = ({ navigation, handleScroll }) => {
     // 랜덤한 dimensions 값을 생성하는 함수
     const generateRandomDimensions = () => {
         const width = Math.floor(Math.random() * 200) + 100; // 최소 100, 최대 300
@@ -57,7 +57,7 @@ const LoadingContainer = styled.View`
     margin-top: 100px;
 `;
 
-export default PostFeedScreen;
+export default RandomFeedScreen;
 
 const RandomCard = ({ item, index, navigation }) => {
     const isEven = index % 2 === 0;
@@ -77,9 +77,7 @@ const RandomCard = ({ item, index, navigation }) => {
                     <QnABoolen>Q&A</QnABoolen>
                 </QnABox>
             )}
-            <FeedDetail numberOfLines={3} ellipsizeMode="tail">
-                {item.description}
-            </FeedDetail>
+
             <Pressable
                 style={{
                     width: '100%',
@@ -94,6 +92,9 @@ const RandomCard = ({ item, index, navigation }) => {
                     })
                 }
             >
+                <FeedDetail numberOfLines={3} ellipsizeMode="tail">
+                    {item.description}
+                </FeedDetail>
                 <LinearGradientBox
                     start={{ x: 0, y: 0 }}
                     end={{ x: 0, y: 1 }}
@@ -110,13 +111,12 @@ const RandomCard = ({ item, index, navigation }) => {
                     resizeMode="cover"
                     style={{
                         width: '100%',
-                        // ...item.dimensions,
-                        // width: item.dimensions.width,
                         height: item.dimensions.height,
                         borderRadius: 12, // 보더의 모서리 둥글기
                     }}
                 />
             </Pressable>
+
             {item.qna_boolen === false && (
                 <TotalLikeBox>
                     <IconBox>
@@ -167,7 +167,7 @@ const QnABoolen = styled.Text`
 
 const FeedDetail = styled.Text`
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     bottom: 26px;
     width: 85%;
     margin: 14px 16px;
@@ -212,6 +212,7 @@ const PetNameTag = styled.TouchableOpacity`
     right: 16px;
     flex-direction: row;
     align-items: center;
+    z-index: 1;
 `;
 
 const PetImageBox = styled.View`

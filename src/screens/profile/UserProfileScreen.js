@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import PostFeedScreen from '../profile/PostFeedScreen';
-import DiaryFeedScreen from '../profile/DiaryFeedScreen';
-import AllLikeFeedScreen from '../profile/AllLikeFeedScreen';
+import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
+import DiaryFeedScreen from '../diary/DiaryFeedScreen';
+import PostFeedScreen from '../feed/profile/PostFeedScreen';
 
 const Tab = createMaterialTopTabNavigator();
 

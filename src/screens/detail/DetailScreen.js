@@ -5,10 +5,10 @@ import Swiper from 'react-native-swiper';
 import { ScrollView, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import CommentScreen from './CommentScreen';
 import { AntDesign } from '@expo/vector-icons';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import CommentScreen from '../comment/CommentScreen';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
     console.log('detail', params);

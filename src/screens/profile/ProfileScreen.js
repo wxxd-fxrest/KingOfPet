@@ -5,11 +5,11 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import * as KakaoLogin from '@react-native-seoul/kakao-login';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import AllLikeFeedScreen from './AllLikeFeedScreen';
-import PostFeedScreen from './PostFeedScreen';
-import DiaryFeedScreen from './DiaryFeedScreen';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import PostFeedScreen from '../feed/profile/PostFeedScreen';
+import DiaryFeedScreen from '../diary/DiaryFeedScreen';
+import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
 
 const Tab = createMaterialTopTabNavigator();
 

@@ -6,11 +6,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 import CreateAllPostScreen from '../screens/newPost/CreateAllPostScreen';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
 import DetailScreen from '../screens/detail/DetailScreen';
-import UserProfileScreen from '../screens/detail/UserProfileScreen';
-import CommentDetailScreen from '../screens/detail/CommentDetailScreen';
+import UserProfileScreen from '../screens/profile/UserProfileScreen';
+import CommentDetailScreen from '../screens/comment/CommentDetailScreen';
 import CreateSelectImgScreen from '../screens/newPost/CreateSelectImgScreen';
 import FollowingScreen from '../screens/follow/FollowingScreen';
 import FollowerScreen from '../screens/follow/FollowerScreen';
+import DiaryDetailScreen from '../screens/diary/DiaryDetailScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -89,6 +90,15 @@ const MainStack = ({ navigation }) => {
             <Stack.Screen
                 name="Detail"
                 component={DetailScreen}
+                options={{
+                    title: '상세페이지',
+                    headerShadowVisible: false,
+                }}
+            />
+
+            <Stack.Screen
+                name="DiaryDetail"
+                component={DiaryDetailScreen}
                 options={{
                     title: '상세페이지',
                     headerShadowVisible: false,

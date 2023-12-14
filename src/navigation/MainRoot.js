@@ -12,12 +12,7 @@ const MainRoot = ({ handleScroll, hide }) => {
                 headerShown: false,
             }}
         >
-            <Root.Screen
-                name="MainTab"
-                children={() => <MainTab handleScroll={handleScroll} hide={hide} />}
-
-                // component={MainTab}
-            />
+            <Root.Screen name="MainTab" children={() => <MainTab handleScroll={handleScroll} hide={hide} />} />
             <Root.Screen name="MainStack" component={MainStack} />
         </Root.Navigator>
     );
