@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { Foundation } from '@expo/vector-icons';
 import RandomFeedScreen from '../feed/main/RandomFeedScreen';
 import QuestionFeedScreen from '../feed/main/QuestionFeedScreen';
 import FollowFeedScreen from '../feed/main/FollowFeedScreen';
@@ -57,14 +56,32 @@ const MainScreen = ({ handleScroll, hide }) => {
         navigation.setOptions({
             headerTitle: () => <MaterialIcons name="pets" size={24} color="#243e35" />,
             headerRight: () => (
-                <SetupButton onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}>
-                    <Feather name="plus-square" size={28} color="#243e35" />
-                </SetupButton>
-            ),
-            headerLeft: () => (
-                <DrawerButton onPress={() => navigation.openDrawer()}>
-                    <Foundation name="indent-more" size={28} color="#243e35" />
-                </DrawerButton>
+                <View
+                    style={{
+                        width: '40%',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginRight: 20,
+                    }}
+                >
+                    <SetupButton>
+                        <Feather
+                            name="plus-square"
+                            size={28}
+                            color="#243e35"
+                            onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}
+                        />
+                    </SetupButton>
+                    <SetupButton>
+                        <Feather
+                            name="search"
+                            size={28}
+                            color="#243e35"
+                            onPress={() => navigation.navigate('MainStack', { screen: 'Search' })}
+                        />
+                    </SetupButton>
+                </View>
             ),
         });
     }, [navigation]);
@@ -108,7 +125,6 @@ const MainScreen = ({ handleScroll, hide }) => {
                 />
                 <Tab.Screen
                     name="QnA"
-                    // component={QuestionFeedScreen}
                     children={() => <QuestionFeedScreen navigation={navigation} handleScroll={handleScroll} />}
                     options={{
                         title: '질문',
@@ -126,12 +142,6 @@ const Container = styled.View`
     padding-top: ${({ hide }) => (hide ? '0' : '14%')};
 `;
 
-const DrawerButton = styled.TouchableOpacity`
-    margin-left: 20px;
-`;
-
-const SetupButton = styled.TouchableOpacity`
-    margin-right: 20px;
-`;
+const SetupButton = styled.View``;
 
 export default MainScreen;

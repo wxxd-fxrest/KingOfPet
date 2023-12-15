@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList } from 'react-native';
 import styled from 'styled-components';
 import postData from '../../data/postData';
 
-const AlertScreen = () => {
+const AlertScreen = ({ navigation }) => {
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: () => <AlertTitle>알림</AlertTitle>,
+        });
+    }, [navigation]);
+
     return (
         <Container>
             <FlatList
@@ -75,6 +81,12 @@ const AlertDetail = styled.Text`
     font-size: 14px;
     font-weight: 400;
     color: #343c3a;
+`;
+
+const AlertTitle = styled.Text`
+    color: #243e35;
+    font-size: 18px;
+    font-weight: 600;
 `;
 
 export default AlertScreen;

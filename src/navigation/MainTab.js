@@ -17,8 +17,6 @@ const MainTab = ({ handleScroll, hide }) => {
             screenOptions={{
                 headerShown: false,
                 tabBarShowLabel: false,
-                // tabBarActiveTintColor: '#6b8a47',
-                // tabBarInactiveTintColor: '#a7c585',
                 tabBarStyle: { backgroundColor: '#f9f9f7' },
                 headerStyle: { backgroundColor: '#f9f9f7' },
             }}
@@ -50,7 +48,6 @@ const MainTab = ({ handleScroll, hide }) => {
                     title: '홈',
                     headerShown: hide,
                     headerShadowVisible: false,
-                    unmountOnBlur: true,
                     tabBarIcon: ({ focused, size }) => {
                         return <MaterialIcons name="pets" size={size} color={focused ? '#243e35' : '#c1ccc8'} />;
                     },
@@ -64,7 +61,6 @@ const MainTab = ({ handleScroll, hide }) => {
                     title: '프로필',
                     headerShown: true,
                     headerShadowVisible: false,
-                    showLable: false,
                     tabBarIcon: ({ focused, size }) => {
                         return <Ionicons name="person" size={size} color={focused ? '#243e35' : '#c1ccc8'} />;
                     },

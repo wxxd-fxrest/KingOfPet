@@ -12,6 +12,8 @@ import CreateSelectImgScreen from '../screens/newPost/CreateSelectImgScreen';
 import FollowingScreen from '../screens/follow/FollowingScreen';
 import FollowerScreen from '../screens/follow/FollowerScreen';
 import DiaryDetailScreen from '../screens/diary/DiaryDetailScreen';
+import SearchScreen from '../screens/search/SearchScreen';
+import ImportantDiarySceren from '../screens/diary/ImportantDiarySceren';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +30,7 @@ const MainStack = ({ navigation }) => {
                 name="SocialLogin"
                 component={SocialLoginScreen}
                 options={{
-                    title: '프로필 수정',
+                    title: '소셜 로그인',
                     headerShown: true,
                     headerShadowVisible: false,
                     headerLeft: () =>
@@ -100,8 +102,24 @@ const MainStack = ({ navigation }) => {
                 name="DiaryDetail"
                 component={DiaryDetailScreen}
                 options={{
-                    title: '상세페이지',
+                    title: '일기',
                     headerShadowVisible: false,
+                }}
+            />
+
+            <Stack.Screen
+                name="ImportantDiary"
+                component={ImportantDiarySceren}
+                options={{
+                    title: '중요!',
+                    headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
                 }}
             />
 
@@ -128,12 +146,6 @@ const MainStack = ({ navigation }) => {
                     title: 'UserProfile',
                     headerShown: true,
                     headerShadowVisible: false,
-                    headerLeft: () =>
-                        Platform.OS === 'ios' ? (
-                            <BackButton onPress={() => navigation.goBack()}>
-                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
-                            </BackButton>
-                        ) : null,
                 }}
             />
 
@@ -144,11 +156,12 @@ const MainStack = ({ navigation }) => {
                     title: '팔로워',
                     headerShown: true,
                     headerShadowVisible: false,
-                    headerLeft: () => (
-                        <BackButton onPress={() => navigation.goBack()}>
-                            <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
-                        </BackButton>
-                    ),
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
                 }}
             />
 
@@ -157,6 +170,22 @@ const MainStack = ({ navigation }) => {
                 component={FollowingScreen}
                 options={{
                     title: '팔로잉',
+                    headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
+                }}
+            />
+
+            <Stack.Screen
+                name="Search"
+                component={SearchScreen}
+                options={{
+                    title: '검색',
                     headerShown: true,
                     headerShadowVisible: false,
                     headerLeft: () => (

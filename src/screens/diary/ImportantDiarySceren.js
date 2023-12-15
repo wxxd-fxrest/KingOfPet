@@ -3,24 +3,13 @@ import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
 import postData from '../../data/postData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Foundation } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-const ImportantDiarSceren = () => {
+const ImportantDiarySceren = () => {
     const navigation = useNavigation();
     const [star, setStar] = useState(false);
 
-    useEffect(() => {
-        navigation.setOptions({
-            headerTitle: () => <MaterialIcons name="pets" size={24} color="#243e35" />,
-            headerLeft: () => (
-                <DrawerButton onPress={() => navigation.openDrawer()}>
-                    <Foundation name="indent-more" size={28} color="#243e35" />
-                </DrawerButton>
-            ),
-        });
-    }, [navigation]);
     return (
         <Container>
             <FlatList
@@ -167,4 +156,4 @@ const DiayrDate = styled.Text`
     font-size: 10px;
 `;
 
-export default ImportantDiarSceren;
+export default ImportantDiarySceren;

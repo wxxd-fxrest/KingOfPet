@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Text } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import styled from 'styled-components';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -10,7 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import PostFeedScreen from '../feed/profile/PostFeedScreen';
 import DiaryFeedScreen from '../diary/DiaryFeedScreen';
 import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
-import { Foundation } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -49,14 +49,32 @@ const ProfileScreen = ({ navigation }) => {
             navigation.setOptions({
                 headerTitle: () => <UserID>{userData.userid}</UserID>,
                 headerRight: () => (
-                    <SetupButton onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}>
-                        <Feather name="plus-square" size={28} color="#243e35" />
-                    </SetupButton>
-                ),
-                headerLeft: () => (
-                    <DrawerButton onPress={() => navigation.openDrawer()}>
-                        <Foundation name="indent-more" size={28} color="#243e35" />
-                    </DrawerButton>
+                    <View
+                        style={{
+                            width: '40%',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginRight: 20,
+                        }}
+                    >
+                        <SetupButton>
+                            <Feather
+                                name="plus-square"
+                                size={28}
+                                color="#243e35"
+                                onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}
+                            />
+                        </SetupButton>
+                        <SetupButton>
+                            <MaterialCommunityIcons
+                                name="progress-star"
+                                size={28}
+                                color="#243e35"
+                                onPress={() => navigation.navigate('MainStack', { screen: 'ImportantDiary' })}
+                            />
+                        </SetupButton>
+                    </View>
                 ),
             });
         }
@@ -302,9 +320,7 @@ const UserID = styled.Text`
     font-weight: 600;
 `;
 
-const SetupButton = styled.TouchableOpacity`
-    margin-right: 20px;
-`;
+const SetupButton = styled.View``;
 
 const DrawerButton = styled.TouchableOpacity`
     margin-left: 20px;

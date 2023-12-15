@@ -7,6 +7,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
 import DiaryFeedScreen from '../diary/DiaryFeedScreen';
 import PostFeedScreen from '../feed/profile/PostFeedScreen';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -46,6 +47,12 @@ const UserProfileScreen = ({ navigation, route: params }) => {
         if (userData) {
             navigation.setOptions({
                 headerTitle: () => <UserID>{userdata.username}</UserID>,
+                headerLeft: () =>
+                    Platform.OS === 'ios' ? (
+                        <BackButton onPress={() => navigation.goBack()}>
+                            <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                        </BackButton>
+                    ) : null,
             });
         }
     }, [navigation, userData]);
@@ -103,7 +110,6 @@ const UserProfileScreen = ({ navigation, route: params }) => {
             >
                 <Tab.Screen
                     name="Post"
-                    // component={PostFeedScreen}
                     children={() => <PostFeedScreen navigation={navigation} handleScroll={handleScroll} />}
                     options={{
                         title: '게시글',
@@ -112,7 +118,6 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                 />
                 <Tab.Screen
                     name="Diary"
-                    // component={DiaryFeedScreen}
                     children={() => <DiaryFeedScreen navigation={navigation} handleScroll={handleScroll} />}
                     options={{
                         title: '일기',
@@ -120,7 +125,6 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                 />
                 <Tab.Screen
                     name="Like"
-                    // component={AllLikeFeedScreen}
                     children={() => <AllLikeFeedScreen navigation={navigation} handleScroll={handleScroll} />}
                     options={{
                         title: '도장',

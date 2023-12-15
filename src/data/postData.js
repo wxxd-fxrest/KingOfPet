@@ -178,5 +178,6 @@ export default [
             'https://i.pinimg.com/736x/96/d4/43/96d443c92059f2b3a240a7ff74692bbf.jpg',
             'https://i.pinimg.com/564x/ec/48/05/ec48054b6b71e7f67cc9aed123c352cd.jpg',
         ],
+        description: `바보멍청이`,
     },
 ];

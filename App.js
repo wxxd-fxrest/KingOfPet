@@ -11,11 +11,8 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { REACT_GOOGLE_AUTH_KEY } from '@env';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import styled from 'styled-components';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import MainDrawer from './src/navigation/MainDrawer';
 
 const Stack = createNativeStackNavigator();
-const NavigateDrawer = createDrawerNavigator();
 
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
 
@@ -63,7 +60,7 @@ export default function App() {
             <Stack.Navigator>
                 {isAuthentication ? (
                     <Stack.Screen name="MainRoot" options={{ headerShown: false }}>
-                        {(props) => <MainDrawer {...props} handleScroll={handleScroll} hide={hide} />}
+                        {(props) => <MainRoot {...props} handleScroll={handleScroll} hide={hide} />}
                     </Stack.Screen>
                 ) : (
                     <Stack.Screen name="AuthRoot" options={{ headerShown: false }}>
