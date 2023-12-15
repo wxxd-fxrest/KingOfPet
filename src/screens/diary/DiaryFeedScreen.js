@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { FlatList } from 'react-native';
 import styled from 'styled-components';
 import postData from '../../data/postData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -9,46 +8,41 @@ const DiaryFeedScreen = ({ navigation, handleScroll }) => {
     const [star, setStar] = useState(false);
 
     return (
-        <Container onScroll={handleScroll}>
+        <Container onScroll={handleScroll} scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
             {/* 일기장 비공개일 경우 */}
             <PrivateBox>
                 <MaterialIcons name="lock-outline" size={18} color="gray" />
                 <Private>현재 일기장은 비공개 설정이 되어있습니다.</Private>
             </PrivateBox>
-            <FlatList
-                data={postData}
-                ItemSeparatorComponent={heightEmpty}
-                renderItem={({ item }) => (
-                    <DiaryContainer
-                        onPress={() => navigation.navigate('MainStack', { screen: 'DiaryDetail', params: item })}
-                    >
-                        <DiaryImgBox>
-                            <DiaryImg source={{ uri: item.image }} />
-                        </DiaryImgBox>
-                        <DiaryDetailBox>
-                            <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
-                                {item.description}
-                            </DiaryDetail>
+            {postData.map((item) => (
+                <DiaryContainer
+                    key={item.id}
+                    onPress={() => navigation.navigate('MainStack', { screen: 'DiaryDetail', params: item })}
+                >
+                    <DiaryImgBox>
+                        <DiaryImg source={{ uri: item.image }} />
+                    </DiaryImgBox>
+                    <DiaryDetailBox>
+                        <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
+                            {item.description}
+                        </DiaryDetail>
 
-                            <LikeBottomBox>
-                                <DiaryDateBox>
-                                    <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
-                                    <DiayrDate>2023.02.31</DiayrDate>
-                                </DiaryDateBox>
-                                <LikeBox onPress={() => setStar(!star)}>
-                                    <MaterialIcons
-                                        name={star === true ? 'star' : 'star-outline'}
-                                        size={20}
-                                        color="#243e35"
-                                    />
-                                </LikeBox>
-                            </LikeBottomBox>
-                        </DiaryDetailBox>
-                    </DiaryContainer>
-                )}
-                keyExtractor={(item) => item.id + ''}
-                showsVerticalScrollIndicator={false}
-            />
+                        <LikeBottomBox>
+                            <DiaryDateBox>
+                                <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
+                                <DiayrDate>2023.02.31</DiayrDate>
+                            </DiaryDateBox>
+                            <LikeBox onPress={() => setStar(!star)}>
+                                <MaterialIcons
+                                    name={item.important === true ? 'star' : 'star-outline'}
+                                    size={20}
+                                    color="#243e35"
+                                />
+                            </LikeBox>
+                        </LikeBottomBox>
+                    </DiaryDetailBox>
+                </DiaryContainer>
+            ))}
         </Container>
     );
 };
@@ -58,10 +52,6 @@ const Container = styled.ScrollView`
     background-color: #f9f9f7;
     padding: 0px 20px;
     padding-top: 10px;
-`;
-
-const heightEmpty = styled.View`
-    height: 0px;
 `;
 
 const PrivateBox = styled.View`
@@ -148,9 +138,6 @@ const DiaryDateBox = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    /* position: absolute;
-    right: 10px;
-    bottom: 14px; */
 `;
 
 const DiayrDate = styled.Text`

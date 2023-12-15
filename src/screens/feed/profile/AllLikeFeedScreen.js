@@ -1,15 +1,14 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Platform } from 'react-native';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import postData from '../../../data/postData';
 
 const AllLikeFeedScreen = ({ navigation, handleScroll }) => {
     return (
-        <Container onScroll={handleScroll}>
+        <Container>
             <FlatList
                 data={postData}
-                ItemSeparatorComponent={heightEmpty}
                 renderItem={({ item }) => (
                     <LikeContainer
                         onPress={() =>
@@ -49,20 +48,18 @@ const AllLikeFeedScreen = ({ navigation, handleScroll }) => {
                 )}
                 keyExtractor={(item) => item.id + ''}
                 showsVerticalScrollIndicator={false}
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
             />
         </Container>
     );
 };
 
-const Container = styled.ScrollView`
+const Container = styled.View`
     flex: 1;
     background-color: #f9f9f7;
     padding: 0px 20px;
     padding-top: 10px;
-`;
-
-const heightEmpty = styled.View`
-    height: 0px;
 `;
 
 const LikeContainer = styled.TouchableOpacity`

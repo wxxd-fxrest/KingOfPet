@@ -12,6 +12,7 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
     console.log('detail', params);
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
+
     const [star, setStar] = useState(false);
     const [currentUser, setCurrentUser] = useState([]);
     const [userData, setUserData] = useState([]);
@@ -139,7 +140,6 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
 const Container = styled.View`
     background-color: #f9f9f7;
     flex: 1;
-    /* padding-bottom: 70px; */
 `;
 
 const HeaderIconBox = styled.View`
@@ -160,21 +160,6 @@ const LikeButton = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
     border-radius: 100px;
-`;
-
-const QnABox = styled.View`
-    background-color: rgba(193, 204, 200, 0.5);
-    color: #fc8980;
-    width: 30px;
-    height: 20px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 4px;
-`;
-
-const QnABoolen = styled.Text`
-    font-size: 10px;
-    color: #243e35;
 `;
 
 const BackButton = styled.TouchableOpacity``;
