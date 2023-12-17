@@ -149,9 +149,9 @@ const DetailScreen = ({ navigation, route: { params } }) => {
 
             <BottomSheetBox>
                 <OpenBottomSheetButton onPress={toggleBottomSheet}>
-                    <MaterialCommunityIcons name="comment-outline" size={20} color="#243E35" />
+                    <MaterialCommunityIcons name="comment-outline" size={20} color="#f9f9f7" />
                     <OpenBottomSheetText>Comment</OpenBottomSheetText>
-                    <ArrowIcon name="keyboard-arrow-up" size={20} color="#243E35" />
+                    <ArrowIcon name="keyboard-arrow-up" size={20} color="#f9f9f7" />
                 </OpenBottomSheetButton>
                 <Modal
                     propagateSwipe
@@ -300,18 +300,18 @@ const BottomSheetBox = styled.View`
 `;
 
 const OpenBottomSheetButton = styled.TouchableOpacity`
-    background-color: #c1ccc8;
+    background-color: #243e35;
     padding: 0px 20px;
     border-radius: 16px;
     width: 90%;
-    height: 60%;
-    margin-bottom: 10px;
+    height: 50%;
+    margin-bottom: 24px;
     align-items: center;
     flex-direction: row;
 `;
 
 const OpenBottomSheetText = styled.Text`
-    color: #243e35;
+    color: #f9f9f7;
     font-size: 12px;
     font-weight: 600;
     margin-left: 10px;

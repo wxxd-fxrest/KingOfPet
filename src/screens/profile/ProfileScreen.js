@@ -59,19 +59,19 @@ const ProfileScreen = ({ navigation }) => {
                         }}
                     >
                         <SetupButton>
-                            <Feather
-                                name="plus-square"
-                                size={28}
+                            <MaterialCommunityIcons
+                                name="star-circle-outline"
+                                size={30}
                                 color="#243e35"
-                                onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}
+                                onPress={() => navigation.navigate('MainStack', { screen: 'ImportantDiary' })}
                             />
                         </SetupButton>
                         <SetupButton>
-                            <MaterialCommunityIcons
-                                name="progress-star"
+                            <Feather
+                                name="plus-circle"
                                 size={28}
                                 color="#243e35"
-                                onPress={() => navigation.navigate('MainStack', { screen: 'ImportantDiary' })}
+                                onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}
                             />
                         </SetupButton>
                     </View>
@@ -320,10 +320,8 @@ const UserID = styled.Text`
     font-weight: 600;
 `;
 
-const SetupButton = styled.View``;
-
-const DrawerButton = styled.TouchableOpacity`
-    margin-left: 20px;
+const SetupButton = styled.View`
+    /* background-color: yellowgreen; */
 `;
 
 export default ProfileScreen;

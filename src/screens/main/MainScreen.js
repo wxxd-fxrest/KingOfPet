@@ -67,18 +67,18 @@ const MainScreen = ({ handleScroll, hide }) => {
                 >
                     <SetupButton>
                         <Feather
-                            name="plus-square"
-                            size={28}
-                            color="#243e35"
-                            onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}
-                        />
-                    </SetupButton>
-                    <SetupButton>
-                        <Feather
                             name="search"
                             size={28}
                             color="#243e35"
                             onPress={() => navigation.navigate('MainStack', { screen: 'Search' })}
+                        />
+                    </SetupButton>
+                    <SetupButton>
+                        <Feather
+                            name="plus-circle"
+                            size={28}
+                            color="#243e35"
+                            onPress={() => navigation.navigate('MainStack', { screen: 'NewPostStack' })}
                         />
                     </SetupButton>
                 </View>

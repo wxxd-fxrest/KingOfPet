@@ -5,12 +5,6 @@ import { Alert, ActivityIndicator, KeyboardAvoidingView, TouchableWithoutFeedbac
 import { MaterialIcons } from '@expo/vector-icons';
 import CreateQuestionScreen from './CreateQuestionScreen';
 import CreateDiaryScreen from './CreateDiaryScreen';
-import { AntDesign } from '@expo/vector-icons';
-
-// import { MaterialCommunityIcons } from '@expo/vector-icons';
-// <MaterialCommunityIcons name="message-star-outline" size={20} color="#d5d5d4" />
-// <MaterialCommunityIcons name="message-question-outline" size={20} color="#d5d5d4" />
-// <MaterialCommunityIcons name="message-bookmark-outline" size={20} color="#d5d5d4" />
 
 const CreateAllPostScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
@@ -31,10 +25,14 @@ const CreateAllPostScreen = ({ navigation }) => {
                     });
                 }
             } else if (pickerValue === 'Post') {
-                navigation.navigate('MainStack', {
-                    screen: 'CreateSelectImg',
-                    params: [pickerValue, write],
-                });
+                if (write === '') {
+                    Alert.alert('텍스트를 입력해 주세요!');
+                } else {
+                    navigation.navigate('MainStack', {
+                        screen: 'CreateSelectImg',
+                        params: [pickerValue, write],
+                    });
+                }
             }
         }
 
@@ -95,7 +93,7 @@ const CreateAllPostScreen = ({ navigation }) => {
                 </Box>
                 {/* </ScrollView> */}
                 <NextButtonBox>
-                    <Button onPress={onSubmitPasswordEditing} pickerValue={pickerValue}>
+                    <Button onPress={onSubmitPasswordEditing} write={write}>
                         {loading ? (
                             <ActivityIndicator color="white" />
                         ) : (
@@ -194,7 +192,7 @@ const NextButtonBox = styled.View`
 
 const Button = styled.TouchableOpacity`
     flex-direction: row;
-    background-color: ${({ pickerValue }) => (pickerValue !== '' && pickerValue !== '선택' ? '#243e35' : '#839891')};
+    background-color: ${({ write }) => (write !== '' ? '#243e35' : '#839891')};
     width: 100%;
     height: 50px;
     justify-content: center;

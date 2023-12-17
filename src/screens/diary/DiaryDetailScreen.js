@@ -13,7 +13,7 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
 
-    const [star, setStar] = useState(false);
+    const [star, setStar] = useState(true);
     const [currentUser, setCurrentUser] = useState([]);
     const [userData, setUserData] = useState([]);
 
@@ -51,7 +51,11 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
                 )}
 
                 <LikeButton>
-                    <MaterialIcons name={star === true ? 'star' : 'star-outline'} size={18} color="#243e35" />
+                    <MaterialCommunityIcons
+                        name={star === true ? 'star-check' : 'star-plus-outline'}
+                        size={18}
+                        color="#243e35"
+                    />
                 </LikeButton>
             </HeaderIconBox>
             <ScrollView showsVerticalScrollIndicator={false}>

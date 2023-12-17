@@ -33,8 +33,8 @@ const DiaryFeedScreen = ({ navigation, handleScroll }) => {
                                 <DiayrDate>2023.02.31</DiayrDate>
                             </DiaryDateBox>
                             <LikeBox onPress={() => setStar(!star)}>
-                                <MaterialIcons
-                                    name={item.important === true ? 'star' : 'star-outline'}
+                                <MaterialCommunityIcons
+                                    name={item.important === true ? 'star-check' : 'star-plus-outline'}
                                     size={20}
                                     color="#243e35"
                                 />

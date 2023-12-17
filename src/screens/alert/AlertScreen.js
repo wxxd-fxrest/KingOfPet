@@ -18,7 +18,14 @@ const AlertScreen = ({ navigation }) => {
                 keyExtractor={(item) => item.id + ''}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (
-                    <AlertBox>
+                    <AlertBox
+                        onPress={() =>
+                            navigation.navigate('MainStack', {
+                                screen: 'UserProfile',
+                                params: item,
+                            })
+                        }
+                    >
                         <AlertUserProfileBox>
                             <UserImageBox>
                                 <UserImg source={{ uri: item.image }} />

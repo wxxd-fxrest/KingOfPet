@@ -3,7 +3,6 @@ import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
 import postData from '../../data/postData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const ImportantDiarySceren = () => {
@@ -36,9 +35,10 @@ const ImportantDiarySceren = () => {
                                             <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
                                             <DiayrDate>2023.02.31</DiayrDate>
                                         </DiaryDateBox>
+
                                         <LikeBox onPress={() => setStar(!star)}>
-                                            <MaterialIcons
-                                                name={item.important === true ? 'star' : 'star-outline'}
+                                            <MaterialCommunityIcons
+                                                name={item.important === true ? 'star-check' : 'star-plus-outline'}
                                                 size={20}
                                                 color="#243e35"
                                             />

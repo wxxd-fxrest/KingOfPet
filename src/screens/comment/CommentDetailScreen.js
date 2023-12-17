@@ -18,6 +18,17 @@ const CommentDetailScreen = ({ navigation, route: { params } }) => {
             : null;
     }, []);
 
+    useEffect(() => {
+        navigation.setOptions({
+            headerLeft: () =>
+                Platform.OS === 'ios' ? (
+                    <BackButton onPress={() => navigation.goBack()}>
+                        <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                    </BackButton>
+                ) : null,
+        });
+    }, [navigation]);
+
     return (
         <Container>
             <KeyboardView
@@ -67,6 +78,10 @@ const CommentDetailScreen = ({ navigation, route: { params } }) => {
         </Container>
     );
 };
+
+const BackButton = styled.TouchableOpacity`
+    margin-right: 20px;
+`;
 
 const Container = styled.View`
     background-color: #f9f9f7;
