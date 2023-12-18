@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import postData from '../../data/postData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import postData from '../../data/postData';
 
 const DiaryFeedScreen = ({ navigation, handleScroll }) => {
     const [star, setStar] = useState(false);

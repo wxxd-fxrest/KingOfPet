@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
-import { MaterialIcons } from '@expo/vector-icons';
-import Swiper from 'react-native-swiper';
 import { ScrollView, View } from 'react-native';
 import Modal from 'react-native-modal';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import Swiper from 'react-native-swiper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import styled from 'styled-components';
 import CommentScreen from '../comment/CommentScreen';
+import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
     console.log('detail', params);

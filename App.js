@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
+import { REACT_GOOGLE_AUTH_KEY } from '@env';
 import auth from '@react-native-firebase/auth';
-import { Ionicons } from '@expo/vector-icons';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 import MainRoot from './src/navigation/MainRoot';
 import AuthRoot from './src/navigation/AuthRoot';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { REACT_GOOGLE_AUTH_KEY } from '@env';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import styled from 'styled-components';
 
 const Stack = createNativeStackNavigator();
 
@@ -72,15 +70,3 @@ export default function App() {
         </NavigationContainer>
     );
 }
-
-const Container = styled.View`
-    flex: 1;
-    background-color: #f9f9f7;
-`;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f9f9f7',
-    },
-});

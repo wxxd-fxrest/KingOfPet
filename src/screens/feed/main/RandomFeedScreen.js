@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { ActivityIndicator, Image, Pressable, TouchableOpacity } from 'react-native';
-import MasonryList from '@react-native-seoul/masonry-list';
+import { ActivityIndicator, Image, Pressable } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import MasonryList from '@react-native-seoul/masonry-list';
 import LinearGradient from 'react-native-linear-gradient';
+import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import postData from '../../../data/postData';
 

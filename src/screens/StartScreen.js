@@ -1,14 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Alert } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import * as KakaoLogin from '@react-native-seoul/kakao-login';
 import LogoImage from '../assets/logo.png';
 import Kakao from '../assets/kakao-talk.png';
 import Google from '../assets/social.png';
 import Email from '../assets/arroba.png';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { Alert } from 'react-native';
-import * as KakaoLogin from '@react-native-seoul/kakao-login';
 
 const StartScreen = ({ navigation }) => {
     const onGoogleSignInPress = async () => {

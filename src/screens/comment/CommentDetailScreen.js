@@ -65,9 +65,7 @@ const CommentDetailScreen = ({ navigation, route: { params } }) => {
                         returnKeyType="send"
                         maxLength={300}
                         multiline={true}
-                        onSubmitEditing={() => {
-                            // Handle submit action here
-                        }}
+                        onSubmitEditing={() => {}}
                         onChangeText={(text) => setComment(text)}
                     />
                     <SaveIcon>
@@ -97,7 +95,6 @@ const KeyboardView = styled(KeyboardAvoidingView)`
 `;
 
 const CommentContainer = styled.View`
-    /* background-color: yellowgreen; */
     flex-direction: row;
     justify-content: space-between;
     padding: 20px;

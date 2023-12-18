@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView } from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import * as ImagePicker from 'expo-image-picker';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import { styled } from 'styled-components';
 import { Feather } from '@expo/vector-icons';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import * as ImagePicker from 'expo-image-picker';
 
 const EditProfileScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);

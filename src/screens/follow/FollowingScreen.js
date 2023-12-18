@@ -16,10 +16,12 @@ const FollowingScreen = () => {
                         <UserImgBox>
                             <UserImg source={{ uri: item.image }} />
                         </UserImgBox>
+
                         <ProfilePetNameBox>
                             <ProfilePetNameTitle>상전</ProfilePetNameTitle>
                             <ProfilePetName>{item.username}</ProfilePetName>
                         </ProfilePetNameBox>
+
                         <FollowBox>
                             <Follow>Unfollow</Follow>
                         </FollowBox>

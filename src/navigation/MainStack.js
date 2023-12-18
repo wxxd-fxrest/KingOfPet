@@ -1,5 +1,5 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import styled from 'styled-components';
 import SocialLoginScreen from '../screens/auth/SocialLoginScreen';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -14,6 +14,7 @@ import FollowerScreen from '../screens/follow/FollowerScreen';
 import DiaryDetailScreen from '../screens/diary/DiaryDetailScreen';
 import SearchScreen from '../screens/search/SearchScreen';
 import ImportantDiarySceren from '../screens/diary/ImportantDiarySceren';
+import SettingScreen from '../screens/profile/SettingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,23 @@ const MainStack = ({ navigation }) => {
                         ) : null,
                 }}
             />
+
+            <Stack.Screen
+                name="Setting"
+                component={SettingScreen}
+                options={{
+                    title: '설정',
+                    headerShown: true,
+                    headerShadowVisible: false,
+                    headerLeft: () =>
+                        Platform.OS === 'ios' ? (
+                            <BackButton onPress={() => navigation.goBack()}>
+                                <MaterialIcons name="arrow-back-ios" size={22} color="#243e35" />
+                            </BackButton>
+                        ) : null,
+                }}
+            />
+
             <Stack.Screen
                 name="NewPostStack"
                 component={CreateAllPostScreen}

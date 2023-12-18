@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { FlatList } from 'react-native';
-import styled from 'styled-components';
 import postData from '../../data/postData';
+import styled from 'styled-components';
 
 const AlertScreen = ({ navigation }) => {
     useEffect(() => {

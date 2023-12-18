@@ -140,7 +140,6 @@ const LoginScreen = () => {
                         </ViewPasswordBtn>
                     </PasswordBox>
                 </ScrollView>
-
                 <JoinButton>
                     <Button onPress={onSubmitPasswordEditing}>
                         {loading ? <ActivityIndicator color="white" /> : <ButtonText> 로그인 </ButtonText>}

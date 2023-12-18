@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import { ActivityIndicator, Image, Pressable } from 'react-native';
-import MasonryList from '@react-native-seoul/masonry-list';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import MasonryList from '@react-native-seoul/masonry-list';
+import styled from 'styled-components';
 import LinearGradient from 'react-native-linear-gradient';
 import postData from '../../../data/postData';
 
