@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { FlatList, KeyboardAvoidingView } from 'react-native';
 import styled from 'styled-components';
-import postData from '../../data/postData';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import postData from '../../data/postData';
 
 const CommentScreen = ({ toggleBottomSheet, userData }) => {
     const navigation = useNavigation();
@@ -124,7 +124,6 @@ const KeyboardAvoidingBox = styled(KeyboardAvoidingView)`
 `;
 
 const CurrentUerProfile = styled.View`
-    /* background-color: tomato; */
     flex-direction: row;
     justify-content: space-between;
     align-items: center;

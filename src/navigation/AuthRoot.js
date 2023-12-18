@@ -1,19 +1,19 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
-import AuthStack from "./AuthStack";
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AuthStack from './AuthStack';
 
-const Root = createNativeStackNavigator(); 
+const Root = createNativeStackNavigator();
 
 const AuthRoot = () => {
     return (
         <Root.Navigator
             screenOptions={{
-                headerShown: false
+                headerShown: false,
             }}
         >
-            <Root.Screen name="AuthStack" component={AuthStack}/>
+            <Root.Screen name="AuthStack" component={AuthStack} />
         </Root.Navigator>
-    )
+    );
 };
 
-export default AuthRoot; 
+export default AuthRoot;

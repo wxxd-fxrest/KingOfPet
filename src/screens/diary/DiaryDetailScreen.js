@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
-import { MaterialIcons } from '@expo/vector-icons';
-import Swiper from 'react-native-swiper';
 import { ScrollView, View } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import Swiper from 'react-native-swiper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import styled from 'styled-components';
+import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 const DiaryDetailScreen = ({ navigation, route: { params } }) => {
     console.log('detail', params);
@@ -118,7 +118,6 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
                             <DiayrDate>2023.02.31</DiayrDate>
                         </DiaryDateBox>
                         <PetNameTag>
-                            {/* <UserProfileTitle>상전 </UserProfileTitle> */}
                             <PetName>{params.username}</PetName>
                             <PetMoodText> 컨디션 최고!</PetMoodText>
                         </PetNameTag>

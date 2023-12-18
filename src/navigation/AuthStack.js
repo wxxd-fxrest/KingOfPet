@@ -1,5 +1,5 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import LoginScreen from '../screens/auth/LoginScreen';
@@ -68,10 +68,6 @@ const AuthStack = ({ navigation }) => {
         </Stack.Navigator>
     );
 };
-
-const SetupButton = styled.TouchableOpacity`
-    margin-right: 20px;
-`;
 
 const BackButton = styled.TouchableOpacity`
     margin-right: 20px;

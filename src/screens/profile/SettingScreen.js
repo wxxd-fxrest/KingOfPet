@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const FollowFeedScreen = () => {
+const SettingScreen = () => {
     return (
         <Container>
-            <Title>FollowFeedScreen</Title>
+            <Title>SettingScreen</Title>
         </Container>
     );
 };
@@ -13,4 +13,4 @@ const Container = styled.View``;
 
 const Title = styled.Text``;
 
-export default FollowFeedScreen;
+export default SettingScreen;

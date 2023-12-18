@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
-import postData from '../../data/postData';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import postData from '../../data/postData';
 
 const ImportantDiarySceren = () => {
     const navigation = useNavigation();
@@ -67,10 +67,6 @@ const Container = styled.View`
     background-color: #f9f9f7;
     padding: 0px 20px;
     padding-top: 10px;
-`;
-
-const DrawerButton = styled.TouchableOpacity`
-    margin-left: 20px;
 `;
 
 const heightEmpty = styled.View`

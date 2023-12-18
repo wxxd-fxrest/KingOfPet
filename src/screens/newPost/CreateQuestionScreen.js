@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { styled } from 'styled-components';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { styled } from 'styled-components';
 
 const CreateQuestionScreen = () => {
     const [health, setHealth] = useState(false);
@@ -18,15 +18,6 @@ const CreateQuestionScreen = () => {
     const typeFirst = useRef();
     const typeSecond = useRef();
     const typeThird = useRef();
-
-    // const petTypeData =
-    //     typeFirst.current.state.checked === true
-    //         ? { type: '상' }
-    //         : typeCat.current.state.checked === true
-    //         ? { type: '중' }
-    //         : typeThird.current.state.checked === true && petType
-    //         ? { type: 하 }
-    //         : null;
 
     return (
         <Container onPress={() => keyboard.dismiss()}>
@@ -111,6 +102,7 @@ const CreateQuestionScreen = () => {
                     }}
                 />
             </QnABox>
+
             {health && (
                 <QnABox
                     health={health}

@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Alert, Text, View } from 'react-native';
 import styled from 'styled-components';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import * as KakaoLogin from '@react-native-seoul/kakao-login';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Feather } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
 import PostFeedScreen from '../feed/profile/PostFeedScreen';
 import DiaryFeedScreen from '../diary/DiaryFeedScreen';
 import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
+import { Feather } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -22,7 +23,6 @@ const ProfileScreen = ({ navigation }) => {
 
     const handleScroll = (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;
-        // 여기에 스크롤 감지 시 실행할 코드를 작성합니다.
         // console.log('Scroll OffsetY:', offsetY);
 
         if (offsetY > 0) {
@@ -76,6 +76,18 @@ const ProfileScreen = ({ navigation }) => {
                         </SetupButton>
                     </View>
                 ),
+
+                headerLeft: () => (
+                    <SettingButton>
+                        <MaterialIcons
+                            name="logout"
+                            size={28}
+                            color="#243e35"
+                            style={{ transform: [{ rotateY: '180deg' }] }}
+                            onPress={onLogOut}
+                        />
+                    </SettingButton>
+                ),
             });
         }
     }, [navigation, userData]);
@@ -113,12 +125,6 @@ const ProfileScreen = ({ navigation }) => {
 
     return (
         <Container>
-            {/* <Container>
-                <Title> profile </Title>
-                <LogoutBtn onPress={onLogOut}>
-                    <Logout> 로그아웃 </Logout>
-                </LogoutBtn>
-            </Container> */}
             {hide === true && (
                 <>
                     {userData && (
@@ -186,7 +192,6 @@ const ProfileScreen = ({ navigation }) => {
             >
                 <Tab.Screen
                     name="Post"
-                    // component={PostFeedScreen}
                     children={() => <PostFeedScreen navigation={navigation} handleScroll={handleScroll} />}
                     options={{
                         title: '게시글',
@@ -195,7 +200,6 @@ const ProfileScreen = ({ navigation }) => {
                 />
                 <Tab.Screen
                     name="Diary"
-                    // component={DiaryFeedScreen}
                     children={() => <DiaryFeedScreen navigation={navigation} handleScroll={handleScroll} />}
                     options={{
                         title: '일기',
@@ -203,7 +207,6 @@ const ProfileScreen = ({ navigation }) => {
                 />
                 <Tab.Screen
                     name="Like"
-                    // component={AllLikeFeedScreen}
                     children={() => <AllLikeFeedScreen navigation={navigation} handleScroll={handleScroll} />}
                     options={{
                         title: '도장',
@@ -320,8 +323,10 @@ const UserID = styled.Text`
     font-weight: 600;
 `;
 
-const SetupButton = styled.View`
-    /* background-color: yellowgreen; */
+const SetupButton = styled.View``;
+
+const SettingButton = styled.View`
+    margin-left: 20px;
 `;
 
 export default ProfileScreen;

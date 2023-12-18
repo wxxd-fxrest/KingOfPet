@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Text } from 'react-native';
 import styled from 'styled-components';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
 import DiaryFeedScreen from '../diary/DiaryFeedScreen';
 import PostFeedScreen from '../feed/profile/PostFeedScreen';
@@ -21,7 +21,6 @@ const UserProfileScreen = ({ navigation, route: params }) => {
 
     const handleScroll = (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;
-        // 여기에 스크롤 감지 시 실행할 코드를 작성합니다.
         // console.log('Scroll OffsetY:', offsetY);
 
         if (offsetY > 0) {
@@ -192,10 +191,6 @@ const UserID = styled.Text`
     color: #243e35;
     font-size: 18px;
     font-weight: 600;
-`;
-
-const SetupButton = styled.TouchableOpacity`
-    margin-right: 20px;
 `;
 
 const BackButton = styled.TouchableOpacity`

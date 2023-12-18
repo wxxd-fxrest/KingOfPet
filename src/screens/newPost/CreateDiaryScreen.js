@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { styled } from 'styled-components';
 import { Feather } from '@expo/vector-icons';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 const CreateDiaryScreen = () => {
     const [first, setFirst] = useState(false);
@@ -12,6 +12,7 @@ const CreateDiaryScreen = () => {
     const typeFirst = useRef();
     const typeSecond = useRef();
     const typeThird = useRef();
+
     return (
         <Container>
             <QnABox>

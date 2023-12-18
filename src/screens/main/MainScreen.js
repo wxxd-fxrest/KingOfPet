@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { Alert, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { Alert, View } from 'react-native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import RandomFeedScreen from '../feed/main/RandomFeedScreen';
 import QuestionFeedScreen from '../feed/main/QuestionFeedScreen';
 import FollowFeedScreen from '../feed/main/FollowFeedScreen';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 const Tab = createMaterialTopTabNavigator();
 

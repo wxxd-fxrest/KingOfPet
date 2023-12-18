@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import RNPickerSelect from 'react-native-picker-select';
 import { Alert, ActivityIndicator, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import RNPickerSelect from 'react-native-picker-select';
 import CreateQuestionScreen from './CreateQuestionScreen';
 import CreateDiaryScreen from './CreateDiaryScreen';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const CreateAllPostScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
@@ -65,12 +65,10 @@ const CreateAllPostScreen = ({ navigation }) => {
                         </RNPickerSelect>
                     </SelectBox>
 
-                    {/* {pickerValue === 'Post' && <CreateRandomScreen />} */}
                     {pickerValue === 'QnA' && <CreateQuestionScreen />}
                     {pickerValue === 'Diary' && <CreateDiaryScreen />}
 
                     {/* 텍스트 입력 필수로 설정 */}
-
                     {/* 카테고리 선택 후 각자 맞는 세부 사항 체크 후에 텍스트 입력창이 보이도록 수정  */}
                     {pickerValue !== '' && pickerValue !== '선택' && (
                         <WriteBox>
@@ -89,9 +87,8 @@ const CreateAllPostScreen = ({ navigation }) => {
                             />
                         </WriteBox>
                     )}
-                    {/* 일기에 경우 내용에 대한 간략한 태그(약 다섯개)필요 */}
                 </Box>
-                {/* </ScrollView> */}
+
                 <NextButtonBox>
                     <Button onPress={onSubmitPasswordEditing} write={write}>
                         {loading ? (

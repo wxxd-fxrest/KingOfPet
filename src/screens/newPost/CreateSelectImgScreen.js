@@ -174,29 +174,6 @@ const Container = styled.View`
     align-items: center;
 `;
 
-const HeaderBox = styled.View`
-    background-color: #f9f9f7;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding-top: 12%;
-    width: 100%;
-    height: 10%;
-    z-index: 10;
-`;
-
-const BackIcon = styled(MaterialIcons)`
-    left: 20px;
-    position: absolute;
-    bottom: 24%;
-`;
-
-const Title = styled.Text`
-    font-size: 16px;
-    font-weight: 600;
-    color: #343c3a;
-`;
-
 const Box = styled.View`
     width: 90%;
     height: 80%;
