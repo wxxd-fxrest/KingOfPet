@@ -171,7 +171,7 @@ const ProfileScreen = ({ navigation }) => {
                 </>
             )}
             <Tab.Navigator
-                initialRouteName="All"
+                initialRouteName="Diary"
                 screenOptions={{
                     tabBarActiveTintColor: '#243e35',
                     tabBarInactiveTintColor: 'rgba(36, 62, 53, 0.5)',

@@ -106,7 +106,7 @@ const RandomCard = ({ item, index, navigation }) => {
                     }}
                 />
                 <Image
-                    source={{ uri: item.image }}
+                    source={{ uri: item.images[1] }}
                     isEven={isEven}
                     resizeMode="cover"
                     style={{

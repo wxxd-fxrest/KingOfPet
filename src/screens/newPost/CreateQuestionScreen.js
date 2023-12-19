@@ -2,22 +2,14 @@ import React, { useRef, useState } from 'react';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { styled } from 'styled-components';
 
-const CreateQuestionScreen = () => {
+const CreateQuestionScreen = ({ typeHealth, typeLife, typeEtc, typeFirst, typeSecond, typeThird }) => {
     const [health, setHealth] = useState(false);
     const [life, setLife] = useState(true);
     const [etc, setEtc] = useState(false);
 
-    const typeHealth = useRef();
-    const typeLife = useRef();
-    const typeEtc = useRef();
-
     const [first, setFirst] = useState(false);
     const [second, setSecond] = useState(true);
     const [third, setThird] = useState(false);
-
-    const typeFirst = useRef();
-    const typeSecond = useRef();
-    const typeThird = useRef();
 
     return (
         <Container onPress={() => keyboard.dismiss()}>
@@ -43,7 +35,7 @@ const CreateQuestionScreen = () => {
                             }
                             if (typeEtc.current.state.checked === true) {
                                 typeEtc.current.onPress();
-                                setEtc(false);
+                                // setEtc(false);
                             }
                             setHealth(true);
                         } else if (typeHealth.current.state.checked === false) {
@@ -71,10 +63,14 @@ const CreateQuestionScreen = () => {
                             }
                             if (typeEtc.current.state.checked === true) {
                                 typeEtc.current.onPress();
-                                setEtc(false);
+                                // setEtc(false);
                             }
-                            setLife(!second);
+                            setLife(true);
+                        } else if (typeLife.current.state.checked === false) {
+                            setLife(false);
                         }
+                        console.log('typeLife', typeLife.current.state.checked);
+                        console.log('life', life);
                     }}
                 />
                 <PetCheckBox
@@ -97,8 +93,11 @@ const CreateQuestionScreen = () => {
                             if (typeLife.current.state.checked === true) {
                                 typeLife.current.onPress();
                             }
-                            setEtc(!third);
+                            setEtc(true);
+                        } else if (typeEtc.current.state.checked === false) {
+                            setEtc(false);
                         }
+                        console.log('typeEtc', typeEtc.current.state.checked);
                     }}
                 />
             </QnABox>
@@ -132,7 +131,7 @@ const CreateQuestionScreen = () => {
                                     }
                                     if (typeThird.current.state.checked === true) {
                                         typeThird.current.onPress();
-                                        setThird(false);
+                                        // setThird(false);
                                     }
                                     setFirst(!first);
                                 }
@@ -158,7 +157,7 @@ const CreateQuestionScreen = () => {
                                     }
                                     if (typeThird.current.state.checked === true) {
                                         typeThird.current.onPress();
-                                        setThird(false);
+                                        // setThird(false);
                                     }
                                     setSecond(!second);
                                 }

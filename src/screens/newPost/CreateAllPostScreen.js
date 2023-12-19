@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Alert, ActivityIndicator, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -10,18 +10,71 @@ const CreateAllPostScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const [pickerValue, setPickerValue] = useState('');
     const [write, setWrite] = useState('');
+    const [significant, setSignificant] = useState('');
+
+    const typeHealth = useRef();
+    const typeLife = useRef();
+    const typeEtc = useRef();
+
+    const typeFirst = useRef();
+    const typeSecond = useRef();
+    const typeThird = useRef();
 
     const onSubmitPasswordEditing = async () => {
         if (pickerValue === '' || pickerValue === '선택') {
             Alert.alert('카테고리를 선택해 주세요!');
         } else {
-            if (pickerValue === 'Diary' || pickerValue === 'QnA') {
+            if (pickerValue === 'QnA') {
                 if (write === '') {
                     Alert.alert('텍스트를 입력해 주세요!');
                 } else {
+                    const QnAType =
+                        typeHealth.current.state.checked === true
+                            ? { type: '건강' }
+                            : typeLife.current.state.checked === true
+                            ? { type: '생활' }
+                            : typeEtc.current.state.checked === true
+                            ? { type: '기타' }
+                            : null;
+
+                    let healthType;
+                    if (typeHealth.current.state.checked === true) {
+                        healthType =
+                            typeFirst.current.state.checked === true
+                                ? { type: '상' }
+                                : typeSecond.current.state.checked === true
+                                ? { type: '중' }
+                                : typeThird.current.state.checked === true
+                                ? { type: '하' }
+                                : null;
+                    }
+
                     navigation.navigate('MainStack', {
                         screen: 'CreateSelectImg',
-                        params: [pickerValue, write],
+                        params: [
+                            pickerValue,
+                            write,
+                            { QnAType: QnAType },
+                            { healthType: healthType ? healthType : 'null' },
+                        ],
+                    });
+                }
+            }
+            if (pickerValue === 'Diary') {
+                if (write === '') {
+                    Alert.alert('텍스트를 입력해 주세요!');
+                } else {
+                    const conditionType =
+                        typeFirst.current.state.checked === true
+                            ? { type: '상' }
+                            : typeSecond.current.state.checked === true
+                            ? { type: '중' }
+                            : typeThird.current.state.checked === true
+                            ? { type: '하' }
+                            : null;
+                    navigation.navigate('MainStack', {
+                        screen: 'CreateSelectImg',
+                        params: [pickerValue, write, { condition: conditionType }, { significant: significant }],
                     });
                 }
             } else if (pickerValue === 'Post') {
@@ -65,8 +118,25 @@ const CreateAllPostScreen = ({ navigation }) => {
                         </RNPickerSelect>
                     </SelectBox>
 
-                    {pickerValue === 'QnA' && <CreateQuestionScreen />}
-                    {pickerValue === 'Diary' && <CreateDiaryScreen />}
+                    {pickerValue === 'QnA' && (
+                        <CreateQuestionScreen
+                            typeHealth={typeHealth}
+                            typeLife={typeLife}
+                            typeEtc={typeEtc}
+                            typeFirst={typeFirst}
+                            typeSecond={typeSecond}
+                            typeThird={typeThird}
+                        />
+                    )}
+                    {pickerValue === 'Diary' && (
+                        <CreateDiaryScreen
+                            typeFirst={typeFirst}
+                            typeSecond={typeSecond}
+                            typeThird={typeThird}
+                            significant={significant}
+                            setSignificant={setSignificant}
+                        />
+                    )}
 
                     {/* 텍스트 입력 필수로 설정 */}
                     {/* 카테고리 선택 후 각자 맞는 세부 사항 체크 후에 텍스트 입력창이 보이도록 수정  */}
@@ -82,7 +152,6 @@ const CreateAllPostScreen = ({ navigation }) => {
                                 returnKeyType="next"
                                 maxLength={300}
                                 multiline={true}
-                                // onSubmitEditing={}
                                 onChangeText={(text) => setWrite(text)}
                             />
                         </WriteBox>

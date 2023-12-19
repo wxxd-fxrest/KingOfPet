@@ -3,15 +3,10 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { styled } from 'styled-components';
 import { Feather } from '@expo/vector-icons';
 
-const CreateDiaryScreen = () => {
+const CreateDiaryScreen = ({ typeFirst, typeSecond, typeThird, significant, setSignificant }) => {
     const [first, setFirst] = useState(false);
     const [second, setSecond] = useState(true);
     const [third, setThird] = useState(false);
-    const [significant, setSignificant] = useState('');
-
-    const typeFirst = useRef();
-    const typeSecond = useRef();
-    const typeThird = useRef();
 
     return (
         <Container>
@@ -110,7 +105,6 @@ const CreateDiaryScreen = () => {
                         placeholderTextColor="grey"
                         returnKeyType="done"
                         maxLength={20}
-                        // onSubmitEditing={onSubmitPasswordEditing}
                         onChangeText={(text) => {
                             setSignificant(text);
                         }}
@@ -132,14 +126,6 @@ const CreateDiaryScreen = () => {
 const Container = styled.View`
     justify-content: center;
     align-items: center;
-`;
-
-const DiaryTitle = styled.Text`
-    color: #636362;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    padding: 0px 6px;
 `;
 
 const QnABox = styled.View`

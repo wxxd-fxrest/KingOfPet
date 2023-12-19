@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import { Alert, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import postData from '../../data/postData';
 
 const CreateSelectImgScreen = ({ navigation, route: params }) => {
-    console.log('category', params);
-
+    let TextData = params.params;
+    // console.log('category', params.params);
     const [loading, setLoading] = useState(false);
+    const [currentUser, setCurrentUser] = useState([]);
+
     const [imageUrl, setImageUrl] = useState('');
     const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     const [saveImgUrl, setSaveImgUrl] = useState('');
+
+    useEffect(() => {
+        setCurrentUser(auth().currentUser);
+        // console.log('profile', currentUser);
+    }, [currentUser]);
 
     const [totalImg, setTotalImg] = useState([
         {
@@ -21,6 +32,78 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
             url: '',
         },
     ]);
+
+    const onSubmitPasswordEditing = async () => {
+        if (loading) {
+            return;
+        }
+        const filteredArray = totalImg.filter((item) => item.id !== 'select');
+
+        if (TextData[0] === 'QnA') {
+            firestore()
+                .collection('Posts')
+                .add({
+                    type: TextData[0],
+                    text: TextData[1],
+                    QnAType: TextData[2].QnAType,
+                    healthType: TextData[3].healthType !== undefined ? '' : TextData[3].healthType,
+                    image: filteredArray,
+                    useremail: currentUser.email,
+                    orderBy: new Date(),
+                    like: [],
+                })
+                .then(() => {
+                    console.log('User added!');
+                    navigation.navigate('MainTab', {
+                        screen: 'Main',
+                    });
+                });
+        } else if (filteredArray.length > 0) {
+            if (TextData[0] === 'Post') {
+                firestore()
+                    .collection('Posts')
+                    .add({
+                        type: TextData[0],
+                        text: TextData[1],
+                        image: filteredArray,
+                        useremail: currentUser.email,
+                        orderBy: new Date(),
+                        like: [],
+                    })
+                    .then(() => {
+                        console.log('User added!');
+                        navigation.navigate('MainTab', {
+                            screen: 'Main',
+                        });
+                    });
+            }
+
+            if (TextData[0] === 'Diary') {
+                firestore()
+                    .collection('Users')
+                    .doc(`${currentUser.email}`)
+                    .collection('Diary')
+                    .add({
+                        type: TextData[0],
+                        text: TextData[1],
+                        condition: TextData[2].condition,
+                        significant: TextData[3].significant ? TextData[3].significant : '특이사항이 없습니다.',
+                        image: filteredArray,
+                        useremail: currentUser.email,
+                        orderBy: new Date(),
+                        like: [],
+                    })
+                    .then(() => {
+                        console.log('User added!');
+                        navigation.navigate('MainTab', {
+                            screen: 'MyProfile',
+                        });
+                    });
+            }
+        } else {
+            Alert.alert('이미지를 선택해 주세요.');
+        }
+    };
 
     useEffect(() => {
         const uploadImage = async () => {
@@ -35,6 +118,7 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
                 const IMG_URL = await reference.getDownloadURL();
                 // console.log('IMG_URL', IMG_URL);
                 setSaveImgUrl(IMG_URL);
+
                 setTotalImg([{ id: asset.assetId, url: IMG_URL }, ...totalImg]);
                 console.log(totalImg);
                 setImageUrl('');
@@ -45,7 +129,7 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
                 setLoading(false);
             }
         };
-        console.log(totalImg);
+        // console.log(totalImg);
 
         uploadImage(); // 이미지 업로드 실행
     }, [imageUrl]); // imageUrl이 변경될 때마다 실행
@@ -124,12 +208,6 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
                 </ImageSelectBox>
             </ImageContainer>
         );
-    };
-
-    const onSubmitPasswordEditing = async () => {
-        if (loading) {
-            return;
-        }
     };
 
     return (
