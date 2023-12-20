@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, Image, Pressable } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, Pressable, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import MasonryList from '@react-native-seoul/masonry-list';
 import LinearGradient from 'react-native-linear-gradient';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
-import postData from '../../../data/postData';
+import EmptyImg from '../../../assets/logo.png';
 
 const RandomFeedScreen = ({ navigation, handleScroll }) => {
+    const [data, setData] = useState([]);
+
     // 랜덤한 dimensions 값을 생성하는 함수
     const generateRandomDimensions = () => {
         const width = Math.floor(Math.random() * 200) + 100; // 최소 100, 최대 300
@@ -15,18 +19,43 @@ const RandomFeedScreen = ({ navigation, handleScroll }) => {
         return { width, height };
     };
 
-    const [dataWithDimensions, setDataWithDimensions] = useState(() =>
-        postData.map((item) => ({
-            ...item,
-            dimensions: generateRandomDimensions(),
-        }))
-    );
+    const [dataWithDimensions, setDataWithDimensions] = useState([]);
+
+    useEffect(() => {
+        const subscriber = firestore()
+            .collection('Posts')
+            .orderBy('orderBy', 'desc')
+            .onSnapshot((documentSnapshot) => {
+                let feedArray = [];
+                documentSnapshot.forEach((doc) => {
+                    feedArray.push({
+                        DocID: doc.id,
+                        Data: doc.data(),
+                    });
+                });
+                setData(feedArray);
+            });
+
+        return () => subscriber();
+    }, []);
+
+    useEffect(() => {
+        setDataWithDimensions(
+            data.map((item) => ({
+                ...item,
+                dimensions: generateRandomDimensions(),
+            }))
+        );
+    }, [data]);
+
+    // console.log('dataWithDimensions', dataWithDimensions);
+    // console.log('postData', postData);
 
     return (
         <Container>
             {dataWithDimensions.length === 0 ? (
                 <LoadingContainer>
-                    <ActivityIndicator color="red" />
+                    <ActivityIndicator color="#243e35" />
                 </LoadingContainer>
             ) : (
                 <MasonryList
@@ -61,6 +90,23 @@ export default RandomFeedScreen;
 
 const RandomCard = ({ item, index, navigation }) => {
     const isEven = index % 2 === 0;
+    const [userData, setUserData] = useState([]);
+
+    useEffect(() => {
+        firestore()
+            .collection('Users')
+            .doc(`${item.Data.useremail}`)
+            .onSnapshot((documentSnapshot) => {
+                setUserData(documentSnapshot.data());
+                // console.log('profile User data: ', documentSnapshot.data());
+            });
+    }, []);
+    // console.log('item', item.Data.like);
+
+    let totalLike;
+    if (item.Data) {
+        totalLike = item.Data.like;
+    }
 
     return (
         <AnimatedContainer
@@ -72,7 +118,7 @@ const RandomCard = ({ item, index, navigation }) => {
                 marginBottom: isEven ? 4 : 4,
             }}
         >
-            {item.qna_boolen === true && (
+            {item.Data.type === 'QnA' && (
                 <QnABox>
                     <QnABoolen>Q&A</QnABoolen>
                 </QnABox>
@@ -93,7 +139,7 @@ const RandomCard = ({ item, index, navigation }) => {
                 }
             >
                 <FeedDetail numberOfLines={3} ellipsizeMode="tail">
-                    {item.description}
+                    {item.Data.text}
                 </FeedDetail>
                 <LinearGradientBox
                     start={{ x: 0, y: 0 }}
@@ -106,7 +152,7 @@ const RandomCard = ({ item, index, navigation }) => {
                     }}
                 />
                 <Image
-                    source={{ uri: item.images[1] }}
+                    source={{ uri: item.Data.image[0].url || EmptyImg }}
                     isEven={isEven}
                     resizeMode="cover"
                     style={{
@@ -117,29 +163,32 @@ const RandomCard = ({ item, index, navigation }) => {
                 />
             </Pressable>
 
-            {item.qna_boolen === false && (
+            {item.Data.type === 'Post' && (
                 <TotalLikeBox>
                     <IconBox>
                         <MaterialIcons name="pets" size={12} color="rgba(249, 19, 0, 0.8)" />
                     </IconBox>
                     <TotalLike numberOfLines={1} ellipsizeMode="tail">
-                        {item.totalLike}
+                        {totalLike.length <= 0 ? 0 : totalLike.length}
                     </TotalLike>
                 </TotalLikeBox>
             )}
-            <PetNameTag
-                onPress={() => {
-                    navigation.navigate('MainStack', {
-                        screen: 'UserProfile',
-                        params: item,
-                    });
-                }}
-            >
-                <PetImageBox>
-                    <PetImage source={{ uri: item.userimg }} />
-                </PetImageBox>
-                <UserName>{item.username}</UserName>
-            </PetNameTag>
+
+            {item.Data.useremail === userData.email && (
+                <PetNameTag
+                    onPress={() => {
+                        navigation.navigate('MainStack', {
+                            screen: 'UserProfile',
+                            params: userData,
+                        });
+                    }}
+                >
+                    <PetImageBox>
+                        <PetImage source={{ uri: userData.petimage }} />
+                    </PetImageBox>
+                    <UserName>{userData.petname}</UserName>
+                </PetNameTag>
+            )}
         </AnimatedContainer>
     );
 };

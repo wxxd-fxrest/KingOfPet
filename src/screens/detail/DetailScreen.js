@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import Swiper from 'react-native-swiper';
 import auth from '@react-native-firebase/auth';
@@ -9,20 +9,26 @@ import CommentScreen from '../comment/CommentScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import EmptyImg from '../../assets/logo.png';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
-    console.log('detail', params);
+    let detailData;
+    if (params) {
+        detailData = params.Data;
+    }
+
+    console.log('detailData', detailData.useremail);
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
     const [currentUser, setCurrentUser] = useState([]);
     const [userData, setUserData] = useState([]);
 
     useEffect(() => {
-        setCurrentUser(auth().currentUser);
+        // setCurrentUser(auth().currentUser);
         // console.log('profile', currentUser);
         firestore()
             .collection('Users')
-            .doc(`${currentUser.email}`)
+            .doc(`${detailData.useremail}`)
             .onSnapshot((documentSnapshot) => {
                 setUserData(documentSnapshot.data());
                 console.log('profile User data: ', documentSnapshot.data());
@@ -56,7 +62,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                     </BackButton>
                 )}
 
-                {params.qna_boolen === false ? (
+                {detailData.type === 'Post' ? (
                     <LikeButton>
                         <MaterialIcons name="pets" size={18} color="rgba(249, 19, 0, 0.8)" />
                     </LikeButton>
@@ -102,48 +108,41 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                             />
                         }
                     >
-                        {params.images.map((item, i) => (
-                            <BannerContainer
-                                key={i}
-                                activeOpacity={0.9}
-                                onPress={() => {
-                                    navigation.navigate('NovelStack', { screen: 'NovelIndex', params: item });
-                                }}
-                            >
-                                <BannerImage source={{ uri: item }} />
+                        {detailData.image.map((item, i) => (
+                            <BannerContainer key={i} activeOpacity={0.9}>
+                                <BannerImage source={{ uri: item.url || EmptyImg }} />
                             </BannerContainer>
                         ))}
                     </Swiper>
                 </SwiperBox>
                 <UserProfileBox>
-                    <UerProfileImageBox
+                    <TouchableOpacity
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}
                         onPress={() => {
                             navigation.navigate('MainStack', {
                                 screen: 'UserProfile',
-                                params: params,
+                                params: userData,
                             });
                         }}
                     >
-                        <UserProfileImg source={{ uri: params.image }} />
-                    </UerProfileImageBox>
-                    <UserProfileNameTag
-                        onPress={() => {
-                            navigation.navigate('MainStack', {
-                                screen: 'UserProfile',
-                                params: params,
-                            });
-                        }}
-                    >
-                        <UserProfileTitle>옆집 상전</UserProfileTitle>
-                        <UserProfileName>{params.username}</UserProfileName>
-                    </UserProfileNameTag>
+                        <UerProfileImageBox>
+                            <UserProfileImg source={{ uri: userData.petimage }} />
+                        </UerProfileImageBox>
+                        <UserProfileNameTag>
+                            <UserProfileTitle>옆집 상전</UserProfileTitle>
+                            <UserProfileName>{userData.petname}</UserProfileName>
+                        </UserProfileNameTag>
+                    </TouchableOpacity>
                     <FollowBox>
                         <Follow>Follow</Follow>
                     </FollowBox>
                 </UserProfileBox>
 
                 <DetailBox>
-                    <Detail>{params.description}</Detail>
+                    <Detail>{detailData.text}</Detail>
                 </DetailBox>
             </ScrollView>
 
@@ -221,7 +220,7 @@ const SwiperBox = styled.View`
         : ''}
 `;
 
-const BannerContainer = styled.TouchableOpacity`
+const BannerContainer = styled.View`
     justify-content: center;
     align-items: center;
 `;
@@ -239,7 +238,7 @@ const UserProfileBox = styled.View`
     align-items: center;
 `;
 
-const UerProfileImageBox = styled.TouchableOpacity``;
+const UerProfileImageBox = styled.View``;
 
 const UserProfileImg = styled.Image`
     width: 50px;
@@ -248,7 +247,7 @@ const UserProfileImg = styled.Image`
     margin-right: 16px;
 `;
 
-const UserProfileNameTag = styled.TouchableOpacity``;
+const UserProfileNameTag = styled.View``;
 
 const UserProfileTitle = styled.Text`
     margin-bottom: 4px;
@@ -281,6 +280,7 @@ const Follow = styled.Text`
 
 const DetailBox = styled.View`
     padding: 10px 20px;
+    margin-top: 3%;
 `;
 
 const Detail = styled.Text`

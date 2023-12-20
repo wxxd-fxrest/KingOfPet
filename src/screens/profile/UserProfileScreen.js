@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Text } from 'react-native';
 import styled from 'styled-components';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
 import DiaryFeedScreen from '../diary/DiaryFeedScreen';
 import PostFeedScreen from '../feed/profile/PostFeedScreen';
@@ -12,12 +10,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 const Tab = createMaterialTopTabNavigator();
 
 const UserProfileScreen = ({ navigation, route: params }) => {
-    const [currentUser, setCurrentUser] = useState([]);
-    const [userData, setUserData] = useState([]);
     const [hide, setHide] = useState(true);
 
     let userdata = params.params;
-    console.log('params', params);
+    console.log('user params', userdata);
 
     const handleScroll = (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;
@@ -30,22 +26,10 @@ const UserProfileScreen = ({ navigation, route: params }) => {
         }
     };
 
-    // useEffect(() => {
-    //     setCurrentUser(auth().currentUser);
-    //     // console.log('profile', currentUser);
-    //     firestore()
-    //         .collection('Users')
-    //         .doc(`${currentUser.email}`)
-    //         .onSnapshot((documentSnapshot) => {
-    //             setUserData(documentSnapshot.data());
-    //             console.log('profile User data: ', documentSnapshot.data());
-    //         });
-    // }, [currentUser]);
-
     useEffect(() => {
-        if (userData) {
+        if (userdata) {
             navigation.setOptions({
-                headerTitle: () => <UserID>{userdata.username}</UserID>,
+                headerTitle: () => <UserID>{userdata.userid}</UserID>,
                 headerLeft: () =>
                     Platform.OS === 'ios' ? (
                         <BackButton onPress={() => navigation.goBack()}>
@@ -54,7 +38,7 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                     ) : null,
             });
         }
-    }, [navigation, userData]);
+    }, [navigation]);
 
     return (
         <Container>
@@ -63,12 +47,12 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                     {userdata && (
                         <ProfileBox>
                             <ProfilePetImgBox>
-                                <ProfilePetImg source={{ uri: userdata.image }} />
+                                <ProfilePetImg source={{ uri: userdata.petimage }} />
                             </ProfilePetImgBox>
                             <ProfilePetNameBox>
                                 <ProfilePetNameTitle>상전</ProfilePetNameTitle>
                                 <ProfilePetName>
-                                    {params.params.username}
+                                    {userdata.petname}
                                     <Text
                                         style={{
                                             fontSize: 12,
