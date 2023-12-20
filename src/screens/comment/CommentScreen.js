@@ -1,14 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import postData from '../../data/postData';
+import EmptyImg from '../../assets/logo.png';
 
-const CommentScreen = ({ toggleBottomSheet, userData }) => {
+const CommentScreen = ({ toggleBottomSheet }) => {
     const navigation = useNavigation();
     const [comment, setComment] = useState('');
+    const [currentUser, setCurrentUser] = useState([]);
+    const [userData, setUserData] = useState([]);
+
+    useEffect(() => {
+        setCurrentUser(auth().currentUser);
+        // console.log('profile', currentUser);
+        firestore()
+            .collection('Users')
+            .doc(`${currentUser.email}`)
+            .onSnapshot((documentSnapshot) => {
+                setUserData(documentSnapshot.data());
+                console.log('profile User data: ', documentSnapshot.data());
+            });
+    }, [currentUser]);
 
     return (
         <Container>
@@ -18,7 +35,7 @@ const CommentScreen = ({ toggleBottomSheet, userData }) => {
             <KeyboardAvoidingBox behavior={Platform.select({ ios: 'position', android: 'height' })}>
                 <CurrentUerProfile>
                     <CurrentUserImgBox>
-                        <CurrentUserProfileImg source={{ uri: userData.petimage }} />
+                        <CurrentUserProfileImg source={userData && { uri: userData.petimage || EmptyImg }} />
                     </CurrentUserImgBox>
                     <CommentInputBox>
                         <CommentInput
