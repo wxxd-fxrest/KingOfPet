@@ -12,12 +12,14 @@ import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ postData }) => {
+    const navigation = useNavigation();
     const [currentUser, setCurrentUser] = useState([]);
-    const [userData, setUserData] = useState([]);
+    const [currentUserData, setCurrentUserData] = useState([]);
 
     const [hide, setHide] = useState(true);
 
@@ -39,15 +41,15 @@ const ProfileScreen = ({ navigation }) => {
             .collection('Users')
             .doc(`${currentUser.email}`)
             .onSnapshot((documentSnapshot) => {
-                setUserData(documentSnapshot.data());
+                setCurrentUserData(documentSnapshot.data());
                 console.log('profile User data: ', documentSnapshot.data());
             });
     }, [currentUser]);
 
     useEffect(() => {
-        if (userData) {
+        if (currentUserData) {
             navigation.setOptions({
-                headerTitle: () => <UserID>{userData.userid}</UserID>,
+                headerTitle: () => <UserID>{currentUserData.userid}</UserID>,
                 headerRight: () => (
                     <View
                         style={{
@@ -90,7 +92,7 @@ const ProfileScreen = ({ navigation }) => {
                 ),
             });
         }
-    }, [navigation, userData]);
+    }, [navigation, currentUserData]);
 
     const onLogOut = () => {
         Alert.alert(
@@ -105,10 +107,10 @@ const ProfileScreen = ({ navigation }) => {
                 {
                     text: 'Yes',
                     onPress: async () => {
-                        if (userData.signType === 'Google' || userData.signType === 'Email') {
+                        if (currentUserData.signType === 'Google' || currentUserData.signType === 'Email') {
                             auth().signOut();
                             console.log('firebase logout message');
-                        } else if (userData.signType === 'KaKao') {
+                        } else if (currentUserData.signType === 'KaKao') {
                             const message = await KakaoLogin.logout();
                             console.log('kakao logout message', message);
                             auth().signOut();
@@ -127,10 +129,10 @@ const ProfileScreen = ({ navigation }) => {
         <Container>
             {hide === true && (
                 <>
-                    {userData && (
+                    {currentUserData && (
                         <ProfileBox>
                             <ProfilePetImgBox>
-                                <ProfilePetImg source={{ uri: userData.petimage }} />
+                                <ProfilePetImg source={{ uri: currentUserData.petimage }} />
                                 <ImageEditBtn
                                     onPress={() => navigation.navigate('MainStack', { screen: 'EditProfile' })}
                                 >
@@ -141,7 +143,7 @@ const ProfileScreen = ({ navigation }) => {
                                 <ProfilePetNameBox>
                                     <ProfilePetNameTitle>상전</ProfilePetNameTitle>
                                     <ProfilePetName>
-                                        {userData.petname}
+                                        {currentUserData.petname}
                                         <Text
                                             style={{
                                                 fontSize: 12,
@@ -171,7 +173,7 @@ const ProfileScreen = ({ navigation }) => {
                 </>
             )}
             <Tab.Navigator
-                initialRouteName="Diary"
+                initialRouteName="Post"
                 screenOptions={{
                     tabBarActiveTintColor: '#243e35',
                     tabBarInactiveTintColor: 'rgba(36, 62, 53, 0.5)',
@@ -192,7 +194,14 @@ const ProfileScreen = ({ navigation }) => {
             >
                 <Tab.Screen
                     name="Post"
-                    children={() => <PostFeedScreen navigation={navigation} handleScroll={handleScroll} />}
+                    children={() => (
+                        <PostFeedScreen
+                            navigation={navigation}
+                            handleScroll={handleScroll}
+                            currentUserData={currentUserData}
+                            postData={postData}
+                        />
+                    )}
                     options={{
                         title: '게시글',
                         unmountOnBlur: true,
@@ -200,7 +209,13 @@ const ProfileScreen = ({ navigation }) => {
                 />
                 <Tab.Screen
                     name="Diary"
-                    children={() => <DiaryFeedScreen navigation={navigation} handleScroll={handleScroll} />}
+                    children={() => (
+                        <DiaryFeedScreen
+                            navigation={navigation}
+                            handleScroll={handleScroll}
+                            currentUserData={currentUserData}
+                        />
+                    )}
                     options={{
                         title: '일기',
                     }}

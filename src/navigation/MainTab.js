@@ -10,7 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
-const MainTab = ({ handleScroll, hide }) => {
+const MainTab = ({ handleScroll, hide, postData }) => {
     return (
         <Tab.Navigator
             initialRouteName="Main"
@@ -43,7 +43,7 @@ const MainTab = ({ handleScroll, hide }) => {
 
             <Tab.Screen
                 name="Main"
-                children={() => <MainScreen handleScroll={handleScroll} hide={hide} />}
+                children={() => <MainScreen handleScroll={handleScroll} hide={hide} postData={postData} />}
                 options={{
                     title: '홈',
                     headerShown: hide,
@@ -56,7 +56,7 @@ const MainTab = ({ handleScroll, hide }) => {
 
             <Tab.Screen
                 name="MyProfile"
-                component={ProfileScreen}
+                children={() => <ProfileScreen postData={postData} />}
                 options={{
                     title: '프로필',
                     headerShown: true,

@@ -9,9 +9,7 @@ import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import EmptyImg from '../../../assets/logo.png';
 
-const RandomFeedScreen = ({ navigation, handleScroll }) => {
-    const [data, setData] = useState([]);
-
+const RandomFeedScreen = ({ navigation, handleScroll, postData }) => {
     // 랜덤한 dimensions 값을 생성하는 함수
     const generateRandomDimensions = () => {
         const width = Math.floor(Math.random() * 200) + 100; // 최소 100, 최대 300
@@ -22,31 +20,13 @@ const RandomFeedScreen = ({ navigation, handleScroll }) => {
     const [dataWithDimensions, setDataWithDimensions] = useState([]);
 
     useEffect(() => {
-        const subscriber = firestore()
-            .collection('Posts')
-            .orderBy('orderBy', 'desc')
-            .onSnapshot((documentSnapshot) => {
-                let feedArray = [];
-                documentSnapshot.forEach((doc) => {
-                    feedArray.push({
-                        DocID: doc.id,
-                        Data: doc.data(),
-                    });
-                });
-                setData(feedArray);
-            });
-
-        return () => subscriber();
-    }, []);
-
-    useEffect(() => {
         setDataWithDimensions(
-            data.map((item) => ({
+            postData.map((item) => ({
                 ...item,
                 dimensions: generateRandomDimensions(),
             }))
         );
-    }, [data]);
+    }, [postData]);
 
     // console.log('dataWithDimensions', dataWithDimensions);
     // console.log('postData', postData);
@@ -91,6 +71,12 @@ export default RandomFeedScreen;
 const RandomCard = ({ item, index, navigation }) => {
     const isEven = index % 2 === 0;
     const [userData, setUserData] = useState([]);
+    const [currentUser, setCurrentUser] = useState([]);
+
+    useEffect(() => {
+        setCurrentUser(auth().currentUser);
+        console.log('main', currentUser);
+    }, [currentUser]);
 
     useEffect(() => {
         firestore()
@@ -177,10 +163,20 @@ const RandomCard = ({ item, index, navigation }) => {
             {item.Data.useremail === userData.email && (
                 <PetNameTag
                     onPress={() => {
-                        navigation.navigate('MainStack', {
-                            screen: 'UserProfile',
-                            params: userData,
-                        });
+                        <>
+                            {currentUser.email === userData.email
+                                ? navigation.navigate('MainTab', {
+                                      screen: 'MyProfile',
+                                  })
+                                : navigation.navigate('MainStack', {
+                                      screen: 'UserProfile',
+                                      params: userData,
+                                  })}
+                        </>;
+                        // navigation.navigate('MainStack', {
+                        //     screen: 'UserProfile',
+                        //     params: { ...userData },
+                        // });
                     }}
                 >
                     <PetImageBox>

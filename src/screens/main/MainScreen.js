@@ -13,7 +13,7 @@ import { Feather } from '@expo/vector-icons';
 
 const Tab = createMaterialTopTabNavigator();
 
-const MainScreen = ({ handleScroll, hide }) => {
+const MainScreen = ({ handleScroll, hide, postData }) => {
     const navigation = useNavigation();
     const [currentUser, setCurrentUser] = useState([]);
     const [loginUserData, setLoginUserData] = useState([]);
@@ -31,7 +31,7 @@ const MainScreen = ({ handleScroll, hide }) => {
                 .onSnapshot((documentSnapshot) => {
                     const userData = documentSnapshot.data();
                     setLoginUserData(userData);
-                    console.log('User data: ', userData);
+                    // console.log('User data: ', userData);
 
                     if (userData.createprofile === false) {
                         Alert.alert('프로필이 미완성 상태입니다.', '프로필 수정을 통해 프로필을 완성해 주세요!', [
@@ -110,7 +110,9 @@ const MainScreen = ({ handleScroll, hide }) => {
             >
                 <Tab.Screen
                     name="All"
-                    children={() => <RandomFeedScreen navigation={navigation} handleScroll={handleScroll} />}
+                    children={() => (
+                        <RandomFeedScreen navigation={navigation} handleScroll={handleScroll} postData={postData} />
+                    )}
                     options={{
                         title: '전체',
                         unmountOnBlur: true,
@@ -125,7 +127,9 @@ const MainScreen = ({ handleScroll, hide }) => {
                 />
                 <Tab.Screen
                     name="QnA"
-                    children={() => <QuestionFeedScreen navigation={navigation} handleScroll={handleScroll} />}
+                    children={() => (
+                        <QuestionFeedScreen navigation={navigation} handleScroll={handleScroll} postData={postData} />
+                    )}
                     options={{
                         title: '질문',
                         unmountOnBlur: true,

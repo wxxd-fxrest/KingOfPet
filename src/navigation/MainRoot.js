@@ -5,15 +5,18 @@ import MainTab from './MainTab';
 
 const Root = createNativeStackNavigator();
 
-const MainRoot = ({ handleScroll, hide }) => {
+const MainRoot = ({ handleScroll, hide, postData }) => {
     return (
         <Root.Navigator
             screenOptions={{
                 headerShown: false,
             }}
         >
-            <Root.Screen name="MainTab" children={() => <MainTab handleScroll={handleScroll} hide={hide} />} />
-            <Root.Screen name="MainStack" component={MainStack} />
+            <Root.Screen
+                name="MainTab"
+                children={() => <MainTab handleScroll={handleScroll} hide={hide} postData={postData} />}
+            />
+            <Root.Screen name="MainStack" children={() => <MainStack postData={postData} />} />
         </Root.Navigator>
     );
 };
