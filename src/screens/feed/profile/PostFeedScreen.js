@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Pressable } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
-import postData from '../../../data/postData';
+import EmptyImg from '../../../assets/logo.png';
 
-const PostFeedScreen = ({ navigation, handleScroll }) => {
+const PostFeedScreen = ({ navigation, handleScroll, postData }) => {
     // 랜덤한 dimensions 값을 생성하는 함수
     const generateRandomDimensions = () => {
         const width = Math.floor(Math.random() * 200) + 100; // 최소 100, 최대 300
@@ -15,18 +17,22 @@ const PostFeedScreen = ({ navigation, handleScroll }) => {
         return { width, height };
     };
 
-    const [dataWithDimensions, setDataWithDimensions] = useState(() =>
-        postData.map((item) => ({
-            ...item,
-            dimensions: generateRandomDimensions(),
-        }))
-    );
+    const [dataWithDimensions, setDataWithDimensions] = useState([]);
+
+    useEffect(() => {
+        setDataWithDimensions(
+            postData.map((item) => ({
+                ...item,
+                dimensions: generateRandomDimensions(),
+            }))
+        );
+    }, [postData]);
 
     return (
         <Container>
             {dataWithDimensions.length === 0 ? (
                 <LoadingContainer>
-                    <ActivityIndicator color="red" />
+                    <ActivityIndicator color="#243e35" />
                 </LoadingContainer>
             ) : (
                 <MasonryList
@@ -61,86 +67,105 @@ export default PostFeedScreen;
 
 const RandomCard = ({ item, index, navigation }) => {
     const isEven = index % 2 === 0;
+    const [userData, setUserData] = useState([]);
+    const [currentUser, setCurrentUser] = useState([]);
+
+    // console.log(item.Data);
+    // console.log(userData.email);
+
+    useEffect(() => {
+        setCurrentUser(auth().currentUser);
+        // console.log('main', currentUser);
+
+        firestore()
+            .collection('Users')
+            .doc(`${currentUser.email}`)
+            .onSnapshot((documentSnapshot) => {
+                setUserData(documentSnapshot.data());
+                // console.log('profile User data: ', documentSnapshot.data());
+            });
+    }, [currentUser]);
+    // console.log('item', item.Data.like);
+
+    let totalLike;
+    if (item.Data) {
+        totalLike = item.Data.like;
+    }
 
     return (
-        <AnimatedContainer
-            entering={FadeInDown.delay(index * 100)
-                .duration(600)
-                .springify()
-                .damping(12)}
-            style={{
-                marginBottom: isEven ? 4 : 4,
-            }}
-        >
-            {item.qna_boolen === true && (
-                <QnABox>
-                    <QnABoolen>Q&A</QnABoolen>
-                </QnABox>
-            )}
-            <FeedDetail numberOfLines={3} ellipsizeMode="tail">
-                {item.description}
-            </FeedDetail>
-            <Pressable
-                style={{
-                    width: '100%',
-                    paddingLeft: isEven ? 2 : 2,
-                    paddingRight: isEven ? 2 : 2,
-                    alignItems: 'center',
-                }}
-                onPress={() =>
-                    navigation.navigate('MainStack', {
-                        screen: 'Detail',
-                        params: item,
-                    })
-                }
-            >
-                <LinearGradientBox
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
-                    colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.9)']}
+        <>
+            {currentUser.email === item.Data.useremail && (
+                <AnimatedContainer
+                    entering={FadeInDown.delay(index * 100)
+                        .duration(600)
+                        .springify()
+                        .damping(12)}
                     style={{
-                        width: '100%',
-                        height: item.dimensions.height - 50,
-                        marginBottom: item.dimensions.margin,
+                        marginBottom: isEven ? 4 : 4,
                     }}
-                />
-                <Image
-                    source={{ uri: item.image }}
-                    isEven={isEven}
-                    resizeMode="cover"
-                    style={{
-                        width: '100%',
-                        // ...item.dimensions,
-                        // width: item.dimensions.width,
-                        height: item.dimensions.height,
-                        borderRadius: 12, // 보더의 모서리 둥글기
-                    }}
-                />
-            </Pressable>
-            {item.qna_boolen === false && (
-                <TotalLikeBox>
-                    <IconBox>
-                        <MaterialIcons name="pets" size={12} color="rgba(249, 19, 0, 0.8)" />
-                    </IconBox>
-                    <TotalLike numberOfLines={1} ellipsizeMode="tail">
-                        {item.totalLike}
-                    </TotalLike>
-                </TotalLikeBox>
+                >
+                    {item.Data.type === 'QnA' && (
+                        <QnABox>
+                            <QnABoolen>Q&A</QnABoolen>
+                        </QnABox>
+                    )}
+                    <FeedDetail numberOfLines={3} ellipsizeMode="tail">
+                        {item.Data.text}
+                    </FeedDetail>
+                    <Pressable
+                        style={{
+                            width: '100%',
+                            paddingLeft: isEven ? 2 : 2,
+                            paddingRight: isEven ? 2 : 2,
+                            alignItems: 'center',
+                        }}
+                        onPress={() =>
+                            navigation.navigate('MainStack', {
+                                screen: 'Detail',
+                                params: item,
+                            })
+                        }
+                    >
+                        <LinearGradientBox
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 0, y: 1 }}
+                            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.9)']}
+                            style={{
+                                width: '100%',
+                                height: item.dimensions.height - 50,
+                                marginBottom: item.dimensions.margin,
+                            }}
+                        />
+                        <Image
+                            source={{ uri: item.Data.image[0].url || EmptyImg }}
+                            isEven={isEven}
+                            resizeMode="cover"
+                            style={{
+                                width: '100%',
+                                height: item.dimensions.height,
+                                borderRadius: 12, // 보더의 모서리 둥글기
+                            }}
+                        />
+                    </Pressable>
+                    {item.Data.type === 'Post' && (
+                        <TotalLikeBox>
+                            <IconBox>
+                                <MaterialIcons name="pets" size={12} color="rgba(249, 19, 0, 0.8)" />
+                            </IconBox>
+                            <TotalLike numberOfLines={1} ellipsizeMode="tail">
+                                {item.totalLike}
+                            </TotalLike>
+                        </TotalLikeBox>
+                    )}
+                    <PetNameTag>
+                        <PetImageBox>
+                            <PetImage source={userData && { uri: userData.petimage }} />
+                        </PetImageBox>
+                        <UserName>{userData && userData.petname}</UserName>
+                    </PetNameTag>
+                </AnimatedContainer>
             )}
-            <PetNameTag
-                onPress={() => {
-                    navigation.navigate('MainStack', {
-                        screen: 'UserProfile',
-                        params: item,
-                    });
-                }}
-            >
-                <PetImageBox>
-                    <PetImage source={{ uri: item.userimg }} />
-                </PetImageBox>
-                <UserName>{item.username}</UserName>
-            </PetNameTag>
-        </AnimatedContainer>
+        </>
     );
 };
 
@@ -206,7 +231,7 @@ const TotalLike = styled.Text`
     margin-left: 4px;
 `;
 
-const PetNameTag = styled.TouchableOpacity`
+const PetNameTag = styled.View`
     position: absolute;
     bottom: 16px;
     right: 16px;

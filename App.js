@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { REACT_GOOGLE_AUTH_KEY } from '@env';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as Font from 'expo-font';
@@ -53,12 +54,32 @@ export default function App() {
         });
     }, []);
 
+    const [postData, setPostData] = useState([]);
+
+    useEffect(() => {
+        const subscriber = firestore()
+            .collection('Posts')
+            .orderBy('orderBy', 'desc')
+            .onSnapshot((documentSnapshot) => {
+                let feedArray = [];
+                documentSnapshot.forEach((doc) => {
+                    feedArray.push({
+                        DocID: doc.id,
+                        Data: doc.data(),
+                    });
+                });
+                setPostData(feedArray);
+            });
+
+        return () => subscriber();
+    }, []);
+
     return (
         <NavigationContainer>
             <Stack.Navigator>
                 {isAuthentication ? (
                     <Stack.Screen name="MainRoot" options={{ headerShown: false }}>
-                        {(props) => <MainRoot {...props} handleScroll={handleScroll} hide={hide} />}
+                        {(props) => <MainRoot {...props} handleScroll={handleScroll} hide={hide} postData={postData} />}
                     </Stack.Screen>
                 ) : (
                     <Stack.Screen name="AuthRoot" options={{ headerShown: false }}>

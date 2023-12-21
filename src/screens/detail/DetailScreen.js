@@ -24,7 +24,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
     const [userData, setUserData] = useState([]);
 
     useEffect(() => {
-        // setCurrentUser(auth().currentUser);
+        setCurrentUser(auth().currentUser);
         // console.log('profile', currentUser);
         firestore()
             .collection('Users')
@@ -122,10 +122,20 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                             alignItems: 'center',
                         }}
                         onPress={() => {
-                            navigation.navigate('MainStack', {
-                                screen: 'UserProfile',
-                                params: userData,
-                            });
+                            // navigation.navigate('MainStack', {
+                            //     screen: 'UserProfile',
+                            //     params: userData,
+                            // });
+                            <>
+                                {currentUser.email === userData.email
+                                    ? navigation.navigate('MainTab', {
+                                          screen: 'MyProfile',
+                                      })
+                                    : navigation.navigate('MainStack', {
+                                          screen: 'UserProfile',
+                                          params: userData,
+                                      })}
+                            </>;
                         }}
                     >
                         <UerProfileImageBox>

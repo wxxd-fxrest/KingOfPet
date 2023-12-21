@@ -9,17 +9,21 @@ import { Alert, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import postData from '../../data/postData';
 
 const CreateSelectImgScreen = ({ navigation, route: params }) => {
     let TextData = params.params;
     // console.log('category', params.params);
+
     const [loading, setLoading] = useState(false);
     const [currentUser, setCurrentUser] = useState([]);
 
     const [imageUrl, setImageUrl] = useState('');
     const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     const [saveImgUrl, setSaveImgUrl] = useState('');
+
+    let timestamp = Date.now();
+    let date = new Date(timestamp);
+    let saveDate = date.getFullYear() + '년 ' + (date.getMonth() + 1) + '월 ' + date.getDate() + '일 ';
 
     useEffect(() => {
         setCurrentUser(auth().currentUser);
@@ -49,7 +53,7 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
                     healthType: TextData[3].healthType !== undefined ? '' : TextData[3].healthType,
                     image: filteredArray,
                     useremail: currentUser.email,
-                    orderBy: new Date(),
+                    orderBy: saveDate,
                     like: [],
                 })
                 .then(() => {
@@ -67,7 +71,7 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
                         text: TextData[1],
                         image: filteredArray,
                         useremail: currentUser.email,
-                        orderBy: new Date(),
+                        orderBy: saveDate,
                         like: [],
                     })
                     .then(() => {
@@ -90,7 +94,7 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
                         significant: TextData[3].significant ? TextData[3].significant : '특이사항이 없습니다.',
                         image: filteredArray,
                         useremail: currentUser.email,
-                        orderBy: new Date(),
+                        orderBy: saveDate,
                         like: [],
                     })
                     .then(() => {

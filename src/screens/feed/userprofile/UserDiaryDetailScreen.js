@@ -8,7 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-const DiaryDetailScreen = ({ navigation, route: { params } }) => {
+const UserDiaryDetailScreen = ({ navigation, route: { params } }) => {
     console.log('일기장 디테일', params);
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
@@ -18,11 +18,11 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
     const [currentUserData, setCurrentUserData] = useState([]);
 
     useEffect(() => {
-        setCurrentUser(auth().currentUser);
+        // setCurrentUser(auth().currentUser);
         // console.log('profile', currentUser);
         firestore()
             .collection('Users')
-            .doc(`${currentUser.email}`)
+            .doc(`${params.Data.useremail}`)
             .onSnapshot((documentSnapshot) => {
                 setCurrentUserData(documentSnapshot.data());
                 console.log('profile User data: ', documentSnapshot.data());
@@ -277,4 +277,4 @@ const Detail = styled.Text`
     font-weight: 400;
 `;
 
-export default DiaryDetailScreen;
+export default UserDiaryDetailScreen;

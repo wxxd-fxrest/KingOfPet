@@ -15,10 +15,14 @@ import DiaryDetailScreen from '../screens/diary/DiaryDetailScreen';
 import SearchScreen from '../screens/search/SearchScreen';
 import ImportantDiarySceren from '../screens/diary/ImportantDiarySceren';
 import SettingScreen from '../screens/profile/SettingScreen';
+import { useNavigation } from '@react-navigation/native';
+import UserDiaryDetailScreen from '../screens/feed/userprofile/UserDiaryDetailScreen';
 
 const Stack = createNativeStackNavigator();
 
-const MainStack = ({ navigation }) => {
+const MainStack = ({ postData }) => {
+    const navigation = useNavigation();
+
     return (
         <Stack.Navigator
             screenOptions={{
@@ -124,6 +128,14 @@ const MainStack = ({ navigation }) => {
                     headerShadowVisible: false,
                 }}
             />
+            <Stack.Screen
+                name="UserDiaryDetail"
+                component={UserDiaryDetailScreen}
+                options={{
+                    title: '일기',
+                    headerShadowVisible: false,
+                }}
+            />
 
             <Stack.Screen
                 name="ImportantDiary"
@@ -154,6 +166,7 @@ const MainStack = ({ navigation }) => {
             <Stack.Screen
                 name="UserProfile"
                 component={UserProfileScreen}
+                // children={() => <UserProfileScreen navigation={navigation} postData={postData} />}
                 options={{
                     title: 'UserProfile',
                     headerShown: true,

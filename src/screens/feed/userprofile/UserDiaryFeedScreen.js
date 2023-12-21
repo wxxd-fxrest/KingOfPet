@@ -5,78 +5,91 @@ import { MaterialIcons } from '@expo/vector-icons';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
-import EmptyImg from '../../assets/logo.png';
+import EmptyImg from '../../../assets/logo.png';
 import { ActivityIndicator } from 'react-native';
 
-const DiaryFeedScreen = ({ navigation, handleScroll, currentUserData }) => {
+const UserDiaryFeedScreen = ({ navigation, handleScroll, userData }) => {
+    // console.log(userData);
     const [star, setStar] = useState(false);
     const [diaryData, setDiaryData] = useState([]);
 
     useEffect(() => {
-        if (currentUserData) {
-            const subscriber = firestore()
-                .collection('Users')
-                .doc(`${currentUserData.email}`)
-                .collection('Diary')
-                .orderBy('orderBy', 'desc')
-                .onSnapshot((documentSnapshot) => {
-                    let feedArray = [];
-                    documentSnapshot.forEach((doc) => {
-                        feedArray.push({
-                            DocID: doc.id,
-                            Data: doc.data(),
-                        });
+        // if (userData) {
+        const subscriber = firestore()
+            .collection('Users')
+            .doc(`${userData.email}`)
+            .collection('Diary')
+            .orderBy('orderBy', 'desc')
+            .onSnapshot((documentSnapshot) => {
+                let feedArray = [];
+                documentSnapshot.forEach((doc) => {
+                    feedArray.push({
+                        DocID: doc.id,
+                        Data: doc.data(),
                     });
-                    setDiaryData(feedArray);
                 });
+                setDiaryData(feedArray);
+            });
 
-            return () => subscriber();
-        }
-    }, [currentUserData]);
+        return () => subscriber();
+        // }
+    }, [userData]);
 
-    // console.log('currentUserData', currentUserData);
     // console.log('diaryData', diaryData);
 
     return (
         <>
-            {currentUserData ? (
+            {userData ? (
                 <Container onScroll={handleScroll} scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
                     {/* true === 공개 false === 비공개 */}
-                    {currentUserData.diary === false && (
+                    {userData.diary === false && (
                         <PrivateBox>
                             <MaterialIcons name="lock-outline" size={18} color="gray" />
                             <Private>현재 일기장은 비공개 설정이 되어있습니다.</Private>
                         </PrivateBox>
                     )}
-                    {diaryData.map((item) => (
-                        <DiaryContainer
-                            key={item.id}
-                            onPress={() => navigation.navigate('MainStack', { screen: 'DiaryDetail', params: item })}
-                        >
-                            <DiaryImgBox>
-                                <DiaryImg source={{ uri: item.Data.image[0].url || EmptyImg }} />
-                            </DiaryImgBox>
-                            <DiaryDetailBox>
-                                <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
-                                    {item.Data.text}
-                                </DiaryDetail>
+                    {userData.diary === true && (
+                        <>
+                            {diaryData.map((item) => (
+                                <DiaryContainer
+                                    key={item.id}
+                                    onPress={() =>
+                                        navigation.navigate('MainStack', {
+                                            screen: 'UserDiaryDetail',
+                                            params: item,
+                                        })
+                                    }
+                                >
+                                    <DiaryImgBox>
+                                        <DiaryImg source={{ uri: item.Data.image[0].url || EmptyImg }} />
+                                    </DiaryImgBox>
+                                    <DiaryDetailBox>
+                                        <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
+                                            {item.Data.text}
+                                        </DiaryDetail>
 
-                                <LikeBottomBox>
-                                    <DiaryDateBox>
-                                        <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
-                                        <DiayrDate>{item.Data.orderBy}</DiayrDate>
-                                    </DiaryDateBox>
-                                    <LikeBox onPress={() => setStar(!star)}>
-                                        <MaterialCommunityIcons
-                                            name={item.important === true ? 'star-check' : 'star-plus-outline'}
-                                            size={20}
-                                            color="#243e35"
-                                        />
-                                    </LikeBox>
-                                </LikeBottomBox>
-                            </DiaryDetailBox>
-                        </DiaryContainer>
-                    ))}
+                                        <LikeBottomBox>
+                                            <DiaryDateBox>
+                                                <MaterialCommunityIcons
+                                                    name="calendar-heart"
+                                                    size={14}
+                                                    color="#243e35"
+                                                />
+                                                <DiayrDate>{item.Data.orderBy}</DiayrDate>
+                                            </DiaryDateBox>
+                                            <LikeBox onPress={() => setStar(!star)}>
+                                                <MaterialCommunityIcons
+                                                    name={item.important === true ? 'star-check' : 'star-plus-outline'}
+                                                    size={20}
+                                                    color="#243e35"
+                                                />
+                                            </LikeBox>
+                                        </LikeBottomBox>
+                                    </DiaryDetailBox>
+                                </DiaryContainer>
+                            ))}
+                        </>
+                    )}
                 </Container>
             ) : (
                 <ActivityIndicator color="#243e35" />
@@ -184,4 +197,4 @@ const DiayrDate = styled.Text`
     font-size: 10px;
 `;
 
-export default DiaryFeedScreen;
+export default UserDiaryFeedScreen;

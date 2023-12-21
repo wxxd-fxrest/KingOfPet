@@ -1,19 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Text } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
-import DiaryFeedScreen from '../diary/DiaryFeedScreen';
-import PostFeedScreen from '../feed/profile/PostFeedScreen';
 import { MaterialIcons } from '@expo/vector-icons';
+import UserPostFeedScreen from '../feed/userprofile/UserPostFeedScreen';
+import UserDiaryFeedScreen from '../feed/userprofile/UserDiaryFeedScreen';
 
 const Tab = createMaterialTopTabNavigator();
 
 const UserProfileScreen = ({ navigation, route: params }) => {
+    // const navigation = useNavigation();
     const [hide, setHide] = useState(true);
+    const [postData, setPostData] = useState([]);
 
-    let userdata = params.params;
-    console.log('user params', userdata);
+    useEffect(() => {
+        const subscriber = firestore()
+            .collection('Posts')
+            .orderBy('orderBy', 'desc')
+            .onSnapshot((documentSnapshot) => {
+                let feedArray = [];
+                documentSnapshot.forEach((doc) => {
+                    feedArray.push({
+                        DocID: doc.id,
+                        Data: doc.data(),
+                    });
+                });
+                setPostData(feedArray);
+            });
+
+        return () => subscriber();
+    }, []);
+
+    let userData = params?.params;
+    // console.log('유저 params', userData.email);
 
     const handleScroll = (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;
@@ -27,9 +49,9 @@ const UserProfileScreen = ({ navigation, route: params }) => {
     };
 
     useEffect(() => {
-        if (userdata) {
+        if (userData) {
             navigation.setOptions({
-                headerTitle: () => <UserID>{userdata.userid}</UserID>,
+                headerTitle: () => <UserID>{userData.userid}</UserID>,
                 headerLeft: () =>
                     Platform.OS === 'ios' ? (
                         <BackButton onPress={() => navigation.goBack()}>
@@ -44,15 +66,15 @@ const UserProfileScreen = ({ navigation, route: params }) => {
         <Container>
             {hide === true && (
                 <>
-                    {userdata && (
+                    {userData && (
                         <ProfileBox>
                             <ProfilePetImgBox>
-                                <ProfilePetImg source={{ uri: userdata.petimage }} />
+                                <ProfilePetImg source={{ uri: userData.petimage }} />
                             </ProfilePetImgBox>
                             <ProfilePetNameBox>
                                 <ProfilePetNameTitle>상전</ProfilePetNameTitle>
                                 <ProfilePetName>
-                                    {userdata.petname}
+                                    {userData.petname}
                                     <Text
                                         style={{
                                             fontSize: 12,
@@ -93,7 +115,14 @@ const UserProfileScreen = ({ navigation, route: params }) => {
             >
                 <Tab.Screen
                     name="Post"
-                    children={() => <PostFeedScreen navigation={navigation} handleScroll={handleScroll} />}
+                    children={() => (
+                        <UserPostFeedScreen
+                            navigation={navigation}
+                            handleScroll={handleScroll}
+                            userData={userData}
+                            postData={postData}
+                        />
+                    )}
                     options={{
                         title: '게시글',
                         unmountOnBlur: true,
@@ -101,7 +130,9 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                 />
                 <Tab.Screen
                     name="Diary"
-                    children={() => <DiaryFeedScreen navigation={navigation} handleScroll={handleScroll} />}
+                    children={() => (
+                        <UserDiaryFeedScreen navigation={navigation} handleScroll={handleScroll} userData={userData} />
+                    )}
                     options={{
                         title: '일기',
                     }}
