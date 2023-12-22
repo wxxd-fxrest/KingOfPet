@@ -1,34 +1,84 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Switch, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
-import postData from '../../data/postData';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import EmptyImg from '../../assets/logo.png';
 
 const SearchScreen = ({ navigation }) => {
-    const [category, setCategory] = useState(false);
     // flase === user, true === post
+    const [category, setCategory] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [searchUser, setSearchUser] = useState([]);
     const [searchPost, setSearchPost] = useState([]);
+    const [currentUser, setCurrentUser] = useState([]);
+
+    useEffect(() => {
+        setCurrentUser(auth().currentUser);
+    }, [currentUser]);
 
     const toggleSwitch = () => setCategory((previousState) => !previousState);
 
-    const handleSearch = (text) => {
-        // 검색어가 변경될 때 호출되는 함수
-        setSearchText(text);
-        if (category === false) {
-            // 실제 검색 로직을 여기에 구현
-            const results = postData.filter((item) => item.username.toLowerCase().includes(text.toLowerCase()));
+    const onSubmitEditing = () => {
+        if (category === true) {
+            firestore()
+                .collection('Posts')
+                .where('text', '==', `${searchText}`)
+                .onSnapshot((documentSnapshot) => {
+                    const promises = [];
 
-            // 검색 결과 업데이트
-            setSearchUser(results);
-        } else if (category === true) {
-            // 실제 검색 로직을 여기에 구현
-            const results = postData.filter((item) => item.description?.toLowerCase().includes(text.toLowerCase()));
+                    const updatedFeedArray = documentSnapshot.docs.map((doc) => {
+                        const postData = doc.data();
+                        const feedItem = {
+                            DocID: doc.id,
+                            Data: postData,
+                            userData: {},
+                        };
 
-            // 검색 결과 업데이트
-            setSearchPost(results);
+                        // 각 게시글에 대한 useremail을 사용하여 유저 정보 가져오기
+                        const userPromise = firestore()
+                            .collection('Users')
+                            .doc(postData.useremail)
+                            .get()
+                            .then((userDoc) => {
+                                const userData = userDoc.data();
+                                feedItem.userData = userData;
+                            })
+                            .catch((error) => {
+                                console.error('Error fetching user data:', error);
+                            });
+
+                        promises.push(userPromise);
+                        return feedItem;
+                    });
+
+                    // 모든 유저 정보가 로드된 후에 setSearchPost 호출
+                    Promise.all(promises)
+                        .then(() => {
+                            setSearchPost(updatedFeedArray);
+                            // console.log('searchPost', searchPost[0].userData.petname);
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching user data:', error);
+                        });
+                });
+        } else if (category === false) {
+            firestore()
+                .collection('Users')
+                .where('petname', '==', `${searchText}`)
+                .onSnapshot((documentSnapshot) => {
+                    let feedArray = [];
+                    documentSnapshot.forEach((doc) => {
+                        feedArray.push({
+                            DocID: doc.id,
+                            Data: doc.data(),
+                        });
+                    });
+                    setSearchUser(feedArray);
+                    console.log('searchUser', searchUser);
+                });
         }
     };
 
@@ -37,7 +87,8 @@ const SearchScreen = ({ navigation }) => {
             <SearchInputBox>
                 <SearchInput
                     placeholder={category === true ? '단어를 입력해 주세요.' : '사용자 이름을 입력해 주세요.'}
-                    onChangeText={handleSearch}
+                    onSubmitEditing={onSubmitEditing}
+                    onChangeText={(text) => setSearchText(text)}
                     value={searchText}
                 />
                 <SearchIcon>
@@ -45,7 +96,7 @@ const SearchScreen = ({ navigation }) => {
                 </SearchIcon>
             </SearchInputBox>
             <ChangeBtn>
-                {category === true ? <Change>사용자</Change> : <Change>게시글</Change>}
+                {category === true ? <Change>상전 검색하기</Change> : <Change>게시글 검색하기</Change>}
                 <Switch
                     trackColor={{ false: '#767577', true: '#c1ccc8' }}
                     thumbColor={category ? '#243e35' : '#3a6b5a'}
@@ -59,79 +110,95 @@ const SearchScreen = ({ navigation }) => {
             <FlatList
                 data={category === false ? searchUser : searchPost}
                 showsVerticalScrollIndicator={false}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <SearchResultBox>
-                        {category === false ? (
-                            <TouchableOpacity
-                                activeOpacity={0.9}
-                                onPress={() =>
-                                    navigation.navigate('MainStack', {
-                                        screen: 'UserProfile',
-                                        params: item,
-                                    })
-                                }
-                            >
-                                <SearchUserProfileBox>
-                                    <Line />
-                                    <ResultNameTag>
-                                        <ResultText
-                                            style={{
-                                                fontSize: 12,
-                                                fontWeight: 400,
-                                            }}
-                                        >
-                                            {item.username}네 집사
-                                        </ResultText>
-                                        <ResultText> {item.username}</ResultText>
-                                    </ResultNameTag>
-                                    <UserImageBox>
-                                        <UserImg source={{ uri: item.image }} />
-                                    </UserImageBox>
-                                    <GoProfileIcon name="arrow-up-right" size={26} color="#243e35" />
-                                </SearchUserProfileBox>
-                            </TouchableOpacity>
-                        ) : (
-                            <PostResultContainer
-                                activeOpacity={0.9}
-                                onPress={() =>
-                                    navigation.navigate('MainStack', {
-                                        screen: 'Detail',
-                                        params: item,
-                                    })
-                                }
-                            >
-                                <PostResultImgBox>
-                                    <PostResultImg source={{ uri: item.image }} />
-                                </PostResultImgBox>
-                                <PostResultDetailBox>
-                                    <PostResultDetail numberOfLines={7} ellipsizeMode="tail">
-                                        {item.description}
-                                    </PostResultDetail>
-                                    <PostResultBottomBox>
-                                        <PostResultProfileBox
-                                            activeOpacity={0.9}
-                                            onPress={() => {
-                                                navigation.navigate('MainStack', {
-                                                    screen: 'UserProfile',
-                                                    params: item,
-                                                });
-                                            }}
-                                        >
-                                            <PostResultProfileImgBox>
-                                                <PostResultProfileImg source={{ uri: item.userimg }} />
-                                            </PostResultProfileImgBox>
-                                            <PostResultProfileName>{item.username} </PostResultProfileName>
-                                        </PostResultProfileBox>
-                                        <PostResultLikeBox>
-                                            <MaterialIcons name="pets" size={16} color="rgba(249, 19, 0, 0.8)" />
-                                        </PostResultLikeBox>
-                                    </PostResultBottomBox>
-                                </PostResultDetailBox>
-                            </PostResultContainer>
-                        )}
-                    </SearchResultBox>
-                )}
+                keyExtractor={(item) => item.DocID + ''}
+                renderItem={({ item }) => {
+                    return (
+                        <SearchResultBox>
+                            {category === false ? (
+                                <TouchableOpacity
+                                    activeOpacity={0.9}
+                                    onPress={() => (
+                                        <>
+                                            {currentUser.email === item.Data.email
+                                                ? navigation.navigate('MainTab', {
+                                                      screen: 'MyProfile',
+                                                  })
+                                                : navigation.navigate('MainStack', {
+                                                      screen: 'UserProfile',
+                                                      params: item.Data,
+                                                  })}
+                                        </>
+                                    )}
+                                >
+                                    <SearchUserProfileBox>
+                                        <Line />
+                                        <ResultNameTag>
+                                            <ResultText
+                                                style={{
+                                                    fontSize: 12,
+                                                    fontWeight: 400,
+                                                }}
+                                            >
+                                                {item.Data.userid}네 상전
+                                            </ResultText>
+                                            <ResultText>{item.Data.petname}</ResultText>
+                                        </ResultNameTag>
+                                        <UserImageBox>
+                                            <UserImg source={{ uri: item.Data.petimage || EmptyImg }} />
+                                        </UserImageBox>
+                                        <GoProfileIcon name="arrow-up-right" size={26} color="#243e35" />
+                                    </SearchUserProfileBox>
+                                </TouchableOpacity>
+                            ) : (
+                                <PostResultContainer
+                                    activeOpacity={0.9}
+                                    onPress={() =>
+                                        navigation.navigate('MainStack', {
+                                            screen: 'Detail',
+                                            params: item,
+                                        })
+                                    }
+                                >
+                                    <PostResultImgBox>
+                                        <PostResultImg source={{ uri: item.Data.image[0].url || EmptyImg }} />
+                                    </PostResultImgBox>
+                                    <PostResultDetailBox>
+                                        <PostResultDetail numberOfLines={7} ellipsizeMode="tail">
+                                            {item.Data.text}
+                                        </PostResultDetail>
+                                        <PostResultBottomBox>
+                                            <PostResultProfileBox
+                                                activeOpacity={0.9}
+                                                onPress={() => {
+                                                    <>
+                                                        {currentUser.email === item.userData.email
+                                                            ? navigation.navigate('MainTab', {
+                                                                  screen: 'MyProfile',
+                                                              })
+                                                            : navigation.navigate('MainStack', {
+                                                                  screen: 'UserProfile',
+                                                                  params: item.userData,
+                                                              })}
+                                                    </>;
+                                                }}
+                                            >
+                                                <PostResultProfileImgBox>
+                                                    <PostResultProfileImg
+                                                        source={{ uri: item.userData.petimage || EmptyImg }}
+                                                    />
+                                                </PostResultProfileImgBox>
+                                                <PostResultProfileName>{item.userData.petname}</PostResultProfileName>
+                                            </PostResultProfileBox>
+                                            <PostResultLikeBox>
+                                                <MaterialIcons name="pets" size={16} color="rgba(249, 19, 0, 0.8)" />
+                                            </PostResultLikeBox>
+                                        </PostResultBottomBox>
+                                    </PostResultDetailBox>
+                                </PostResultContainer>
+                            )}
+                        </SearchResultBox>
+                    );
+                }}
             />
         </Container>
     );
