@@ -7,7 +7,7 @@ import CreateAllPostScreen from '../screens/newPost/CreateAllPostScreen';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
 import DetailScreen from '../screens/detail/DetailScreen';
 import UserProfileScreen from '../screens/profile/UserProfileScreen';
-import CommentDetailScreen from '../screens/comment/CommentDetailScreen';
+import ComentDetailScreen from '../screens/comment/ComentDetailScreen';
 import CreateSelectImgScreen from '../screens/newPost/CreateSelectImgScreen';
 import FollowingScreen from '../screens/follow/FollowingScreen';
 import FollowerScreen from '../screens/follow/FollowerScreen';
@@ -154,8 +154,8 @@ const MainStack = ({ postData }) => {
             />
 
             <Stack.Screen
-                name="CommentDetail"
-                component={CommentDetailScreen}
+                name="ComentDetail"
+                component={ComentDetailScreen}
                 options={{
                     title: 'Comment',
                     headerShown: true,
@@ -166,7 +166,6 @@ const MainStack = ({ postData }) => {
             <Stack.Screen
                 name="UserProfile"
                 component={UserProfileScreen}
-                // children={() => <UserProfileScreen navigation={navigation} postData={postData} />}
                 options={{
                     title: 'UserProfile',
                     headerShown: true,

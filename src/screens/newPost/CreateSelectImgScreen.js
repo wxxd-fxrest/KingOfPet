@@ -23,7 +23,19 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
 
     let timestamp = Date.now();
     let date = new Date(timestamp);
-    let saveDate = date.getFullYear() + '년 ' + (date.getMonth() + 1) + '월 ' + date.getDate() + '일 ';
+    let saveDate =
+        date.getFullYear() +
+        '년 ' +
+        (date.getMonth() + 1) +
+        '월 ' +
+        date.getDate() +
+        '일 ' +
+        date.getHours() +
+        '시 ' +
+        date.getMinutes() +
+        '분 ' +
+        date.getSeconds() +
+        '초';
 
     useEffect(() => {
         setCurrentUser(auth().currentUser);
@@ -216,11 +228,6 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
 
     return (
         <Container>
-            {/* 이미지 캐러셀 필요 */}
-            {/* 자랑, 일기에 경우 이미지 필수 */}
-            {/* 질문에 경우 선택 */}
-            {/* 이미지 최대 다섯 장 제한 */}
-            {/* 첫 이미지 선택 시 아이콘은 카메라이지만 이후 부터는 플러스 아이콘으로 변경 */}
             <Box>
                 <CarouselBox>
                     <Carousel

@@ -6,26 +6,87 @@ import styled from 'styled-components';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
-import postData from '../../data/postData';
 import EmptyImg from '../../assets/logo.png';
 
-const CommentScreen = ({ toggleBottomSheet }) => {
+const ComentScreen = ({ toggleBottomSheet, detailDocID }) => {
     const navigation = useNavigation();
-    const [comment, setComment] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [coment, setComent] = useState('');
+    const [comentData, setComentData] = useState([]);
     const [currentUser, setCurrentUser] = useState([]);
-    const [userData, setUserData] = useState([]);
+    const [currentUserData, setCurrentUserData] = useState([]);
 
     useEffect(() => {
         setCurrentUser(auth().currentUser);
-        // console.log('profile', currentUser);
         firestore()
             .collection('Users')
             .doc(`${currentUser.email}`)
             .onSnapshot((documentSnapshot) => {
-                setUserData(documentSnapshot.data());
+                setCurrentUserData(documentSnapshot.data());
                 console.log('profile User data: ', documentSnapshot.data());
             });
     }, [currentUser]);
+
+    useEffect(() => {
+        if (detailDocID) {
+            const subscriber = firestore()
+                .collection('Posts')
+                .doc(`${detailDocID}`)
+                .collection('Coment')
+                .orderBy('orderBy', 'desc')
+                .onSnapshot((documentSnapshot) => {
+                    let feedArray = [];
+                    documentSnapshot.forEach((doc) => {
+                        feedArray.push({
+                            DocID: doc.id,
+                            Data: doc.data(),
+                        });
+                    });
+                    setComentData(feedArray);
+                    // console.log('comentData', feedArray);
+                });
+
+            return () => subscriber();
+        }
+    }, [detailDocID]);
+
+    let timestamp = Date.now();
+    let date = new Date(timestamp);
+    let saveDate =
+        date.getFullYear() +
+        '년 ' +
+        (date.getMonth() + 1) +
+        '월 ' +
+        date.getDate() +
+        '일 ' +
+        date.getHours() +
+        '시 ' +
+        date.getMinutes() +
+        '분 ' +
+        date.getSeconds() +
+        '초';
+
+    const onSubmitEditing = async () => {
+        if (loading) {
+            return;
+        }
+        firestore()
+            .collection('Posts')
+            .doc(`${detailDocID}`)
+            .collection('Coment')
+            .add({
+                coment: coment,
+                email: currentUserData.email,
+                petimage: currentUserData.petimage,
+                petname: currentUserData.petname,
+                userid: currentUserData.userid,
+                orderBy: saveDate,
+            })
+            .then(() => {
+                console.log('User added!');
+                setComent('');
+            });
+    };
 
     return (
         <Container>
@@ -35,11 +96,13 @@ const CommentScreen = ({ toggleBottomSheet }) => {
             <KeyboardAvoidingBox behavior={Platform.select({ ios: 'position', android: 'height' })}>
                 <CurrentUerProfile>
                     <CurrentUserImgBox>
-                        <CurrentUserProfileImg source={userData && { uri: userData.petimage || EmptyImg }} />
+                        <CurrentUserProfileImg
+                            source={currentUserData && { uri: currentUserData.petimage || EmptyImg }}
+                        />
                     </CurrentUserImgBox>
-                    <CommentInputBox>
-                        <CommentInput
-                            value={comment}
+                    <ComentInputBox>
+                        <ComentInput
+                            value={coment}
                             placeholder="Write a note..."
                             placeholderTextColor="grey"
                             keyboardType="default"
@@ -48,30 +111,30 @@ const CommentScreen = ({ toggleBottomSheet }) => {
                             returnKeyType="next"
                             maxLength={300}
                             multiline={true}
-                            // onSubmitEditing={}
-                            onChangeText={(text) => setComment(text)}
+                            onSubmitEditing={onSubmitEditing}
+                            onChangeText={(text) => setComent(text)}
                         />
-                        <SaveIcon>
+                        <SaveIcon onPress={onSubmitEditing}>
                             <MaterialIcons name="pets" size={22} color="#243e35" />
                         </SaveIcon>
-                    </CommentInputBox>
+                    </ComentInputBox>
                 </CurrentUerProfile>
             </KeyboardAvoidingBox>
             <FlatListBox
-                data={postData}
-                keyExtractor={(item) => item.id + ''}
+                data={comentData}
+                keyExtractor={(item) => item.DocID + ''}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (
                     <>
-                        {item.description && (
-                            <CommentContainer
+                        {item.Data.coment && (
+                            <ComentContainer
                                 onStartShouldSetResponder={() => true}
                                 activeOpacity={1}
                                 onPress={() => {
                                     toggleBottomSheet();
                                     navigation.navigate('MainStack', {
-                                        screen: 'CommentDetail',
-                                        params: item,
+                                        screen: 'ComentDetail',
+                                        params: { item, detailDocID },
                                     });
                                 }}
                             >
@@ -79,35 +142,47 @@ const CommentScreen = ({ toggleBottomSheet }) => {
                                     activeOpacity={0.8}
                                     onPress={() => {
                                         toggleBottomSheet();
-                                        navigation.navigate('MainStack', {
-                                            screen: 'UserProfile',
-                                            params: item,
-                                        });
+                                        <>
+                                            {currentUser.email === item.Data.useremail
+                                                ? navigation.navigate('MainTab', {
+                                                      screen: 'MyProfile',
+                                                  })
+                                                : navigation.navigate('MainStack', {
+                                                      screen: 'UserProfile',
+                                                      params: item.Data,
+                                                  })}
+                                        </>;
                                     }}
                                 >
-                                    <ProfileImg source={{ uri: item.image }} />
+                                    <ProfileImg source={{ uri: item.Data.petimage || EmptyImg }} />
                                 </ProfileImgBox>
-                                <CommentBox>
+                                <ComentBox>
                                     <ProfileNameTagBox
                                         activeOpacity={0.8}
                                         onPress={() => {
                                             toggleBottomSheet();
-                                            navigation.navigate('MainStack', {
-                                                screen: 'UserProfile',
-                                                params: item,
-                                            });
+                                            <>
+                                                {currentUser.email === item.Data.useremail
+                                                    ? navigation.navigate('MainTab', {
+                                                          screen: 'MyProfile',
+                                                      })
+                                                    : navigation.navigate('MainStack', {
+                                                          screen: 'UserProfile',
+                                                          params: item.Data,
+                                                      })}
+                                            </>;
                                         }}
                                     >
-                                        <ProfileNameTag>{item.username}</ProfileNameTag>
+                                        <ProfileNameTag>{item.Data.petname}</ProfileNameTag>
                                     </ProfileNameTagBox>
-                                    <CommentDetailBox>
-                                        <CommentDetail>{item.description}</CommentDetail>
-                                    </CommentDetailBox>
-                                </CommentBox>
+                                    <ComentDetailBox>
+                                        <ComentDetail>{item.Data.coment}</ComentDetail>
+                                    </ComentDetailBox>
+                                </ComentBox>
                                 <MoreIcon activeOpacity={0.4}>
                                     <Feather name="more-vertical" size={16} color="#243E35" />
                                 </MoreIcon>
-                            </CommentContainer>
+                            </ComentContainer>
                         )}
                     </>
                 )}
@@ -162,7 +237,7 @@ const CurrentUserProfileImg = styled.Image`
     border-radius: 12px;
 `;
 
-const CommentInputBox = styled.View`
+const ComentInputBox = styled.View`
     background-color: #f9f9f7;
     justify-content: center;
     width: 86%;
@@ -170,7 +245,7 @@ const CommentInputBox = styled.View`
     align-items: flex-end;
 `;
 
-const CommentInput = styled.TextInput`
+const ComentInput = styled.TextInput`
     background-color: rgba(193, 204, 200, 0.3);
     padding: 10px 20px;
     padding-right: 40px;
@@ -190,14 +265,14 @@ const FlatListBox = styled(FlatList)`
     margin-top: 20px;
 `;
 
-const CommentContainer = styled.TouchableOpacity`
+const ComentContainer = styled.TouchableOpacity`
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
     margin-bottom: 20px;
 `;
 
-const CommentBox = styled.View`
+const ComentBox = styled.View`
     width: 80%;
 `;
 
@@ -221,9 +296,9 @@ const ProfileNameTag = styled.Text`
     margin-bottom: 6px;
 `;
 
-const CommentDetailBox = styled.View``;
+const ComentDetailBox = styled.View``;
 
-const CommentDetail = styled.Text`
+const ComentDetail = styled.Text`
     font-size: 12px;
     color: #343c3a;
 `;
@@ -235,4 +310,4 @@ const MoreIcon = styled.TouchableOpacity`
     height: 18px;
 `;
 
-export default CommentScreen;
+export default ComentScreen;

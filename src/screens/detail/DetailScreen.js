@@ -5,7 +5,7 @@ import Swiper from 'react-native-swiper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
-import CommentScreen from '../comment/CommentScreen';
+import ComentScreen from '../comment/ComentScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -13,11 +13,14 @@ import EmptyImg from '../../assets/logo.png';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
     let detailData;
+    let detailDocID;
     if (params) {
         detailData = params.Data;
+        detailDocID = params.DocID;
     }
 
-    console.log('detailData', detailData.useremail);
+    console.log('detailData', detailDocID);
+
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
     const [currentUser, setCurrentUser] = useState([]);
@@ -122,10 +125,6 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                             alignItems: 'center',
                         }}
                         onPress={() => {
-                            // navigation.navigate('MainStack', {
-                            //     screen: 'UserProfile',
-                            //     params: userData,
-                            // });
                             <>
                                 {currentUser.email === userData.email
                                     ? navigation.navigate('MainTab', {
@@ -152,6 +151,13 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                 </UserProfileBox>
 
                 <DetailBox>
+                    <Detail
+                        style={{
+                            backgroundColor: 'tomato',
+                        }}
+                    >
+                        {detailData.type}
+                    </Detail>
                     <Detail>{detailData.text}</Detail>
                 </DetailBox>
             </ScrollView>
@@ -170,7 +176,11 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                     style={{ justifyContent: 'flex-end', margin: 0 }}
                 >
                     <BottomSheetContainer>
-                        <CommentScreen toggleBottomSheet={toggleBottomSheet} userData={userData} />
+                        <ComentScreen
+                            toggleBottomSheet={toggleBottomSheet}
+                            detailDocID={detailDocID}
+                            userData={userData}
+                        />
                     </BottomSheetContainer>
                 </Modal>
             </BottomSheetBox>

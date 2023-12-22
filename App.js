@@ -69,6 +69,7 @@ export default function App() {
                     });
                 });
                 setPostData(feedArray);
+                // console.log(feedArray);
             });
 
         return () => subscriber();
