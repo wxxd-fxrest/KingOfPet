@@ -35,7 +35,8 @@ const UserProfileScreen = ({ navigation, route: params }) => {
     }, []);
 
     let userData = params?.params;
-    // console.log('유저 params', userData.email);
+    console.log('params', params?.params);
+    console.log('유저 params', userData);
 
     const handleScroll = (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Image, Pressable, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import MasonryList from '@react-native-seoul/masonry-list';
 import LinearGradient from 'react-native-linear-gradient';
@@ -27,9 +27,6 @@ const RandomFeedScreen = ({ navigation, handleScroll, postData }) => {
             }))
         );
     }, [postData]);
-
-    // console.log('dataWithDimensions', dataWithDimensions);
-    // console.log('postData', postData);
 
     return (
         <Container>
@@ -75,7 +72,6 @@ const RandomCard = ({ item, index, navigation }) => {
 
     useEffect(() => {
         setCurrentUser(auth().currentUser);
-        console.log('main', currentUser);
     }, [currentUser]);
 
     useEffect(() => {
@@ -87,7 +83,6 @@ const RandomCard = ({ item, index, navigation }) => {
                 // console.log('profile User data: ', documentSnapshot.data());
             });
     }, []);
-    // console.log('item', item.Data.like);
 
     let totalLike;
     if (item.Data) {
@@ -173,10 +168,6 @@ const RandomCard = ({ item, index, navigation }) => {
                                       params: userData,
                                   })}
                         </>;
-                        // navigation.navigate('MainStack', {
-                        //     screen: 'UserProfile',
-                        //     params: { ...userData },
-                        // });
                     }}
                 >
                     <PetImageBox>
