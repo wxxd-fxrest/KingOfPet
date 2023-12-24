@@ -8,6 +8,8 @@ import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import UserPostFeedScreen from '../feed/userprofile/UserPostFeedScreen';
 import UserDiaryFeedScreen from '../feed/userprofile/UserDiaryFeedScreen';
+import FollowButton from '../../components/FollowButton';
+import EmptyImg from '../../assets/logo.png';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -15,6 +17,26 @@ const UserProfileScreen = ({ navigation, route: params }) => {
     // const navigation = useNavigation();
     const [hide, setHide] = useState(true);
     const [postData, setPostData] = useState([]);
+    const [follow, setFollow] = useState(false);
+    const [currentUser, setCurrentUser] = useState([]);
+    const [currentUserData, setCurrentUserData] = useState([]);
+
+    let userData = params?.params;
+    console.log('params', params?.params);
+    console.log('유저 params', userData);
+
+    useEffect(() => {
+        setCurrentUser(auth().currentUser);
+        // console.log('profile', currentUser);
+
+        firestore()
+            .collection('Users')
+            .doc(`${currentUser.email}`)
+            .onSnapshot((documentSnapshot) => {
+                setCurrentUserData(documentSnapshot.data());
+                console.log('디테일 페이지 current 유저 데이터: ', documentSnapshot.data());
+            });
+    }, [currentUser]);
 
     useEffect(() => {
         const subscriber = firestore()
@@ -33,10 +55,6 @@ const UserProfileScreen = ({ navigation, route: params }) => {
 
         return () => subscriber();
     }, []);
-
-    let userData = params?.params;
-    console.log('params', params?.params);
-    console.log('유저 params', userData);
 
     const handleScroll = (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;
@@ -70,7 +88,7 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                     {userData && (
                         <ProfileBox>
                             <ProfilePetImgBox>
-                                <ProfilePetImg source={{ uri: userData.petimage }} />
+                                <ProfilePetImg source={{ uri: userData.petimage || EmptyImg }} />
                             </ProfilePetImgBox>
                             <ProfilePetNameBox>
                                 <ProfilePetNameTitle>상전</ProfilePetNameTitle>
@@ -87,9 +105,12 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                                     </Text>
                                 </ProfilePetName>
                             </ProfilePetNameBox>
-                            <FollowBox>
-                                <Follow>Follow</Follow>
-                            </FollowBox>
+                            <FollowButton
+                                setFollow={setFollow}
+                                follow={follow}
+                                currentUserData={currentUserData}
+                                userData={userData}
+                            />
                         </ProfileBox>
                     )}
                 </>
@@ -185,22 +206,6 @@ const ProfilePetName = styled.Text`
     font-size: 16px;
     font-weight: 600;
     color: #343c3a;
-`;
-
-const FollowBox = styled.TouchableOpacity`
-    position: absolute;
-    right: 20px;
-    background-color: rgba(193, 204, 200, 0.2);
-    padding: 8px 12px;
-    border-radius: 16px;
-    border-width: 1px;
-    border-color: #243e35;
-`;
-
-const Follow = styled.Text`
-    font-size: 12px;
-    font-weight: 500;
-    color: #243e35;
 `;
 
 const UserID = styled.Text`

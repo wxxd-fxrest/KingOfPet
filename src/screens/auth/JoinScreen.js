@@ -127,6 +127,8 @@ const Join = () => {
                                         ...petTypeData,
                                         createprofile: true,
                                         signType: 'Email',
+                                        follower: [],
+                                        following: [],
                                     })
                                     .then(() => {
                                         console.log('User added!');

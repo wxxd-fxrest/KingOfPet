@@ -10,6 +10,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import EmptyImg from '../../assets/logo.png';
+import FollowButton from '../../components/FollowButton';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
     let detailData;
@@ -19,22 +20,33 @@ const DetailScreen = ({ navigation, route: { params } }) => {
         detailDocID = params.DocID;
     }
 
-    console.log('detailData', detailDocID);
+    // console.log('detailData', detailDocID);
 
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
     const [currentUser, setCurrentUser] = useState([]);
+    const [currentUserData, setCurrentUserData] = useState([]);
     const [userData, setUserData] = useState([]);
+    const [follow, setFollow] = useState(false);
 
     useEffect(() => {
         setCurrentUser(auth().currentUser);
         // console.log('profile', currentUser);
+
+        firestore()
+            .collection('Users')
+            .doc(`${currentUser.email}`)
+            .onSnapshot((documentSnapshot) => {
+                setCurrentUserData(documentSnapshot.data());
+                console.log('디테일 페이지 current 유저 데이터: ', documentSnapshot.data());
+            });
+
         firestore()
             .collection('Users')
             .doc(`${detailData.useremail}`)
             .onSnapshot((documentSnapshot) => {
                 setUserData(documentSnapshot.data());
-                console.log('profile User data: ', documentSnapshot.data());
+                console.log('detailData', documentSnapshot.data());
             });
     }, [currentUser]);
 
@@ -145,9 +157,12 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                             <UserProfileName>{userData.petname}</UserProfileName>
                         </UserProfileNameTag>
                     </TouchableOpacity>
-                    <FollowBox>
-                        <Follow>Follow</Follow>
-                    </FollowBox>
+                    <FollowButton
+                        follow={follow}
+                        setFollow={setFollow}
+                        currentUserData={currentUserData}
+                        userData={userData}
+                    />
                 </UserProfileBox>
 
                 <DetailBox>
@@ -280,22 +295,6 @@ const UserProfileName = styled.Text`
     font-size: 14px;
     font-weight: 600;
     color: #343c3a;
-`;
-
-const FollowBox = styled.TouchableOpacity`
-    position: absolute;
-    right: 20px;
-    background-color: rgba(193, 204, 200, 0.2);
-    padding: 8px 12px;
-    border-radius: 16px;
-    border-width: 1px;
-    border-color: #243e35;
-`;
-
-const Follow = styled.Text`
-    font-size: 12px;
-    font-weight: 500;
-    color: #243e35;
 `;
 
 const DetailBox = styled.View`
