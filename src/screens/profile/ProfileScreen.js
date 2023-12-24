@@ -13,6 +13,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import EmptyImg from '../../assets/logo.png';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -132,7 +133,7 @@ const ProfileScreen = ({ postData }) => {
                     {currentUserData && (
                         <ProfileBox>
                             <ProfilePetImgBox>
-                                <ProfilePetImg source={{ uri: currentUserData.petimage }} />
+                                <ProfilePetImg source={{ uri: currentUserData.petimage || EmptyImg }} />
                                 <ImageEditBtn
                                     onPress={() => navigation.navigate('MainStack', { screen: 'EditProfile' })}
                                 >
@@ -157,13 +158,21 @@ const ProfileScreen = ({ postData }) => {
                                 </ProfilePetNameBox>
                                 <FollowContainer>
                                     <FollowBox onPress={() => navigation.navigate('MainStack', { screen: 'Follower' })}>
-                                        <Follow>203</Follow>
+                                        {currentUserData && currentUserData.follower ? (
+                                            <Follow>{currentUserData.follower.length}</Follow>
+                                        ) : (
+                                            <Follow>0</Follow>
+                                        )}
                                         <FollowText>팔로워</FollowText>
                                     </FollowBox>
                                     <FollowingBox
                                         onPress={() => navigation.navigate('MainStack', { screen: 'Following' })}
                                     >
-                                        <Following>105</Following>
+                                        {currentUserData && currentUserData.following ? (
+                                            <Following>{currentUserData.following.length}</Following>
+                                        ) : (
+                                            <Following>0</Following>
+                                        )}
                                         <FollowText>팔로잉</FollowText>
                                     </FollowingBox>
                                 </FollowContainer>

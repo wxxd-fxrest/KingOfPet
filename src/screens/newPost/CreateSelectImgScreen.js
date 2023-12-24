@@ -55,32 +55,34 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
         }
         const filteredArray = totalImg.filter((item) => item.id !== 'select');
 
-        if (TextData[0] === 'QnA') {
-            firestore()
-                .collection('Posts')
-                .add({
-                    type: TextData[0],
-                    text: TextData[1],
-                    QnAType: TextData[2].QnAType,
-                    healthType: TextData[3].healthType !== undefined ? '' : TextData[3].healthType,
-                    image: filteredArray,
-                    useremail: currentUser.email,
-                    orderBy: saveDate,
-                    like: [],
-                })
-                .then(() => {
-                    console.log('User added!');
-                    navigation.navigate('MainTab', {
-                        screen: 'Main',
-                    });
-                });
-        } else if (filteredArray.length > 0) {
+        if (filteredArray.length > 0) {
             if (TextData[0] === 'Post') {
                 firestore()
                     .collection('Posts')
                     .add({
                         type: TextData[0],
                         text: TextData[1],
+                        image: filteredArray,
+                        useremail: currentUser.email,
+                        orderBy: saveDate,
+                        like: [],
+                    })
+                    .then(() => {
+                        console.log('User added!');
+                        navigation.navigate('MainTab', {
+                            screen: 'Main',
+                        });
+                    });
+            }
+
+            if (TextData[0] === 'QnA') {
+                firestore()
+                    .collection('Posts')
+                    .add({
+                        type: TextData[0],
+                        text: TextData[1],
+                        QnAType: TextData[2].QnAType,
+                        healthType: TextData[3].healthType !== undefined ? '' : TextData[3].healthType,
                         image: filteredArray,
                         useremail: currentUser.email,
                         orderBy: saveDate,
