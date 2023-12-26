@@ -57,22 +57,28 @@ export default function App() {
     const [postData, setPostData] = useState([]);
 
     useEffect(() => {
-        const subscriber = firestore()
-            .collection('Posts')
-            .orderBy('orderBy', 'desc')
-            .onSnapshot((documentSnapshot) => {
-                let feedArray = [];
-                documentSnapshot.forEach((doc) => {
-                    feedArray.push({
-                        DocID: doc.id,
-                        Data: doc.data(),
-                    });
+        const timeoutId = setTimeout(() => {
+            const subscriber = firestore()
+                .collection('Posts')
+                .orderBy('orderBy', 'desc')
+                .onSnapshot((documentSnapshot) => {
+                    if (documentSnapshot) {
+                        let feedArray = [];
+                        documentSnapshot.forEach((doc) => {
+                            feedArray.push({
+                                DocID: doc.id,
+                                Data: doc.data(),
+                            });
+                        });
+                        setPostData(feedArray);
+                    }
                 });
-                setPostData(feedArray);
-                // console.log(feedArray);
-            });
 
-        return () => subscriber();
+            return () => {
+                clearTimeout(timeoutId);
+                subscriber();
+            };
+        }, 500); // 2초 후에 실행
     }, []);
 
     return (

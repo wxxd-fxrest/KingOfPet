@@ -20,14 +20,16 @@ const DiaryFeedScreen = ({ navigation, handleScroll, currentUserData }) => {
                 .collection('Diary')
                 .orderBy('orderBy', 'desc')
                 .onSnapshot((documentSnapshot) => {
-                    let feedArray = [];
-                    documentSnapshot.forEach((doc) => {
-                        feedArray.push({
-                            DocID: doc.id,
-                            Data: doc.data(),
+                    if (documentSnapshot) {
+                        let feedArray = [];
+                        documentSnapshot.forEach((doc) => {
+                            feedArray.push({
+                                DocID: doc.id,
+                                Data: doc.data(),
+                            });
                         });
-                    });
-                    setDiaryData(feedArray);
+                        setDiaryData(feedArray);
+                    }
                 });
 
             return () => subscriber();
@@ -54,7 +56,7 @@ const DiaryFeedScreen = ({ navigation, handleScroll, currentUserData }) => {
                             onPress={() => navigation.navigate('MainStack', { screen: 'DiaryDetail', params: item })}
                         >
                             <DiaryImgBox>
-                                <DiaryImg source={{ uri: item.Data.image[0].url || EmptyImg }} />
+                                <DiaryImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
                             </DiaryImgBox>
                             <DiaryDetailBox>
                                 <DiaryDetail numberOfLines={6} ellipsizeMode="tail">

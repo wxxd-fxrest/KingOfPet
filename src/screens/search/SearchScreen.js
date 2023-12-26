@@ -86,7 +86,7 @@ const SearchScreen = ({ navigation }) => {
         <Container>
             <SearchInputBox>
                 <SearchInput
-                    placeholder={category === true ? '단어를 입력해 주세요.' : '사용자 이름을 입력해 주세요.'}
+                    placeholder={category === true ? '단어를 입력해 주세요.' : '상전의 이름을 입력해 주세요.'}
                     onSubmitEditing={onSubmitEditing}
                     onChangeText={(text) => setSearchText(text)}
                     value={searchText}
@@ -144,7 +144,7 @@ const SearchScreen = ({ navigation }) => {
                                             <ResultText>{item.Data.petname}</ResultText>
                                         </ResultNameTag>
                                         <UserImageBox>
-                                            <UserImg source={{ uri: item.Data.petimage || EmptyImg }} />
+                                            <UserImg source={{ uri: item.Data.petimage } || EmptyImg} />
                                         </UserImageBox>
                                         <GoProfileIcon name="arrow-up-right" size={26} color="#243e35" />
                                     </SearchUserProfileBox>
@@ -160,7 +160,7 @@ const SearchScreen = ({ navigation }) => {
                                     }
                                 >
                                     <PostResultImgBox>
-                                        <PostResultImg source={{ uri: item.Data.image[0].url || EmptyImg }} />
+                                        <PostResultImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
                                     </PostResultImgBox>
                                     <PostResultDetailBox>
                                         <PostResultDetail numberOfLines={7} ellipsizeMode="tail">
@@ -184,7 +184,7 @@ const SearchScreen = ({ navigation }) => {
                                             >
                                                 <PostResultProfileImgBox>
                                                     <PostResultProfileImg
-                                                        source={{ uri: item.userData.petimage || EmptyImg }}
+                                                        source={{ uri: item.userData.petimage } || EmptyImg}
                                                     />
                                                 </PostResultProfileImgBox>
                                                 <PostResultProfileName>{item.userData.petname}</PostResultProfileName>

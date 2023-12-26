@@ -133,7 +133,7 @@ const ProfileScreen = ({ postData }) => {
                     {currentUserData && (
                         <ProfileBox>
                             <ProfilePetImgBox>
-                                <ProfilePetImg source={{ uri: currentUserData.petimage || EmptyImg }} />
+                                <ProfilePetImg source={{ uri: currentUserData.petimage } || EmptyImg} />
                                 <ImageEditBtn
                                     onPress={() => navigation.navigate('MainStack', { screen: 'EditProfile' })}
                                 >

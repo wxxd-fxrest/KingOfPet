@@ -35,15 +35,17 @@ const ComentScreen = ({ toggleBottomSheet, detailDocID }) => {
                 .collection('Coment')
                 .orderBy('orderBy', 'desc')
                 .onSnapshot((documentSnapshot) => {
-                    let feedArray = [];
-                    documentSnapshot.forEach((doc) => {
-                        feedArray.push({
-                            DocID: doc.id,
-                            Data: doc.data(),
+                    if (documentSnapshot) {
+                        let feedArray = [];
+                        documentSnapshot.forEach((doc) => {
+                            feedArray.push({
+                                DocID: doc.id,
+                                Data: doc.data(),
+                            });
                         });
-                    });
-                    setComentData(feedArray);
-                    // console.log('comentData', feedArray);
+                        setComentData(feedArray);
+                        // console.log('comentData', feedArray);
+                    }
                 });
 
             return () => subscriber();
@@ -154,7 +156,7 @@ const ComentScreen = ({ toggleBottomSheet, detailDocID }) => {
                                         </>;
                                     }}
                                 >
-                                    <ProfileImg source={{ uri: item.Data.petimage || EmptyImg }} />
+                                    <ProfileImg source={{ uri: item.Data.petimage } || EmptyImg} />
                                 </ProfileImgBox>
                                 <ComentBox>
                                     <ProfileNameTagBox
