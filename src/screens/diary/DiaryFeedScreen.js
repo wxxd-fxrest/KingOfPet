@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import auth from '@react-native-firebase/auth';
-import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import EmptyImg from '../../assets/logo.png';
 import { ActivityIndicator } from 'react-native';
+import BookMarkButton from '../../components/BookMarkButton';
 
-const DiaryFeedScreen = ({ navigation, handleScroll, currentUserData }) => {
-    const [star, setStar] = useState(false);
+const DiaryFeedScreen = ({ navigation, handleScroll, currentUser, currentUserData }) => {
     const [diaryData, setDiaryData] = useState([]);
 
     useEffect(() => {
@@ -35,9 +33,6 @@ const DiaryFeedScreen = ({ navigation, handleScroll, currentUserData }) => {
             return () => subscriber();
         }
     }, [currentUserData]);
-
-    // console.log('currentUserData', currentUserData);
-    // console.log('diaryData', diaryData);
 
     return (
         <>
@@ -68,13 +63,11 @@ const DiaryFeedScreen = ({ navigation, handleScroll, currentUserData }) => {
                                         <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
                                         <DiayrDate>{item.Data.orderBy}</DiayrDate>
                                     </DiaryDateBox>
-                                    <LikeBox onPress={() => setStar(!star)}>
-                                        <MaterialCommunityIcons
-                                            name={item.important === true ? 'star-check' : 'star-plus-outline'}
-                                            size={20}
-                                            color="#243e35"
-                                        />
-                                    </LikeBox>
+                                    <BookMarkButton
+                                        DocID={item.DocID}
+                                        currentUser={currentUser}
+                                        detailData={item.Data}
+                                    />
                                 </LikeBottomBox>
                             </DiaryDetailBox>
                         </DiaryContainer>

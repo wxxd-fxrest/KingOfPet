@@ -11,44 +11,51 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import EmptyImg from '../../assets/logo.png';
 import FollowButton from '../../components/FollowButton';
+import LikeButton from '../../components/LikeButton';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
-    let detailData;
     let detailDocID;
+    let detailData;
+
+    console.log('디테일', detailData);
+
     if (params) {
         detailData = params.Data;
         detailDocID = params.DocID;
     }
 
-    // console.log('detailData', detailDocID);
-
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
-    const [currentUser, setCurrentUser] = useState([]);
-    const [currentUserData, setCurrentUserData] = useState([]);
-    const [userData, setUserData] = useState([]);
+    const [currentUser, setCurrentUser] = useState(auth().currentUser);
+    const [currentUserData, setCurrentUserData] = useState({});
+    const [userData, setUserData] = useState({});
     const [follow, setFollow] = useState(false);
 
     useEffect(() => {
-        setCurrentUser(auth().currentUser);
-        // console.log('profile', currentUser);
+        const userDoc = firestore().collection('Users').doc(currentUser.email);
 
-        firestore()
-            .collection('Users')
-            .doc(`${currentUser.email}`)
-            .onSnapshot((documentSnapshot) => {
-                setCurrentUserData(documentSnapshot.data());
-                console.log('디테일 페이지 current 유저 데이터: ', documentSnapshot.data());
+        const userUnsubscribe = userDoc.onSnapshot((userSnapshot) => {
+            setCurrentUserData(userSnapshot.data());
+        });
+
+        return () => {
+            userUnsubscribe();
+        };
+    }, [currentUser, detailDocID]);
+
+    useEffect(() => {
+        if (detailData.useremail) {
+            const userDoc = firestore().collection('Users').doc(detailData.useremail);
+
+            const userUnsubscribe = userDoc.onSnapshot((userSnapshot) => {
+                setUserData(userSnapshot.data());
             });
 
-        firestore()
-            .collection('Users')
-            .doc(`${detailData.useremail}`)
-            .onSnapshot((documentSnapshot) => {
-                setUserData(documentSnapshot.data());
-                console.log('detailData', documentSnapshot.data());
-            });
-    }, [currentUser]);
+            return () => {
+                userUnsubscribe();
+            };
+        }
+    }, [detailData.useremail]);
 
     const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
 
@@ -78,9 +85,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                 )}
 
                 {detailData.type === 'Post' ? (
-                    <LikeButton>
-                        <MaterialIcons name="pets" size={18} color="rgba(249, 19, 0, 0.8)" />
-                    </LikeButton>
+                    <LikeButton currentUser={currentUser} currentUserData={currentUserData} detailDocID={detailDocID} />
                 ) : (
                     <QnABox>
                         <QnABoolen>Q&A</QnABoolen>
@@ -123,11 +128,18 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                             />
                         }
                     >
-                        {detailData.image.map((item, i) => (
-                            <BannerContainer key={i} activeOpacity={0.9}>
-                                <BannerImage source={{ uri: item.url } || EmptyImg} />
-                            </BannerContainer>
-                        ))}
+                        {detailData && detailData.image ? (
+                            <>
+                                {detailData.image.map((item, i) => {
+                                    console.log('이미지', item);
+                                    return (
+                                        <BannerContainer key={i} activeOpacity={0.9}>
+                                            <BannerImage source={{ uri: item.url } || EmptyImg} />
+                                        </BannerContainer>
+                                    );
+                                })}
+                            </>
+                        ) : null}
                     </Swiper>
                 </SwiperBox>
                 <UserProfileBox>
@@ -218,15 +230,6 @@ const HeaderIconBox = styled.View`
     top: 50px;
     z-index: 10;
     padding: 0px 20px;
-`;
-
-const LikeButton = styled.TouchableOpacity`
-    background-color: rgba(193, 204, 200, 0.2);
-    width: 24px;
-    height: 24px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 100px;
 `;
 
 const QnABox = styled.View`

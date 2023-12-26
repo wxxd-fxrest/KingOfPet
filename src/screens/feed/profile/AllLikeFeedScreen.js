@@ -1,15 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Platform } from 'react-native';
-import postData from '../../../data/postData';
+import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
-import { MaterialIcons } from '@expo/vector-icons';
 import EmptyImg from '../../../assets/logo.png';
+import LikeButton from '../../../components/LikeButton';
 
-const AllLikeFeedScreen = ({ navigation, handleScroll }) => {
+const AllLikeFeedScreen = ({ navigation, handleScroll, currentUser, currentUserData }) => {
+    const [currentLike, setCurrentLike] = useState([]);
+
+    useEffect(() => {
+        const subscriber = firestore()
+            .collection('Posts')
+            .orderBy('orderBy', 'desc')
+            .where('like', 'array-contains', `${currentUser.email}`)
+            .onSnapshot((documentSnapshot) => {
+                if (documentSnapshot) {
+                    let feedArray = [];
+                    documentSnapshot.forEach((doc) => {
+                        feedArray.push({
+                            DocID: doc.id,
+                            Data: doc.data(),
+                        });
+                    });
+                    setCurrentLike(feedArray);
+                    console.log('feedArray', currentLike);
+                }
+            });
+
+        return () => {
+            subscriber();
+        };
+    }, [currentUser]);
+
     return (
         <Container>
             <FlatList
-                data={postData}
+                data={currentLike}
+                keyExtractor={(item) => item.DocID + ''}
                 renderItem={({ item }) => (
                     <LikeContainer
                         onPress={() =>
@@ -20,11 +47,11 @@ const AllLikeFeedScreen = ({ navigation, handleScroll }) => {
                         }
                     >
                         <LikeImgBox>
-                            <LikeImg source={{ uri: item.image } || EmptyImg} />
+                            <LikeImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
                         </LikeImgBox>
                         <LikeDetailBox>
                             <LikeDetail numberOfLines={7} ellipsizeMode="tail">
-                                {item.description}
+                                {item.Data.text}
                             </LikeDetail>
                             <LikeBottomBox>
                                 <LikeUserBox
@@ -36,18 +63,19 @@ const AllLikeFeedScreen = ({ navigation, handleScroll }) => {
                                     }}
                                 >
                                     <LikeUserImgBox>
-                                        <LikeUserImg source={{ uri: item.userimg } || EmptyImg} />
+                                        <LikeUserImg source={{ uri: currentUserData.petimage } || EmptyImg} />
                                     </LikeUserImgBox>
-                                    <LikeuserName>{item.username} </LikeuserName>
+                                    <LikeuserName>{currentUserData.petname} </LikeuserName>
                                 </LikeUserBox>
-                                <LikeBox>
-                                    <MaterialIcons name="pets" size={16} color="rgba(249, 19, 0, 0.8)" />
-                                </LikeBox>
+                                <LikeButton
+                                    currentUser={currentUser}
+                                    currentUserData={currentUserData}
+                                    detailDocID={item.DocID}
+                                />
                             </LikeBottomBox>
                         </LikeDetailBox>
                     </LikeContainer>
                 )}
-                keyExtractor={(item) => item.id + ''}
                 showsVerticalScrollIndicator={false}
                 onScroll={handleScroll}
                 scrollEventThrottle={16}

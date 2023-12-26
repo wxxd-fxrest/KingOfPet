@@ -8,27 +8,42 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import EmptyImg from '../../assets/logo.png';
+import BookMarkButton from '../../components/BookMarkButton';
 
 const DiaryDetailScreen = ({ navigation, route: { params } }) => {
-    console.log('일기장 디테일', params);
+    let DocID;
+    if (params) {
+        DocID = params.DocID;
+    }
+
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
 
-    const [star, setStar] = useState(true);
+    const [detailData, setDetailData] = useState([]);
     const [currentUser, setCurrentUser] = useState([]);
     const [currentUserData, setCurrentUserData] = useState([]);
 
     useEffect(() => {
-        setCurrentUser(auth().currentUser);
-        // console.log('profile', currentUser);
-        firestore()
-            .collection('Users')
-            .doc(`${currentUser.email}`)
-            .onSnapshot((documentSnapshot) => {
-                setCurrentUserData(documentSnapshot.data());
-                console.log('profile User data: ', documentSnapshot.data());
-            });
-    }, [currentUser]);
+        const fetchData = async () => {
+            setCurrentUser(auth().currentUser);
+
+            const userSnapshot = await firestore().collection('Users').doc(`${currentUser.email}`).get();
+
+            setCurrentUserData(userSnapshot.data());
+
+            const diarySnapshot = await firestore()
+                .collection('Users')
+                .doc(`${currentUser.email}`)
+                .collection('Diary')
+                .doc(`${DocID}`)
+                .get();
+
+            const diaryData = diarySnapshot.data();
+            setDetailData(diaryData);
+        };
+
+        fetchData();
+    }, [currentUser, DocID]);
 
     return (
         <Container>
@@ -51,13 +66,7 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
                     </BackButton>
                 )}
 
-                <LikeButton>
-                    <MaterialCommunityIcons
-                        name={star === true ? 'star-check' : 'star-plus-outline'}
-                        size={18}
-                        color="#243e35"
-                    />
-                </LikeButton>
+                <BookMarkButton DocID={DocID} currentUser={currentUser} detailData={detailData} />
             </HeaderIconBox>
             <ScrollView showsVerticalScrollIndicator={false}>
                 {currentUserData ? (
@@ -97,14 +106,11 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
                                     />
                                 }
                             >
-                                {params.Data.image.map((item, i) => {
-                                    console.log('이미지', item);
-                                    return (
-                                        <BannerContainer key={i}>
-                                            <BannerImage source={{ uri: item.url } || EmptyImg} />
-                                        </BannerContainer>
-                                    );
-                                })}
+                                {params.Data.image.map((item, i) => (
+                                    <BannerContainer key={i}>
+                                        <BannerImage source={{ uri: item.url } || EmptyImg} />
+                                    </BannerContainer>
+                                ))}
                             </Swiper>
                         </SwiperBox>
 
@@ -155,15 +161,6 @@ const HeaderIconBox = styled.View`
     top: 50px;
     z-index: 10;
     padding: 0px 20px;
-`;
-
-const LikeButton = styled.TouchableOpacity`
-    background-color: rgba(193, 204, 200, 0.2);
-    width: 24px;
-    height: 24px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 100px;
 `;
 
 const BackButton = styled.TouchableOpacity``;
@@ -217,7 +214,7 @@ const PetMoodBox = styled.View`
     justify-content: center;
 `;
 
-const PetImageBox = styled.TouchableOpacity`
+const PetImageBox = styled.View`
     margin-right: 16px;
 `;
 
@@ -227,7 +224,7 @@ const PetImg = styled.Image`
     border-radius: 100px;
 `;
 
-const PetNameTag = styled.TouchableOpacity`
+const PetNameTag = styled.View`
     flex-direction: row;
     align-items: center;
 `;

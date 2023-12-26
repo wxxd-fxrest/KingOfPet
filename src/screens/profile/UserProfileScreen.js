@@ -4,7 +4,6 @@ import { Text } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
-import AllLikeFeedScreen from '../feed/profile/AllLikeFeedScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import UserPostFeedScreen from '../feed/userprofile/UserPostFeedScreen';
 import UserDiaryFeedScreen from '../feed/userprofile/UserDiaryFeedScreen';
@@ -131,7 +130,7 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                         borderBottomColor: '#243e35',
                         borderBottomWidth: 2.5,
                         width: 70,
-                        left: 35,
+                        left: 65,
                     },
                 }}
             >
@@ -157,14 +156,6 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                     )}
                     options={{
                         title: '일기',
-                    }}
-                />
-                <Tab.Screen
-                    name="Like"
-                    children={() => <AllLikeFeedScreen navigation={navigation} handleScroll={handleScroll} />}
-                    options={{
-                        title: '도장',
-                        unmountOnBlur: true,
                     }}
                 />
             </Tab.Navigator>

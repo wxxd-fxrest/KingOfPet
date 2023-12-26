@@ -109,7 +109,7 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
                         image: filteredArray,
                         useremail: currentUser.email,
                         orderBy: saveDate,
-                        like: [],
+                        bookmark: false,
                     })
                     .then(() => {
                         console.log('User added!');
