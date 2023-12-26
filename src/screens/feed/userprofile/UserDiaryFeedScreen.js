@@ -61,7 +61,7 @@ const UserDiaryFeedScreen = ({ navigation, handleScroll, userData }) => {
                                     }
                                 >
                                     <DiaryImgBox>
-                                        <DiaryImg source={{ uri: item.Data.image[0].url || EmptyImg }} />
+                                        <DiaryImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
                                     </DiaryImgBox>
                                     <DiaryDetailBox>
                                         <DiaryDetail numberOfLines={6} ellipsizeMode="tail">

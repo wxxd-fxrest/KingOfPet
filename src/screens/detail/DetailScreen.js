@@ -125,7 +125,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                     >
                         {detailData.image.map((item, i) => (
                             <BannerContainer key={i} activeOpacity={0.9}>
-                                <BannerImage source={{ uri: item.url || EmptyImg }} />
+                                <BannerImage source={{ uri: item.url } || EmptyImg} />
                             </BannerContainer>
                         ))}
                     </Swiper>
@@ -150,7 +150,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                         }}
                     >
                         <UerProfileImageBox>
-                            <UserProfileImg source={{ uri: userData.petimage }} />
+                            <UserProfileImg source={{ uri: userData.petimage } || EmptyImg} />
                         </UerProfileImageBox>
                         <UserProfileNameTag>
                             <UserProfileTitle>옆집 상전</UserProfileTitle>

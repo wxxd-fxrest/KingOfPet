@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import postData from '../../data/postData';
+import EmptyImg from '../../assets/logo.png';
 
 const ImportantDiarySceren = () => {
     const navigation = useNavigation();
@@ -23,7 +24,7 @@ const ImportantDiarySceren = () => {
                                 }
                             >
                                 <DiaryImgBox>
-                                    <DiaryImg source={{ uri: item.image }} />
+                                    <DiaryImg source={{ uri: item.image } || EmptyImg} />
                                 </DiaryImgBox>
                                 <DiaryDetailBox>
                                     <DiaryDetail numberOfLines={6} ellipsizeMode="tail">

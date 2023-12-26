@@ -3,6 +3,7 @@ import { FlatList, Platform } from 'react-native';
 import postData from '../../../data/postData';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
+import EmptyImg from '../../../assets/logo.png';
 
 const AllLikeFeedScreen = ({ navigation, handleScroll }) => {
     return (
@@ -19,7 +20,7 @@ const AllLikeFeedScreen = ({ navigation, handleScroll }) => {
                         }
                     >
                         <LikeImgBox>
-                            <LikeImg source={{ uri: item.image }} />
+                            <LikeImg source={{ uri: item.image } || EmptyImg} />
                         </LikeImgBox>
                         <LikeDetailBox>
                             <LikeDetail numberOfLines={7} ellipsizeMode="tail">
@@ -35,7 +36,7 @@ const AllLikeFeedScreen = ({ navigation, handleScroll }) => {
                                     }}
                                 >
                                     <LikeUserImgBox>
-                                        <LikeUserImg source={{ uri: item.userimg }} />
+                                        <LikeUserImg source={{ uri: item.userimg } || EmptyImg} />
                                     </LikeUserImgBox>
                                     <LikeuserName>{item.username} </LikeuserName>
                                 </LikeUserBox>

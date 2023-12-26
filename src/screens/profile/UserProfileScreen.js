@@ -88,7 +88,7 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                     {userData && (
                         <ProfileBox>
                             <ProfilePetImgBox>
-                                <ProfilePetImg source={{ uri: userData.petimage || EmptyImg }} />
+                                <ProfilePetImg source={{ uri: userData.petimage } || EmptyImg} />
                             </ProfilePetImgBox>
                             <ProfilePetNameBox>
                                 <ProfilePetNameTitle>상전</ProfilePetNameTitle>

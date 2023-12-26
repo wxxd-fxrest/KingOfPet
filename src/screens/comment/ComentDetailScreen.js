@@ -47,14 +47,16 @@ const ComentDetailScreen = ({ navigation, route: { params } }) => {
                 .collection('ComentDetail')
                 .orderBy('orderBy')
                 .onSnapshot((documentSnapshot) => {
-                    let feedArray = [];
-                    documentSnapshot.forEach((doc) => {
-                        feedArray.push({
-                            DocID: doc.id,
-                            Data: doc.data(),
+                    if (documentSnapshot) {
+                        let feedArray = [];
+                        documentSnapshot.forEach((doc) => {
+                            feedArray.push({
+                                DocID: doc.id,
+                                Data: doc.data(),
+                            });
                         });
-                    });
-                    setComentDetailData(feedArray);
+                        setComentDetailData(feedArray);
+                    }
                     // console.log('comentDetailData', comentDetailData);
                 });
 
@@ -181,7 +183,7 @@ const ComentDetailScreen = ({ navigation, route: { params } }) => {
                                                 </>;
                                             }}
                                         >
-                                            <ProfileImg source={{ uri: item.Data.petimage || EmptyImg }} />
+                                            <ProfileImg source={{ uri: item.Data.petimage } || EmptyImg} />
                                         </ProfileImgBox>
                                         <ComentBox>
                                             <ProfileNameTagBox

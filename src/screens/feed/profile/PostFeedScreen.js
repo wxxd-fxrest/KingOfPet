@@ -137,7 +137,7 @@ const RandomCard = ({ item, index, navigation }) => {
                             }}
                         />
                         <Image
-                            source={{ uri: item.Data.image[0].url || EmptyImg }}
+                            source={{ uri: item.Data.image[0].url } || EmptyImg}
                             isEven={isEven}
                             resizeMode="cover"
                             style={{
@@ -159,7 +159,7 @@ const RandomCard = ({ item, index, navigation }) => {
                     )}
                     <PetNameTag>
                         <PetImageBox>
-                            <PetImage source={userData && { uri: userData.petimage }} />
+                            <PetImage source={(userData && { uri: userData.petimage }) || EmptyImg} />
                         </PetImageBox>
                         <UserName>{userData && userData.petname}</UserName>
                     </PetNameTag>

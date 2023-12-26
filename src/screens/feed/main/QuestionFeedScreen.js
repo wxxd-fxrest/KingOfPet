@@ -129,7 +129,7 @@ const QnACard = ({ item, index, navigation }) => {
                             }}
                         />
                         <Image
-                            source={{ uri: item.Data.image[0].url || EmptyImg }}
+                            source={{ uri: item.Data.image[0].url } || EmptyImg}
                             isEven={isEven}
                             resizeMode="cover"
                             style={{
@@ -149,7 +149,7 @@ const QnACard = ({ item, index, navigation }) => {
                             }}
                         >
                             <PetImageBox>
-                                <PetImage source={{ uri: userData.petimage }} />
+                                <PetImage source={{ uri: userData.petimage } || EmptyImg} />
                             </PetImageBox>
                             <UserName>{userData.petname}</UserName>
                         </PetNameTag>

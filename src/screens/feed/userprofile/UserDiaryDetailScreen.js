@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import EmptyImg from '../../../assets/logo.png';
 
 const UserDiaryDetailScreen = ({ navigation, route: { params } }) => {
     console.log('일기장 디테일', params);
@@ -109,7 +110,7 @@ const UserDiaryDetailScreen = ({ navigation, route: { params } }) => {
 
                         <PetMoodContainer>
                             <PetImageBox>
-                                <PetImg source={{ uri: currentUserData.petimage }} />
+                                <PetImg source={{ uri: currentUserData.petimage } || EmptyImg} />
                             </PetImageBox>
                             <PetMoodBox>
                                 <DiaryDateBox>
