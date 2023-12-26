@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import Swiper from 'react-native-swiper';
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -19,8 +18,6 @@ const UserDiaryDetailScreen = ({ navigation, route: { params } }) => {
     const [currentUserData, setCurrentUserData] = useState([]);
 
     useEffect(() => {
-        // setCurrentUser(auth().currentUser);
-        // console.log('profile', currentUser);
         firestore()
             .collection('Users')
             .doc(`${params.Data.useremail}`)
@@ -50,14 +47,6 @@ const UserDiaryDetailScreen = ({ navigation, route: { params } }) => {
                         <AntDesign name="arrowleft" size={22} color="#243e35" />
                     </BackButton>
                 )}
-
-                <LikeButton>
-                    <MaterialCommunityIcons
-                        name={star === true ? 'star-check' : 'star-plus-outline'}
-                        size={18}
-                        color="#243e35"
-                    />
-                </LikeButton>
             </HeaderIconBox>
             <ScrollView showsVerticalScrollIndicator={false}>
                 {currentUserData ? (
@@ -217,7 +206,7 @@ const PetMoodBox = styled.View`
     justify-content: center;
 `;
 
-const PetImageBox = styled.TouchableOpacity`
+const PetImageBox = styled.View`
     margin-right: 16px;
 `;
 
@@ -227,7 +216,7 @@ const PetImg = styled.Image`
     border-radius: 100px;
 `;
 
-const PetNameTag = styled.TouchableOpacity`
+const PetNameTag = styled.View`
     flex-direction: row;
     align-items: center;
 `;

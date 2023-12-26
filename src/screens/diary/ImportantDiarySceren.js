@@ -1,58 +1,96 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import postData from '../../data/postData';
 import EmptyImg from '../../assets/logo.png';
+import BookMarkButton from '../../components/BookMarkButton';
 
 const ImportantDiarySceren = () => {
     const navigation = useNavigation();
-    const [star, setStar] = useState(false);
+
+    const [currentUser, setCurrentUser] = useState([]);
+    const [detailData, setDetailData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setCurrentUser(auth().currentUser);
+
+            const handleSnapshot = (documentSnapshot) => {
+                if (documentSnapshot) {
+                    let feedArray = [];
+                    documentSnapshot.forEach((doc) => {
+                        feedArray.push({
+                            DocID: doc.id,
+                            Data: doc.data(),
+                        });
+                    });
+                    setDetailData(feedArray);
+                }
+            };
+
+            const subscriber = firestore()
+                .collection('Users')
+                .doc(`${currentUser.email}`)
+                .collection('Diary')
+                .where('bookmark', '==', true)
+                .onSnapshot(handleSnapshot);
+
+            // Unsubscribe 함수
+            const unsubscribe = () => {
+                subscriber();
+            };
+
+            // Component가 언마운트되거나 다시 렌더링될 때 unsubscribe 실행
+            return unsubscribe;
+        };
+
+        fetchData();
+    }, [currentUser]);
 
     return (
         <Container>
-            <FlatList
-                data={postData}
-                ItemSeparatorComponent={heightEmpty}
-                renderItem={({ item }) => (
-                    <>
-                        {item.important === true && (
+            {detailData && (
+                <>
+                    <FlatList
+                        data={detailData}
+                        ItemSeparatorComponent={heightEmpty}
+                        renderItem={({ item }) => (
                             <DiaryContainer
                                 onPress={() =>
                                     navigation.navigate('MainStack', { screen: 'DiaryDetail', params: item })
                                 }
                             >
                                 <DiaryImgBox>
-                                    <DiaryImg source={{ uri: item.image } || EmptyImg} />
+                                    <DiaryImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
                                 </DiaryImgBox>
                                 <DiaryDetailBox>
                                     <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
-                                        {item.description}
+                                        {item.Data.text}
                                     </DiaryDetail>
 
-                                    <LikeBottomBox>
+                                    <BookMarkBottomBox>
                                         <DiaryDateBox>
                                             <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
-                                            <DiayrDate>2023.02.31</DiayrDate>
+                                            <DiayrDate>{item.Data.orderBy}</DiayrDate>
                                         </DiaryDateBox>
 
-                                        <LikeBox onPress={() => setStar(!star)}>
-                                            <MaterialCommunityIcons
-                                                name={item.important === true ? 'star-check' : 'star-plus-outline'}
-                                                size={20}
-                                                color="#243e35"
-                                            />
-                                        </LikeBox>
-                                    </LikeBottomBox>
+                                        <BookMarkButton
+                                            DocID={item.DocID}
+                                            currentUser={currentUser}
+                                            detailData={item.Data}
+                                        />
+                                    </BookMarkBottomBox>
                                 </DiaryDetailBox>
                             </DiaryContainer>
                         )}
-                    </>
-                )}
-                keyExtractor={(item) => item.id + ''}
-                showsVerticalScrollIndicator={false}
-            />
+                        keyExtractor={(item) => item.DocID + ''}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </>
+            )}
             <View
                 style={{
                     height: '3%',
@@ -121,7 +159,7 @@ const DiaryDetail = styled.Text`
     height: 84%;
 `;
 
-const LikeBottomBox = styled.View`
+const BookMarkBottomBox = styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -129,16 +167,6 @@ const LikeBottomBox = styled.View`
     bottom: 14px;
     right: 10px;
     width: 100%;
-`;
-
-const LikeBox = styled.TouchableOpacity`
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    border-radius: 100px;
-    background-color: rgba(193, 204, 200, 0.2);
 `;
 
 const DiaryDateBox = styled.View`

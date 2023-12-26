@@ -2,19 +2,15 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import auth from '@react-native-firebase/auth';
-import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import EmptyImg from '../../../assets/logo.png';
 import { ActivityIndicator } from 'react-native';
 
 const UserDiaryFeedScreen = ({ navigation, handleScroll, userData }) => {
-    // console.log(userData);
     const [star, setStar] = useState(false);
     const [diaryData, setDiaryData] = useState([]);
 
     useEffect(() => {
-        // if (userData) {
         const subscriber = firestore()
             .collection('Users')
             .doc(`${userData.email}`)
@@ -32,10 +28,7 @@ const UserDiaryFeedScreen = ({ navigation, handleScroll, userData }) => {
             });
 
         return () => subscriber();
-        // }
     }, [userData]);
-
-    // console.log('diaryData', diaryData);
 
     return (
         <>
@@ -77,13 +70,6 @@ const UserDiaryFeedScreen = ({ navigation, handleScroll, userData }) => {
                                                 />
                                                 <DiayrDate>{item.Data.orderBy}</DiayrDate>
                                             </DiaryDateBox>
-                                            <LikeBox onPress={() => setStar(!star)}>
-                                                <MaterialCommunityIcons
-                                                    name={item.important === true ? 'star-check' : 'star-plus-outline'}
-                                                    size={20}
-                                                    color="#243e35"
-                                                />
-                                            </LikeBox>
                                         </LikeBottomBox>
                                     </DiaryDetailBox>
                                 </DiaryContainer>
@@ -167,7 +153,7 @@ const DiaryDetail = styled.Text`
 
 const LikeBottomBox = styled.View`
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     position: absolute;
     bottom: 14px;

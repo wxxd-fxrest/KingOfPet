@@ -222,6 +222,7 @@ const ProfileScreen = ({ postData }) => {
                         <DiaryFeedScreen
                             navigation={navigation}
                             handleScroll={handleScroll}
+                            currentUser={currentUser}
                             currentUserData={currentUserData}
                         />
                     )}
@@ -231,7 +232,14 @@ const ProfileScreen = ({ postData }) => {
                 />
                 <Tab.Screen
                     name="Like"
-                    children={() => <AllLikeFeedScreen navigation={navigation} handleScroll={handleScroll} />}
+                    children={() => (
+                        <AllLikeFeedScreen
+                            navigation={navigation}
+                            handleScroll={handleScroll}
+                            currentUser={currentUser}
+                            currentUserData={currentUserData}
+                        />
+                    )}
                     options={{
                         title: '도장',
                         unmountOnBlur: true,
