@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { Feather } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
 import EmptyImg from '../../assets/logo.png';
+import LikeButton from '../../components/LikeButton';
 
 const SearchScreen = ({ navigation }) => {
     // flase === user, true === post
@@ -13,10 +13,19 @@ const SearchScreen = ({ navigation }) => {
     const [searchText, setSearchText] = useState('');
     const [searchUser, setSearchUser] = useState([]);
     const [searchPost, setSearchPost] = useState([]);
-    const [currentUser, setCurrentUser] = useState([]);
+    const [currentUser, setCurrentUser] = useState(auth().currentUser);
+    const [currentUserData, setCurrentUserData] = useState({});
 
     useEffect(() => {
-        setCurrentUser(auth().currentUser);
+        const userDoc = firestore().collection('Users').doc(currentUser.email);
+
+        const userUnsubscribe = userDoc.onSnapshot((userSnapshot) => {
+            setCurrentUserData(userSnapshot.data());
+        });
+
+        return () => {
+            userUnsubscribe();
+        };
     }, [currentUser]);
 
     const toggleSwitch = () => setCategory((previousState) => !previousState);
@@ -189,9 +198,11 @@ const SearchScreen = ({ navigation }) => {
                                                 </PostResultProfileImgBox>
                                                 <PostResultProfileName>{item.userData.petname}</PostResultProfileName>
                                             </PostResultProfileBox>
-                                            <PostResultLikeBox>
-                                                <MaterialIcons name="pets" size={16} color="rgba(249, 19, 0, 0.8)" />
-                                            </PostResultLikeBox>
+                                            <LikeButton
+                                                currentUser={currentUser}
+                                                currentUserData={currentUserData}
+                                                detailDocID={item.DocID}
+                                            />
                                         </PostResultBottomBox>
                                     </PostResultDetailBox>
                                 </PostResultContainer>
