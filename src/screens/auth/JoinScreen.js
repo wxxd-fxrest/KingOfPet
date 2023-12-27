@@ -128,7 +128,9 @@ const Join = () => {
                                         createprofile: true,
                                         signType: 'Email',
                                         follower: [],
+                                        follower_data: [],
                                         following: [],
+                                        following_data: [],
                                     })
                                     .then(() => {
                                         console.log('User added!');

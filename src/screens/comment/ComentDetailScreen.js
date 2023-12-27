@@ -5,6 +5,7 @@ import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import EmptyImg from '../../assets/logo.png';
 
 const { StatusBarManager } = NativeModules;
 
@@ -134,7 +135,7 @@ const ComentDetailScreen = ({ navigation, route: { params } }) => {
                         <ComentContainer>
                             <ProfileBox>
                                 <ProfileImgBox activeOpacity={0.8}>
-                                    <ProfileImg source={{ uri: comentData.petimage }} />
+                                    <ProfileImg source={(comentData && { uri: comentData.petimage }) || EmptyImg} />
                                 </ProfileImgBox>
 
                                 <ProfileNameTagBox
@@ -183,7 +184,7 @@ const ComentDetailScreen = ({ navigation, route: { params } }) => {
                                                 </>;
                                             }}
                                         >
-                                            <ProfileImg source={{ uri: item.Data.petimage } || EmptyImg} />
+                                            <ProfileImg source={(item && { uri: item.Data.petimage }) || EmptyImg} />
                                         </ProfileImgBox>
                                         <ComentBox>
                                             <ProfileNameTagBox

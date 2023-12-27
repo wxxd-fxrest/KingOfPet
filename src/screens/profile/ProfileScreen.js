@@ -43,7 +43,7 @@ const ProfileScreen = ({ postData }) => {
             .doc(`${currentUser.email}`)
             .onSnapshot((documentSnapshot) => {
                 setCurrentUserData(documentSnapshot.data());
-                console.log('profile User data: ', documentSnapshot.data());
+                // console.log('profile User data: ', documentSnapshot.data());
             });
     }, [currentUser]);
 
@@ -157,14 +157,6 @@ const ProfileScreen = ({ postData }) => {
                                     </ProfilePetName>
                                 </ProfilePetNameBox>
                                 <FollowContainer>
-                                    <FollowBox onPress={() => navigation.navigate('MainStack', { screen: 'Follower' })}>
-                                        {currentUserData && currentUserData.follower ? (
-                                            <Follow>{currentUserData.follower.length}</Follow>
-                                        ) : (
-                                            <Follow>0</Follow>
-                                        )}
-                                        <FollowText>팔로워</FollowText>
-                                    </FollowBox>
                                     <FollowingBox
                                         onPress={() => navigation.navigate('MainStack', { screen: 'Following' })}
                                     >
@@ -175,6 +167,14 @@ const ProfileScreen = ({ postData }) => {
                                         )}
                                         <FollowText>팔로잉</FollowText>
                                     </FollowingBox>
+                                    <FollowBox onPress={() => navigation.navigate('MainStack', { screen: 'Follower' })}>
+                                        {currentUserData && currentUserData.follower ? (
+                                            <Follow>{currentUserData.follower.length}</Follow>
+                                        ) : (
+                                            <Follow>0</Follow>
+                                        )}
+                                        <FollowText>팔로워</FollowText>
+                                    </FollowBox>
                                 </FollowContainer>
                             </ProfileRightBox>
                         </ProfileBox>

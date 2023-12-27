@@ -7,6 +7,7 @@ import EmptyImg from '../../../assets/logo.png';
 import { ActivityIndicator } from 'react-native';
 
 const UserDiaryFeedScreen = ({ navigation, handleScroll, userData }) => {
+    // console.log(userData);
     const [star, setStar] = useState(false);
     const [diaryData, setDiaryData] = useState([]);
 
@@ -25,6 +26,7 @@ const UserDiaryFeedScreen = ({ navigation, handleScroll, userData }) => {
                     });
                 });
                 setDiaryData(feedArray);
+                // console.log('diaryData', diaryData);
             });
 
         return () => subscriber();
@@ -45,7 +47,7 @@ const UserDiaryFeedScreen = ({ navigation, handleScroll, userData }) => {
                         <>
                             {diaryData.map((item) => (
                                 <DiaryContainer
-                                    key={item.id}
+                                    key={item.DocID}
                                     onPress={() =>
                                         navigation.navigate('MainStack', {
                                             screen: 'UserDiaryDetail',

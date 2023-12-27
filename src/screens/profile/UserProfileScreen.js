@@ -19,10 +19,7 @@ const UserProfileScreen = ({ navigation, route: params }) => {
     const [follow, setFollow] = useState(false);
     const [currentUser, setCurrentUser] = useState([]);
     const [currentUserData, setCurrentUserData] = useState([]);
-
-    let userData = params?.params;
-    console.log('params', params?.params);
-    console.log('유저 params', userData);
+    const [userData, setUserData] = useState([]);
 
     useEffect(() => {
         setCurrentUser(auth().currentUser);
@@ -33,9 +30,29 @@ const UserProfileScreen = ({ navigation, route: params }) => {
             .doc(`${currentUser.email}`)
             .onSnapshot((documentSnapshot) => {
                 setCurrentUserData(documentSnapshot.data());
-                console.log('디테일 페이지 current 유저 데이터: ', documentSnapshot.data());
+                // console.log('디테일 페이지 current 유저 데이터: ', documentSnapshot.data());
             });
     }, [currentUser]);
+
+    let isFollowing;
+
+    if (currentUserData) {
+        isFollowing = Array.isArray(currentUserData.following) && currentUserData.following.includes(userData.email);
+    }
+
+    useEffect(() => {
+        const currentDoc = firestore().collection('Users').doc(params?.params.email);
+
+        const currentUnsubscribe = currentDoc.onSnapshot((userSnapshot) => {
+            setUserData(userSnapshot.data());
+        });
+
+        return () => {
+            currentUnsubscribe();
+        };
+    }, [params]);
+
+    // console.log('currentUserData', userData.userid);
 
     useEffect(() => {
         const subscriber = firestore()
@@ -78,7 +95,7 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                     ) : null,
             });
         }
-    }, [navigation]);
+    }, [navigation, userData]);
 
     return (
         <Container>
@@ -105,8 +122,7 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                                 </ProfilePetName>
                             </ProfilePetNameBox>
                             <FollowButton
-                                setFollow={setFollow}
-                                follow={follow}
+                                isFollowing={isFollowing}
                                 currentUserData={currentUserData}
                                 userData={userData}
                             />

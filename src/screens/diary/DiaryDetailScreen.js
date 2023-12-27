@@ -16,6 +16,10 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
         DocID = params.DocID;
     }
 
+    let postDate = params.Data.orderBy;
+    let date = postDate.split(' ');
+    let newDate = date[0] + ' ' + date[1] + ' ' + date[2];
+
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
 
@@ -121,7 +125,7 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
                             <PetMoodBox>
                                 <DiaryDateBox>
                                     <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
-                                    <DiayrDate>2023.02.31</DiayrDate>
+                                    <DiayrDate>{newDate}</DiayrDate>
                                 </DiaryDateBox>
                                 <PetNameTag>
                                     <PetName>{currentUserData.petname}</PetName>

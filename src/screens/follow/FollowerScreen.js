@@ -1,32 +1,66 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
-import postData from '../../data/postData';
+import FollowButton from '../../components/FollowButton';
 
-const FollowerScreen = () => {
+const FollowerScreen = ({ navigation }) => {
+    const [currentUser, setCurrentUser] = useState(auth().currentUser);
+    const [currentUserData, setCurrentUserData] = useState({});
+
+    useEffect(() => {
+        const currentDoc = firestore().collection('Users').doc(currentUser.email);
+
+        const currentUnsubscribe = currentDoc.onSnapshot((userSnapshot) => {
+            setCurrentUserData(userSnapshot.data());
+            // console.log('currentUserData', currentUserData.follower);
+        });
+
+        return () => {
+            currentUnsubscribe();
+        };
+    }, [currentUser]);
+
     return (
         <Container>
             <FlatList
-                data={postData}
+                data={currentUserData.follower_data}
                 ItemSeparatorComponent={heightEmpty}
-                keyExtractor={(item) => item.id + ''}
+                keyExtractor={(item) => item.email + ''}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => (
-                    <UserBox>
-                        <UserImgBox>
-                            <UserImg source={{ uri: item.image }} />
-                        </UserImgBox>
+                renderItem={({ item }) => {
+                    const isFollowing =
+                        Array.isArray(currentUserData.following) && currentUserData.following.includes(item.email);
+                    // console.log(item);
+                    return (
+                        <>
+                            <UserBox
+                                onPress={() => {
+                                    navigation.navigate('MainStack', {
+                                        screen: 'UserProfile',
+                                        params: item,
+                                    });
+                                }}
+                            >
+                                <UserImgBox>
+                                    <UserImg source={{ uri: item.petimage }} />
+                                </UserImgBox>
 
-                        <ProfilePetNameBox>
-                            <ProfilePetNameTitle>상전</ProfilePetNameTitle>
-                            <ProfilePetName>{item.username}</ProfilePetName>
-                        </ProfilePetNameBox>
+                                <ProfilePetNameBox>
+                                    <ProfilePetNameTitle>상전</ProfilePetNameTitle>
+                                    <ProfilePetName>{item.petname}</ProfilePetName>
+                                </ProfilePetNameBox>
 
-                        <FollowBox>
-                            <Follow>Follow</Follow>
-                        </FollowBox>
-                    </UserBox>
-                )}
+                                <FollowButton
+                                    isFollowing={isFollowing}
+                                    currentUserData={currentUserData}
+                                    userData={item}
+                                />
+                            </UserBox>
+                        </>
+                    );
+                }}
             />
         </Container>
     );
@@ -42,7 +76,7 @@ const heightEmpty = styled.View`
     height: 20px;
 `;
 
-const UserBox = styled.View`
+const UserBox = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
 `;

@@ -12,17 +12,23 @@ import { AntDesign } from '@expo/vector-icons';
 import EmptyImg from '../../assets/logo.png';
 import FollowButton from '../../components/FollowButton';
 import LikeButton from '../../components/LikeButton';
+import LinearGradient from 'react-native-linear-gradient';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
     let detailDocID;
     let detailData;
 
-    console.log('디테일', detailData);
-
     if (params) {
         detailData = params.Data;
         detailDocID = params.DocID;
     }
+
+    let postDate = detailData.orderBy;
+    let date = postDate.split(' ');
+    let newDate = date[0] + ' ' + date[1] + ' ' + date[2] + ' ' + date[3] + ' ' + date[4];
+    // console.log(newDate);
+
+    // console.log('디테일', detailData);
 
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
@@ -41,7 +47,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
         return () => {
             userUnsubscribe();
         };
-    }, [currentUser, detailDocID]);
+    }, [currentUser, detailDocID, currentUserData.follow]);
 
     useEffect(() => {
         if (detailData.useremail) {
@@ -62,6 +68,8 @@ const DetailScreen = ({ navigation, route: { params } }) => {
     const toggleBottomSheet = () => {
         setBottomSheetVisible(!isBottomSheetVisible);
     };
+
+    const isFollowing = Array.isArray(currentUserData.following) && currentUserData.following.includes(userData.email);
 
     return (
         <Container>
@@ -131,10 +139,22 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                         {detailData && detailData.image ? (
                             <>
                                 {detailData.image.map((item, i) => {
-                                    console.log('이미지', item);
                                     return (
                                         <BannerContainer key={i} activeOpacity={0.9}>
+                                            <LinearGradientBox
+                                                start={{ x: 0, y: 0 }}
+                                                end={{ x: 0, y: 1 }}
+                                                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.6)']}
+                                                style={{
+                                                    width: '100%',
+                                                    height: '14%',
+                                                }}
+                                            />
+
                                             <BannerImage source={{ uri: item.url } || EmptyImg} />
+                                            <OrderByBox>
+                                                <OrderByText>{newDate}</OrderByText>
+                                            </OrderByBox>
                                         </BannerContainer>
                                     );
                                 })}
@@ -169,12 +189,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                             <UserProfileName>{userData.petname}</UserProfileName>
                         </UserProfileNameTag>
                     </TouchableOpacity>
-                    <FollowButton
-                        follow={follow}
-                        setFollow={setFollow}
-                        currentUserData={currentUserData}
-                        userData={userData}
-                    />
+                    <FollowButton isFollowing={isFollowing} currentUserData={currentUserData} userData={userData} />
                 </UserProfileBox>
 
                 <DetailBox>
@@ -263,10 +278,32 @@ const BannerContainer = styled.View`
     align-items: center;
 `;
 
+const LinearGradientBox = styled(LinearGradient)`
+    position: absolute;
+    bottom: 0px;
+    z-index: 1;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+`;
+
 const BannerImage = styled.Image`
     width: 100%;
     height: 100%;
     border-radius: 16px;
+`;
+
+const OrderByBox = styled.View`
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 100;
+`;
+
+const OrderByText = styled.Text`
+    margin-bottom: 4px;
+    font-size: 10px;
+    font-weight: 400;
+    color: #d5d5d4;
 `;
 
 const UserProfileBox = styled.View`

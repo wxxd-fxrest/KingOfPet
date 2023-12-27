@@ -23,7 +23,7 @@ const ComentScreen = ({ toggleBottomSheet, detailDocID }) => {
             .doc(`${currentUser.email}`)
             .onSnapshot((documentSnapshot) => {
                 setCurrentUserData(documentSnapshot.data());
-                console.log('profile User data: ', documentSnapshot.data());
+                // console.log('profile User data: ', documentSnapshot.data());
             });
     }, [currentUser]);
 
@@ -99,7 +99,7 @@ const ComentScreen = ({ toggleBottomSheet, detailDocID }) => {
                 <CurrentUerProfile>
                     <CurrentUserImgBox>
                         <CurrentUserProfileImg
-                            source={currentUserData && { uri: currentUserData.petimage || EmptyImg }}
+                            source={(currentUserData && { uri: currentUserData.petimage }) || EmptyImg}
                         />
                     </CurrentUserImgBox>
                     <ComentInputBox>
@@ -126,45 +126,28 @@ const ComentScreen = ({ toggleBottomSheet, detailDocID }) => {
                 data={comentData}
                 keyExtractor={(item) => item.DocID + ''}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => (
-                    <>
-                        {item.Data.coment && (
-                            <ComentContainer
-                                onStartShouldSetResponder={() => true}
-                                activeOpacity={1}
-                                onPress={() => {
-                                    toggleBottomSheet();
-                                    navigation.navigate('MainStack', {
-                                        screen: 'ComentDetail',
-                                        params: { item, detailDocID },
-                                    });
-                                }}
-                            >
-                                <ProfileImgBox
-                                    activeOpacity={0.8}
+                renderItem={({ item }) => {
+                    // console.log('comentData', item);
+                    return (
+                        <>
+                            {item.Data.coment && (
+                                <ComentContainer
+                                    onStartShouldSetResponder={() => true}
+                                    activeOpacity={1}
                                     onPress={() => {
                                         toggleBottomSheet();
-                                        <>
-                                            {currentUser.email === item.Data.useremail
-                                                ? navigation.navigate('MainTab', {
-                                                      screen: 'MyProfile',
-                                                  })
-                                                : navigation.navigate('MainStack', {
-                                                      screen: 'UserProfile',
-                                                      params: item.Data,
-                                                  })}
-                                        </>;
+                                        navigation.navigate('MainStack', {
+                                            screen: 'ComentDetail',
+                                            params: { item, detailDocID },
+                                        });
                                     }}
                                 >
-                                    <ProfileImg source={{ uri: item.Data.petimage } || EmptyImg} />
-                                </ProfileImgBox>
-                                <ComentBox>
-                                    <ProfileNameTagBox
+                                    <ProfileImgBox
                                         activeOpacity={0.8}
                                         onPress={() => {
                                             toggleBottomSheet();
                                             <>
-                                                {currentUser.email === item.Data.useremail
+                                                {currentUser.email === item.Data.email
                                                     ? navigation.navigate('MainTab', {
                                                           screen: 'MyProfile',
                                                       })
@@ -175,19 +158,39 @@ const ComentScreen = ({ toggleBottomSheet, detailDocID }) => {
                                             </>;
                                         }}
                                     >
-                                        <ProfileNameTag>{item.Data.petname}</ProfileNameTag>
-                                    </ProfileNameTagBox>
-                                    <ComentDetailBox>
-                                        <ComentDetail>{item.Data.coment}</ComentDetail>
-                                    </ComentDetailBox>
-                                </ComentBox>
-                                <MoreIcon activeOpacity={0.4}>
-                                    <Feather name="more-vertical" size={16} color="#243E35" />
-                                </MoreIcon>
-                            </ComentContainer>
-                        )}
-                    </>
-                )}
+                                        <ProfileImg source={(item && { uri: item.Data.petimage }) || EmptyImg} />
+                                    </ProfileImgBox>
+                                    <ComentBox>
+                                        <ProfileNameTagBox
+                                            activeOpacity={0.8}
+                                            onPress={() => {
+                                                toggleBottomSheet();
+                                                <>
+                                                    {currentUser.email === item.Data.useremail
+                                                        ? navigation.navigate('MainTab', {
+                                                              screen: 'MyProfile',
+                                                          })
+                                                        : navigation.navigate('MainStack', {
+                                                              screen: 'UserProfile',
+                                                              params: item.Data,
+                                                          })}
+                                                </>;
+                                            }}
+                                        >
+                                            <ProfileNameTag>{item.Data.petname}</ProfileNameTag>
+                                        </ProfileNameTagBox>
+                                        <ComentDetailBox>
+                                            <ComentDetail>{item.Data.coment}</ComentDetail>
+                                        </ComentDetailBox>
+                                    </ComentBox>
+                                    <MoreIcon activeOpacity={0.4}>
+                                        <Feather name="more-vertical" size={16} color="#243E35" />
+                                    </MoreIcon>
+                                </ComentContainer>
+                            )}
+                        </>
+                    );
+                }}
             />
         </Container>
     );

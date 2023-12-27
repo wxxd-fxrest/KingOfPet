@@ -80,7 +80,7 @@ const RandomCard = ({ item, index, navigation }) => {
             .doc(`${item.Data.useremail}`)
             .onSnapshot((documentSnapshot) => {
                 setUserData(documentSnapshot.data());
-                // console.log('profile User data: ', documentSnapshot.data());
+                // console.log('random feed: ', documentSnapshot.data());
             });
     }, []);
 
@@ -157,7 +157,7 @@ const RandomCard = ({ item, index, navigation }) => {
 
             {item.Data.useremail === userData.email && (
                 <PetNameTag
-                    onPress={() => {
+                    onPress={() => (
                         <>
                             {currentUser.email === userData.email
                                 ? navigation.navigate('MainTab', {
@@ -167,8 +167,8 @@ const RandomCard = ({ item, index, navigation }) => {
                                       screen: 'UserProfile',
                                       params: userData,
                                   })}
-                        </>;
-                    }}
+                        </>
+                    )}
                 >
                     <PetImageBox>
                         <PetImage source={{ uri: userData.petimage } || EmptyImg} />
