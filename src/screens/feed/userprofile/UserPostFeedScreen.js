@@ -3,16 +3,12 @@ import { ActivityIndicator, Image, Pressable } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import EmptyImg from '../../../assets/logo.png';
 
 const UserPostFeedScreen = ({ navigation, handleScroll, userData, postData }) => {
-    // console.log('userData', userData.email);
-    // console.log('postData email', postData);
-
     // 랜덤한 dimensions 값을 생성하는 함수
     const generateRandomDimensions = () => {
         const width = Math.floor(Math.random() * 200) + 100; // 최소 100, 최대 300
@@ -41,7 +37,7 @@ const UserPostFeedScreen = ({ navigation, handleScroll, userData, postData }) =>
                 <MasonryList
                     onScroll={handleScroll}
                     data={dataWithDimensions}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.DocID}
                     numColumns={2}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, i }) => (
@@ -80,10 +76,10 @@ const RandomCard = ({ item, index, navigation, userData }) => {
             .doc(`${userData.email}`)
             .onSnapshot((documentSnapshot) => {
                 setUserProfileData(documentSnapshot.data());
-                console.log('profile User data: ', documentSnapshot.data());
+                // console.log('profile User data: ', documentSnapshot.data());
             });
     }, [userData]);
-    console.log('item', item.Data.like);
+    // console.log('item', item.Data.like);
 
     let totalLike;
     if (item.Data) {

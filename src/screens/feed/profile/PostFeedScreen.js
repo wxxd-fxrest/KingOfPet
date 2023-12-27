@@ -38,7 +38,7 @@ const PostFeedScreen = ({ navigation, handleScroll, postData }) => {
                 <MasonryList
                     onScroll={handleScroll}
                     data={dataWithDimensions}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.DocID + ''}
                     numColumns={2}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, i }) => <RandomCard item={item} index={i} navigation={navigation} />}
@@ -70,7 +70,7 @@ const RandomCard = ({ item, index, navigation }) => {
     const [userData, setUserData] = useState([]);
     const [currentUser, setCurrentUser] = useState([]);
 
-    // console.log(item.Data);
+    // console.log(item.DocID);
     // console.log(userData.email);
 
     useEffect(() => {

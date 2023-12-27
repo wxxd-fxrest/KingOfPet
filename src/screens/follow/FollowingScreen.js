@@ -1,32 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import postData from '../../data/postData';
+import FollowButton from '../../components/FollowButton';
 
 const FollowingScreen = () => {
+    const [currentUser, setCurrentUser] = useState(auth().currentUser);
+    const [currentUserData, setCurrentUserData] = useState({});
+
+    useEffect(() => {
+        const currentDoc = firestore().collection('Users').doc(currentUser.email);
+
+        const currentUnsubscribe = currentDoc.onSnapshot((userSnapshot) => {
+            setCurrentUserData(userSnapshot.data());
+            // console.log('currentUserData', currentUserData.following);
+        });
+
+        return () => {
+            currentUnsubscribe();
+        };
+    }, [currentUser]);
+
     return (
         <Container>
             <FlatList
-                data={postData}
+                data={currentUserData.following_data}
                 ItemSeparatorComponent={heightEmpty}
-                keyExtractor={(item) => item.id + ''}
+                keyExtractor={(item) => item.email + ''}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => (
-                    <UserBox>
-                        <UserImgBox>
-                            <UserImg source={{ uri: item.image }} />
-                        </UserImgBox>
+                renderItem={({ item }) => {
+                    const isFollowing =
+                        Array.isArray(currentUserData.follower) && currentUserData.follower.includes(item.email);
 
-                        <ProfilePetNameBox>
-                            <ProfilePetNameTitle>상전</ProfilePetNameTitle>
-                            <ProfilePetName>{item.username}</ProfilePetName>
-                        </ProfilePetNameBox>
+                    return (
+                        <UserBox>
+                            <UserImgBox>
+                                <UserImg source={{ uri: item.petimage }} />
+                            </UserImgBox>
 
-                        <FollowBox>
-                            <Follow>Unfollow</Follow>
-                        </FollowBox>
-                    </UserBox>
-                )}
+                            <ProfilePetNameBox>
+                                <ProfilePetNameTitle>상전</ProfilePetNameTitle>
+                                <ProfilePetName>{item.petname}</ProfilePetName>
+                            </ProfilePetNameBox>
+
+                            <FollowButton isFollowing={isFollowing} currentUserData={currentUserData} userData={item} />
+                        </UserBox>
+                    );
+                }}
             />
         </Container>
     );
