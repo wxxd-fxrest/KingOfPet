@@ -44,6 +44,7 @@ const BookMarkBtn = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
     border-radius: 100px;
+    margin-top: 4px;
 `;
 
 export default BookMarkButton;

@@ -13,6 +13,7 @@ import EmptyImg from '../../assets/logo.png';
 import FollowButton from '../../components/FollowButton';
 import LikeButton from '../../components/LikeButton';
 import LinearGradient from 'react-native-linear-gradient';
+import MoreButton from '../../components/MoreButton';
 
 const DetailScreen = ({ navigation, route: { params } }) => {
     let detailDocID;
@@ -152,6 +153,11 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                                             />
 
                                             <BannerImage source={{ uri: item.url } || EmptyImg} />
+                                            {detailData.type === 'Post' && (
+                                                <DetailTypeBox>
+                                                    <DetailType>{detailData.type}</DetailType>
+                                                </DetailTypeBox>
+                                            )}
                                             <OrderByBox>
                                                 <OrderByText>{newDate}</OrderByText>
                                             </OrderByBox>
@@ -189,17 +195,14 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                             <UserProfileName>{userData.petname}</UserProfileName>
                         </UserProfileNameTag>
                     </TouchableOpacity>
-                    <FollowButton isFollowing={isFollowing} currentUserData={currentUserData} userData={userData} />
+                    {userData.email === currentUser.email ? (
+                        <MoreButton detailDocID={detailDocID} navigation={navigation} />
+                    ) : (
+                        <FollowButton isFollowing={isFollowing} currentUserData={currentUserData} userData={userData} />
+                    )}
                 </UserProfileBox>
 
                 <DetailBox>
-                    <Detail
-                        style={{
-                            backgroundColor: 'tomato',
-                        }}
-                    >
-                        {detailData.type}
-                    </Detail>
                     <Detail>{detailData.text}</Detail>
                 </DetailBox>
             </ScrollView>
@@ -294,13 +297,33 @@ const BannerImage = styled.Image`
 
 const OrderByBox = styled.View`
     position: absolute;
-    right: 10px;
+    left: 10px;
     bottom: 10px;
     z-index: 100;
 `;
 
 const OrderByText = styled.Text`
     margin-bottom: 4px;
+    font-size: 10px;
+    font-weight: 400;
+    color: #d5d5d4;
+`;
+
+const DetailTypeBox = styled.View`
+    background-color: rgba(193, 204, 200, 0.3);
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 100;
+    height: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2px;
+    padding: 4px 6px;
+    border-radius: 4px;
+`;
+
+const DetailType = styled.Text`
     font-size: 10px;
     font-weight: 400;
     color: #d5d5d4;

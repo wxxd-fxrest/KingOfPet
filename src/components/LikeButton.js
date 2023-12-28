@@ -50,7 +50,7 @@ const LikeButton = ({ currentUser, currentUserData, detailDocID }) => {
             <MaterialIcons
                 name="pets"
                 size={18}
-                color={like === true ? 'rgba(249, 19, 0, 0.9)' : 'rgba(193, 204, 200, 0.9)'}
+                color={like === true ? 'rgba(249, 19, 0, 0.8)' : 'rgba(193, 204, 200, 0.9)'}
             />
         </LikeBtn>
     );
