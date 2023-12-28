@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, View } from 'react-native';
 import Swiper from 'react-native-swiper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import EmptyImg from '../../assets/logo.png';
 import BookMarkButton from '../../components/BookMarkButton';
 
@@ -49,6 +50,31 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
         fetchData();
     }, [currentUser, DocID]);
 
+    const onDelete = () => {
+        Alert.alert('포스트 삭제', '삭제하시겠습니까?', [
+            {
+                text: 'No',
+                onPress: () => console.log('no'),
+                style: 'destructive',
+            },
+            {
+                text: 'Yes',
+                onPress: async () => {
+                    await firestore()
+                        .collection('Users')
+                        .doc(`${currentUser.email}`)
+                        .collection('Diary')
+                        .doc(`${DocID}`)
+                        .delete()
+                        .then(() => {
+                            console.log('User deleted!');
+                            navigation.goBack();
+                        });
+                },
+            },
+        ]);
+    };
+
     return (
         <Container>
             <HeaderIconBox>
@@ -70,7 +96,12 @@ const DiaryDetailScreen = ({ navigation, route: { params } }) => {
                     </BackButton>
                 )}
 
-                <BookMarkButton DocID={DocID} currentUser={currentUser} detailData={detailData} />
+                <RightBox>
+                    <BookMarkButton DocID={DocID} currentUser={currentUser} detailData={detailData} />
+                    <MoreIcon activeOpacity={0.4} onPress={onDelete}>
+                        <Feather name="more-vertical" size={20} color="#243E35" />
+                    </MoreIcon>
+                </RightBox>
             </HeaderIconBox>
             <ScrollView showsVerticalScrollIndicator={false}>
                 {currentUserData ? (
@@ -169,6 +200,20 @@ const HeaderIconBox = styled.View`
 
 const BackButton = styled.TouchableOpacity``;
 
+const RightBox = styled.View`
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 50px;
+`;
+
+const MoreIcon = styled.TouchableOpacity`
+    justify-content: center;
+    align-items: center;
+    width: 18px;
+    height: 18px;
+`;
+
 const SwiperBox = styled.View`
     position: relative;
     height: 400px;
@@ -190,15 +235,18 @@ const BannerImage = styled.Image`
 `;
 
 const PetMoodContainer = styled.View`
+    /* background-color: yellowgreen; */
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    border-width: 1px;
-    border-color: rgba(36, 62, 53, 0.4);
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(36, 62, 53, 0.4);
+    border-top-width: 1px;
+    border-top-color: rgba(36, 62, 53, 0.4);
     margin: 20px 20px;
     margin-bottom: 10px;
     padding: 20px 20px;
-    border-radius: 12px;
+    /* border-radius: 12px; */
 `;
 
 const DiaryDateBox = styled.View`
