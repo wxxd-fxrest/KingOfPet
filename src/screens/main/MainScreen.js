@@ -7,7 +7,6 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import RandomFeedScreen from '../feed/main/RandomFeedScreen';
 import QuestionFeedScreen from '../feed/main/QuestionFeedScreen';
-import FollowFeedScreen from '../feed/main/FollowFeedScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
@@ -104,7 +103,7 @@ const MainScreen = ({ handleScroll, hide, postData }) => {
                         borderBottomColor: '#243e35',
                         borderBottomWidth: 2.5,
                         width: 70,
-                        left: 35,
+                        left: 65,
                     },
                 }}
             >
@@ -118,18 +117,10 @@ const MainScreen = ({ handleScroll, hide, postData }) => {
                         unmountOnBlur: true,
                     }}
                 />
-                <Tab.Screen
-                    name="Follow"
-                    component={FollowFeedScreen}
-                    options={{
-                        title: '구독',
-                    }}
-                />
+
                 <Tab.Screen
                     name="QnA"
-                    children={() => (
-                        <QuestionFeedScreen navigation={navigation} handleScroll={handleScroll} postData={postData} />
-                    )}
+                    children={() => <QuestionFeedScreen navigation={navigation} handleScroll={handleScroll} />}
                     options={{
                         title: '질문',
                         unmountOnBlur: true,

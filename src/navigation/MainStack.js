@@ -20,7 +20,7 @@ import UserDiaryDetailScreen from '../screens/feed/userprofile/UserDiaryDetailSc
 
 const Stack = createNativeStackNavigator();
 
-const MainStack = ({ postData }) => {
+const MainStack = () => {
     const navigation = useNavigation();
 
     return (

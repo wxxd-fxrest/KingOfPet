@@ -4,6 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import EmptyImg from '../../../assets/logo.png';
 import LikeButton from '../../../components/LikeButton';
+import NonePage from '../../../components/NonePage';
 
 const AllLikeFeedScreen = ({ navigation, handleScroll, currentUser, currentUserData }) => {
     const [currentLike, setCurrentLike] = useState([]);
@@ -34,52 +35,66 @@ const AllLikeFeedScreen = ({ navigation, handleScroll, currentUser, currentUserD
 
     return (
         <Container>
-            <FlatList
-                data={currentLike}
-                keyExtractor={(item) => item.DocID + ''}
-                renderItem={({ item }) => (
-                    <LikeContainer
-                        onPress={() =>
-                            navigation.navigate('MainStack', {
-                                screen: 'Detail',
-                                params: item,
-                            })
-                        }
-                    >
-                        <LikeImgBox>
-                            <LikeImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
-                        </LikeImgBox>
-                        <LikeDetailBox>
-                            <LikeDetail numberOfLines={7} ellipsizeMode="tail">
-                                {item.Data.text}
-                            </LikeDetail>
-                            <LikeBottomBox>
-                                <LikeUserBox
-                                    onPress={() => {
+            {currentLike.length === 0 ? (
+                <NonePage type={'도장'} />
+            ) : (
+                <>
+                    {currentLike.length < 1 ? (
+                        <LoadingContainer>
+                            <ActivityIndicator color="#243e35" />
+                        </LoadingContainer>
+                    ) : (
+                        <FlatList
+                            data={currentLike}
+                            keyExtractor={(item) => item.DocID + ''}
+                            renderItem={({ item }) => (
+                                <LikeContainer
+                                    onPress={() =>
                                         navigation.navigate('MainStack', {
-                                            screen: 'UserProfile',
+                                            screen: 'Detail',
                                             params: item,
-                                        });
-                                    }}
+                                        })
+                                    }
                                 >
-                                    <LikeUserImgBox>
-                                        <LikeUserImg source={{ uri: currentUserData.petimage } || EmptyImg} />
-                                    </LikeUserImgBox>
-                                    <LikeuserName>{currentUserData.petname} </LikeuserName>
-                                </LikeUserBox>
-                                <LikeButton
-                                    currentUser={currentUser}
-                                    currentUserData={currentUserData}
-                                    detailDocID={item.DocID}
-                                />
-                            </LikeBottomBox>
-                        </LikeDetailBox>
-                    </LikeContainer>
-                )}
-                showsVerticalScrollIndicator={false}
-                onScroll={handleScroll}
-                scrollEventThrottle={16}
-            />
+                                    <LikeImgBox>
+                                        <LikeImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
+                                    </LikeImgBox>
+                                    <LikeDetailBox>
+                                        <LikeDetail numberOfLines={7} ellipsizeMode="tail">
+                                            {item.Data.text}
+                                        </LikeDetail>
+                                        <LikeBottomBox>
+                                            <LikeUserBox
+                                                onPress={() => {
+                                                    navigation.navigate('MainStack', {
+                                                        screen: 'UserProfile',
+                                                        params: item,
+                                                    });
+                                                }}
+                                            >
+                                                <LikeUserImgBox>
+                                                    <LikeUserImg
+                                                        source={{ uri: currentUserData.petimage } || EmptyImg}
+                                                    />
+                                                </LikeUserImgBox>
+                                                <LikeuserName>{currentUserData.petname} </LikeuserName>
+                                            </LikeUserBox>
+                                            <LikeButton
+                                                currentUser={currentUser}
+                                                currentUserData={currentUserData}
+                                                detailDocID={item.DocID}
+                                            />
+                                        </LikeBottomBox>
+                                    </LikeDetailBox>
+                                </LikeContainer>
+                            )}
+                            showsVerticalScrollIndicator={false}
+                            onScroll={handleScroll}
+                            scrollEventThrottle={16}
+                        />
+                    )}
+                </>
+            )}
         </Container>
     );
 };

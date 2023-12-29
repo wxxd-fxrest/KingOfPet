@@ -26,10 +26,10 @@ const DetailScreen = ({ navigation, route: { params } }) => {
 
     let postDate = detailData.orderBy;
     let date = postDate.split(' ');
-    let newDate = date[0] + ' ' + date[1] + ' ' + date[2] + ' ' + date[3] + ' ' + date[4];
+    let newDate = date[1] + ' ' + date[2] + ' ' + date[3] + ' ' + date[4];
     // console.log(newDate);
 
-    // console.log('디테일', detailData);
+    console.log('디테일', detailData);
 
     const swiperRef = useRef(null);
     const sheetRef = useRef(null);
@@ -105,7 +105,6 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                 <SwiperBox>
                     <Swiper
                         ref={swiperRef}
-                        loop
                         timeout={2}
                         controlsEnabled={false}
                         dot={
@@ -118,7 +117,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                                     marginLeft: 3,
                                     marginRight: 3,
                                     marginTop: 3,
-                                    marginBottom: 3,
+                                    marginBottom: 0,
                                 }}
                             />
                         }
@@ -132,40 +131,60 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                                     marginLeft: 3,
                                     marginRight: 3,
                                     marginTop: 3,
-                                    marginBottom: 3,
+                                    marginBottom: 1.8,
                                 }}
                             />
                         }
                     >
-                        {detailData && detailData.image ? (
-                            <>
-                                {detailData.image.map((item, i) => {
-                                    return (
-                                        <BannerContainer key={i} activeOpacity={0.9}>
-                                            <LinearGradientBox
-                                                start={{ x: 0, y: 0 }}
-                                                end={{ x: 0, y: 1 }}
-                                                colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.6)']}
-                                                style={{
-                                                    width: '100%',
-                                                    height: '14%',
-                                                }}
-                                            />
+                        {detailData.image.map((item, i) => {
+                            return (
+                                <>
+                                    {detailData && detailData.image ? (
+                                        <>
+                                            <BannerContainer key={i} activeOpacity={0.9}>
+                                                <LinearGradientBox
+                                                    start={{ x: 0, y: 0 }}
+                                                    end={{ x: 0, y: 1 }}
+                                                    colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.6)']}
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '14%',
+                                                    }}
+                                                />
 
-                                            <BannerImage source={{ uri: item.url } || EmptyImg} />
-                                            {detailData.type === 'Post' && (
-                                                <DetailTypeBox>
-                                                    <DetailType>{detailData.type}</DetailType>
-                                                </DetailTypeBox>
-                                            )}
-                                            <OrderByBox>
-                                                <OrderByText>{newDate}</OrderByText>
-                                            </OrderByBox>
-                                        </BannerContainer>
-                                    );
-                                })}
-                            </>
-                        ) : null}
+                                                <BannerImage source={{ uri: item.url } || EmptyImg} />
+                                                {detailData.type === 'Post' ? (
+                                                    <DetailTypeBox>
+                                                        <DetailType>{detailData.type}</DetailType>
+                                                    </DetailTypeBox>
+                                                ) : (
+                                                    <>
+                                                        {detailData.QnAType.type !== '건강' ? (
+                                                            <DetailTypeBox>
+                                                                <DetailType>{detailData.QnAType.type}</DetailType>
+                                                            </DetailTypeBox>
+                                                        ) : (
+                                                            <>
+                                                                <DetailTypeBox
+                                                                    style={{
+                                                                        backgroundColor: 'rgba(249, 19, 0, 0.8)',
+                                                                    }}
+                                                                >
+                                                                    <DetailType>{detailData.QnAType.type}</DetailType>
+                                                                </DetailTypeBox>
+                                                            </>
+                                                        )}
+                                                    </>
+                                                )}
+                                                <OrderByBox>
+                                                    <OrderByText>{newDate}</OrderByText>
+                                                </OrderByBox>
+                                            </BannerContainer>
+                                        </>
+                                    ) : null}
+                                </>
+                            );
+                        })}
                     </Swiper>
                 </SwiperBox>
                 <UserProfileBox>
@@ -202,6 +221,11 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                     )}
                 </UserProfileBox>
 
+                {detailData.type === 'QnA' && detailData.QnAType.type === '건강' && (
+                    <HealthBox>
+                        <HealthText>건강 관련 질문입니다.</HealthText>
+                    </HealthBox>
+                )}
                 <DetailBox>
                     <Detail>{detailData.text}</Detail>
                 </DetailBox>
@@ -211,7 +235,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                 <OpenBottomSheetButton onPress={toggleBottomSheet}>
                     <MaterialCommunityIcons name="comment-outline" size={20} color="#f9f9f7" />
                     <OpenBottomSheetText>Comment</OpenBottomSheetText>
-                    <ArrowIcon name="keyboard-arrow-up" size={20} color="#f9f9f7" />
+                    <ArrowIcon name="keyboard-arrow-up" size={24} color="#f9f9f7" />
                 </OpenBottomSheetButton>
                 <Modal
                     propagateSwipe
@@ -297,8 +321,8 @@ const BannerImage = styled.Image`
 
 const OrderByBox = styled.View`
     position: absolute;
-    left: 10px;
-    bottom: 10px;
+    left: 20px;
+    bottom: 14px;
     z-index: 100;
 `;
 
@@ -312,8 +336,8 @@ const OrderByText = styled.Text`
 const DetailTypeBox = styled.View`
     background-color: rgba(193, 204, 200, 0.3);
     position: absolute;
-    right: 10px;
-    bottom: 10px;
+    right: 20px;
+    bottom: 14px;
     z-index: 100;
     height: 20px;
     justify-content: center;
@@ -360,9 +384,21 @@ const UserProfileName = styled.Text`
     color: #343c3a;
 `;
 
+const HealthBox = styled.View`
+    background-color: rgba(249, 19, 0, 0.7);
+    padding: 8px 20px;
+    margin-top: 16px;
+`;
+
+const HealthText = styled.Text`
+    color: #f9f9f7;
+    font-size: 14px;
+    font-weight: 400;
+`;
+
 const DetailBox = styled.View`
     padding: 10px 20px;
-    margin-top: 3%;
+    margin-top: 8px;
 `;
 
 const Detail = styled.Text`
@@ -386,7 +422,7 @@ const OpenBottomSheetButton = styled.TouchableOpacity`
     padding: 0px 20px;
     border-radius: 16px;
     width: 90%;
-    height: 50%;
+    height: 50px;
     margin-bottom: 24px;
     align-items: center;
     flex-direction: row;
@@ -394,7 +430,7 @@ const OpenBottomSheetButton = styled.TouchableOpacity`
 
 const OpenBottomSheetText = styled.Text`
     color: #f9f9f7;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     margin-left: 10px;
 `;

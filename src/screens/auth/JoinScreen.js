@@ -126,6 +126,7 @@ const Join = () => {
                                         petimage: saveImgUrl,
                                         ...petTypeData,
                                         createprofile: true,
+                                        diary: false,
                                         signType: 'Email',
                                         follower: [],
                                         follower_data: [],

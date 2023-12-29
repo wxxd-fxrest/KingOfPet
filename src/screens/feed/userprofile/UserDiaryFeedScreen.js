@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import firestore from '@react-native-firebase/firestore';
 import EmptyImg from '../../../assets/logo.png';
 import { ActivityIndicator } from 'react-native';
+import NonePage from '../../../components/NonePage';
 
 const UserDiaryFeedScreen = ({ navigation, handleScroll, userData }) => {
     // console.log(userData);
@@ -37,45 +38,64 @@ const UserDiaryFeedScreen = ({ navigation, handleScroll, userData }) => {
             {userData ? (
                 <Container onScroll={handleScroll} scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
                     {/* true === 공개 false === 비공개 */}
-                    {userData.diary === false && (
-                        <PrivateBox>
+                    {userData.diary === false ? (
+                        <PrivateBox diary={userData.diary}>
                             <MaterialIcons name="lock-outline" size={18} color="gray" />
-                            <Private>현재 일기장은 비공개 설정이 되어있습니다.</Private>
+                            <Private>비공개</Private>
                         </PrivateBox>
-                    )}
-                    {userData.diary === true && (
+                    ) : (
                         <>
-                            {diaryData.map((item) => (
-                                <DiaryContainer
-                                    key={item.DocID}
-                                    onPress={() =>
-                                        navigation.navigate('MainStack', {
-                                            screen: 'UserDiaryDetail',
-                                            params: item,
-                                        })
-                                    }
-                                >
-                                    <DiaryImgBox>
-                                        <DiaryImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
-                                    </DiaryImgBox>
-                                    <DiaryDetailBox>
-                                        <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
-                                            {item.Data.text}
-                                        </DiaryDetail>
+                            {userData.diary === true && (
+                                <>
+                                    {diaryData.length === 0 ? (
+                                        <NonePage type={'일기'} user={'user'} />
+                                    ) : (
+                                        <>
+                                            {diaryData.length < 1 ? (
+                                                <LoadingContainer>
+                                                    <ActivityIndicator color="#243e35" />
+                                                </LoadingContainer>
+                                            ) : (
+                                                <>
+                                                    {diaryData.map((item) => (
+                                                        <DiaryContainer
+                                                            key={item.DocID}
+                                                            onPress={() =>
+                                                                navigation.navigate('MainStack', {
+                                                                    screen: 'UserDiaryDetail',
+                                                                    params: item,
+                                                                })
+                                                            }
+                                                        >
+                                                            <DiaryImgBox>
+                                                                <DiaryImg
+                                                                    source={{ uri: item.Data.image[0].url } || EmptyImg}
+                                                                />
+                                                            </DiaryImgBox>
+                                                            <DiaryDetailBox>
+                                                                <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
+                                                                    {item.Data.text}
+                                                                </DiaryDetail>
 
-                                        <LikeBottomBox>
-                                            <DiaryDateBox>
-                                                <MaterialCommunityIcons
-                                                    name="calendar-heart"
-                                                    size={14}
-                                                    color="#243e35"
-                                                />
-                                                <DiayrDate>{item.Data.orderBy}</DiayrDate>
-                                            </DiaryDateBox>
-                                        </LikeBottomBox>
-                                    </DiaryDetailBox>
-                                </DiaryContainer>
-                            ))}
+                                                                <LikeBottomBox>
+                                                                    <DiaryDateBox>
+                                                                        <MaterialCommunityIcons
+                                                                            name="calendar-heart"
+                                                                            size={14}
+                                                                            color="#243e35"
+                                                                        />
+                                                                        <DiayrDate>{item.Data.orderBy}</DiayrDate>
+                                                                    </DiaryDateBox>
+                                                                </LikeBottomBox>
+                                                            </DiaryDetailBox>
+                                                        </DiaryContainer>
+                                                    ))}
+                                                </>
+                                            )}
+                                        </>
+                                    )}
+                                </>
+                            )}
                         </>
                     )}
                 </Container>
@@ -97,7 +117,7 @@ const PrivateBox = styled.View`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-bottom: 10px;
+    padding-top: ${(props) => props.diary === false && '30%'};
 `;
 
 const Private = styled.Text`

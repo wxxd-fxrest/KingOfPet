@@ -7,8 +7,30 @@ import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import EmptyImg from '../../../assets/logo.png';
+import NonePage from '../../../components/NonePage';
 
-const UserPostFeedScreen = ({ navigation, handleScroll, userData, postData }) => {
+const UserPostFeedScreen = ({ navigation, handleScroll, userData }) => {
+    const [postData, setPostData] = useState([]);
+
+    useEffect(() => {
+        firestore()
+            .collection('Posts')
+            .where('useremail', '==', `${userData.email}`)
+            .onSnapshot((documentSnapshot) => {
+                if (documentSnapshot) {
+                    let feedArray = [];
+                    documentSnapshot.forEach((doc) => {
+                        feedArray.push({
+                            DocID: doc.id,
+                            Data: doc.data(),
+                        });
+                    });
+                    setPostData(feedArray);
+                    // console.log(feedArray);
+                }
+            });
+    }, [userData.email]);
+
     // 랜덤한 dimensions 값을 생성하는 함수
     const generateRandomDimensions = () => {
         const width = Math.floor(Math.random() * 200) + 100; // 최소 100, 최대 300
@@ -30,21 +52,27 @@ const UserPostFeedScreen = ({ navigation, handleScroll, userData, postData }) =>
     return (
         <Container>
             {dataWithDimensions.length === 0 ? (
-                <LoadingContainer>
-                    <ActivityIndicator color="#243e35" />
-                </LoadingContainer>
+                <NonePage type={'포스트'} />
             ) : (
-                <MasonryList
-                    onScroll={handleScroll}
-                    data={dataWithDimensions}
-                    keyExtractor={(item) => item.DocID}
-                    numColumns={2}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({ item, i }) => (
-                        <RandomCard item={item} index={i} navigation={navigation} userData={userData} />
+                <>
+                    {dataWithDimensions.length < 1 ? (
+                        <LoadingContainer>
+                            <ActivityIndicator color="#243e35" />
+                        </LoadingContainer>
+                    ) : (
+                        <MasonryList
+                            onScroll={handleScroll}
+                            data={dataWithDimensions}
+                            keyExtractor={(item) => item.DocID}
+                            numColumns={2}
+                            showsVerticalScrollIndicator={false}
+                            renderItem={({ item, i }) => (
+                                <RandomCard item={item} index={i} navigation={navigation} userData={userData} />
+                            )}
+                            onEndReachedThreshold={0.1}
+                        />
                     )}
-                    onEndReachedThreshold={0.1}
-                />
+                </>
             )}
         </Container>
     );
@@ -87,86 +115,82 @@ const RandomCard = ({ item, index, navigation, userData }) => {
     }
 
     return (
-        <>
-            {userData.email === item.Data.useremail && (
-                <AnimatedContainer
-                    entering={FadeInDown.delay(index * 100)
-                        .duration(600)
-                        .springify()
-                        .damping(12)}
-                    style={{
-                        marginBottom: isEven ? 4 : 4,
-                    }}
-                >
-                    {item.Data.type === 'QnA' && (
-                        <QnABox>
-                            <QnABoolen>Q&A</QnABoolen>
-                        </QnABox>
-                    )}
-                    <FeedDetail numberOfLines={3} ellipsizeMode="tail">
-                        {item.Data.text}
-                    </FeedDetail>
-                    <Pressable
-                        style={{
-                            width: '100%',
-                            paddingLeft: isEven ? 2 : 2,
-                            paddingRight: isEven ? 2 : 2,
-                            alignItems: 'center',
-                        }}
-                        onPress={() =>
-                            navigation.navigate('MainStack', {
-                                screen: 'Detail',
-                                params: item,
-                            })
-                        }
-                    >
-                        <LinearGradientBox
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 0, y: 1 }}
-                            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.9)']}
-                            style={{
-                                width: '100%',
-                                height: item.dimensions.height - 50,
-                                marginBottom: item.dimensions.margin,
-                            }}
-                        />
-                        <Image
-                            source={{ uri: item.Data.image[0].url } || EmptyImg}
-                            isEven={isEven}
-                            resizeMode="cover"
-                            style={{
-                                width: '100%',
-                                height: item.dimensions.height,
-                                borderRadius: 12, // 보더의 모서리 둥글기
-                            }}
-                        />
-                    </Pressable>
-                    {item.Data.type === 'Post' && (
-                        <TotalLikeBox>
-                            <IconBox>
-                                <MaterialIcons name="pets" size={12} color="rgba(249, 19, 0, 0.8)" />
-                            </IconBox>
-                            <TotalLike numberOfLines={1} ellipsizeMode="tail">
-                                {totalLike.length <= 0 ? 0 : totalLike.length}
-                            </TotalLike>
-                        </TotalLikeBox>
-                    )}
-                    <PetNameTag
-                        onPress={() => {
-                            navigation.navigate('MainStack', {
-                                screen: 'UserProfile',
-                                params: item,
-                            });
-                        }}
-                    >
-                        <PetImageBox>
-                            <PetImage source={{ uri: userProfileData.petimage } || EmptyImg} />
-                        </PetImageBox>
-                        <UserName>{userProfileData.petname}</UserName>
-                    </PetNameTag>
-                </AnimatedContainer>
+        <AnimatedContainer
+            entering={FadeInDown.delay(index * 100)
+                .duration(600)
+                .springify()
+                .damping(12)}
+            style={{
+                marginBottom: isEven ? 4 : 4,
+            }}
+        >
+            {item.Data.type === 'QnA' && (
+                <QnABox>
+                    <QnABoolen>Q&A</QnABoolen>
+                </QnABox>
             )}
-        </>
+            <FeedDetail numberOfLines={3} ellipsizeMode="tail">
+                {item.Data.text}
+            </FeedDetail>
+            <Pressable
+                style={{
+                    width: '100%',
+                    paddingLeft: isEven ? 2 : 2,
+                    paddingRight: isEven ? 2 : 2,
+                    alignItems: 'center',
+                }}
+                onPress={() =>
+                    navigation.navigate('MainStack', {
+                        screen: 'Detail',
+                        params: item,
+                    })
+                }
+            >
+                <LinearGradientBox
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                    colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.9)']}
+                    style={{
+                        width: '100%',
+                        height: item.dimensions.height - 50,
+                        marginBottom: item.dimensions.margin,
+                    }}
+                />
+                <Image
+                    source={{ uri: item.Data.image[0].url } || EmptyImg}
+                    isEven={isEven}
+                    resizeMode="cover"
+                    style={{
+                        width: '100%',
+                        height: item.dimensions.height,
+                        borderRadius: 12, // 보더의 모서리 둥글기
+                    }}
+                />
+            </Pressable>
+            {item.Data.type === 'Post' && (
+                <TotalLikeBox>
+                    <IconBox>
+                        <MaterialIcons name="pets" size={12} color="rgba(249, 19, 0, 0.8)" />
+                    </IconBox>
+                    <TotalLike numberOfLines={1} ellipsizeMode="tail">
+                        {totalLike.length <= 0 ? 0 : totalLike.length}
+                    </TotalLike>
+                </TotalLikeBox>
+            )}
+            <PetNameTag
+                onPress={() => {
+                    navigation.navigate('MainStack', {
+                        screen: 'UserProfile',
+                        params: item,
+                    });
+                }}
+            >
+                <PetImageBox>
+                    <PetImage source={{ uri: userProfileData.petimage } || EmptyImg} />
+                </PetImageBox>
+                <UserName>{userProfileData.petname}</UserName>
+            </PetNameTag>
+        </AnimatedContainer>
     );
 };
 

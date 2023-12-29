@@ -67,7 +67,7 @@ const UserDiaryDetailScreen = ({ navigation, route: { params } }) => {
                                             marginLeft: 3,
                                             marginRight: 3,
                                             marginTop: 3,
-                                            marginBottom: 3,
+                                            marginBottom: 0,
                                         }}
                                     />
                                 }
@@ -81,7 +81,7 @@ const UserDiaryDetailScreen = ({ navigation, route: { params } }) => {
                                             marginLeft: 3,
                                             marginRight: 3,
                                             marginTop: 3,
-                                            marginBottom: 3,
+                                            marginBottom: 1.8,
                                         }}
                                     />
                                 }
@@ -108,7 +108,42 @@ const UserDiaryDetailScreen = ({ navigation, route: { params } }) => {
                                 </DiaryDateBox>
                                 <PetNameTag>
                                     <PetName>{currentUserData.petname}</PetName>
-                                    <PetMoodText> 컨디션 최고!</PetMoodText>
+                                    {params.Data.condition.type === '상' && (
+                                        <>
+                                            <PetMoodText> 컨디션 </PetMoodText>
+                                            <PetMoodText
+                                                style={{
+                                                    fontWeight: 600,
+                                                }}
+                                            >
+                                                Best
+                                            </PetMoodText>
+                                        </>
+                                    )}
+                                    {params.Data.condition.type === '중' && (
+                                        <>
+                                            <PetMoodText> 컨디션 </PetMoodText>
+                                            <PetMoodText
+                                                style={{
+                                                    fontWeight: 600,
+                                                }}
+                                            >
+                                                Good
+                                            </PetMoodText>
+                                        </>
+                                    )}
+                                    {params.Data.condition.type === '하' && (
+                                        <>
+                                            <PetMoodText> 컨디션 </PetMoodText>
+                                            <PetMoodText
+                                                style={{
+                                                    fontWeight: 600,
+                                                }}
+                                            >
+                                                Bad
+                                            </PetMoodText>
+                                        </>
+                                    )}
                                 </PetNameTag>
                             </PetMoodBox>
                         </PetMoodContainer>
@@ -235,7 +270,7 @@ const PetName = styled.Text`
 
 const SetSignificantBox = styled.View`
     margin: 0px 20px;
-    padding: 10px 20px;
+    padding: 10px 0px;
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;

@@ -3,10 +3,9 @@ import { FlatList } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
-import postData from '../../data/postData';
 import FollowButton from '../../components/FollowButton';
 
-const FollowingScreen = () => {
+const FollowingScreen = ({ navigation }) => {
     const [currentUser, setCurrentUser] = useState(auth().currentUser);
     const [currentUserData, setCurrentUserData] = useState({});
 
@@ -35,7 +34,14 @@ const FollowingScreen = () => {
                         Array.isArray(currentUserData.follower) && currentUserData.follower.includes(item.email);
 
                     return (
-                        <UserBox>
+                        <UserBox
+                            onPress={() => {
+                                navigation.navigate('MainStack', {
+                                    screen: 'UserProfile',
+                                    params: item,
+                                });
+                            }}
+                        >
                             <UserImgBox>
                                 <UserImg source={{ uri: item.petimage }} />
                             </UserImgBox>
@@ -64,7 +70,7 @@ const heightEmpty = styled.View`
     height: 20px;
 `;
 
-const UserBox = styled.View`
+const UserBox = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
 `;
