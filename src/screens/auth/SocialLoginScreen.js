@@ -103,6 +103,11 @@ const SocialLoginScreen = ({ navigation }) => {
                     ...petTypeData,
                     createprofile: true,
                     signType: 'Email',
+                    diary: false,
+                    follower: [],
+                    follower_data: [],
+                    following: [],
+                    following_data: [],
                 })
                 .then(() => {
                     console.log('User added!');

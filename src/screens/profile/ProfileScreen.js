@@ -17,7 +17,7 @@ import EmptyImg from '../../assets/logo.png';
 
 const Tab = createMaterialTopTabNavigator();
 
-const ProfileScreen = ({ postData }) => {
+const ProfileScreen = () => {
     const navigation = useNavigation();
     const [currentUser, setCurrentUser] = useState([]);
     const [currentUserData, setCurrentUserData] = useState([]);
@@ -208,7 +208,6 @@ const ProfileScreen = ({ postData }) => {
                             navigation={navigation}
                             handleScroll={handleScroll}
                             currentUserData={currentUserData}
-                            postData={postData}
                         />
                     )}
                     options={{

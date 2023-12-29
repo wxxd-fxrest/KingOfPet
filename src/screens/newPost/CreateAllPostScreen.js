@@ -37,29 +37,13 @@ const CreateAllPostScreen = ({ navigation }) => {
                             ? { type: '기타' }
                             : null;
 
-                    let healthType;
-                    if (typeHealth.current.state.checked === true) {
-                        healthType =
-                            typeFirst.current.state.checked === true
-                                ? { type: '상' }
-                                : typeSecond.current.state.checked === true
-                                ? { type: '중' }
-                                : typeThird.current.state.checked === true
-                                ? { type: '하' }
-                                : null;
-                    }
-
                     navigation.navigate('MainStack', {
                         screen: 'CreateSelectImg',
-                        params: [
-                            pickerValue,
-                            write,
-                            { QnAType: QnAType },
-                            { healthType: healthType ? healthType : 'null' },
-                        ],
+                        params: [pickerValue, write, { QnAType: QnAType }],
                     });
                 }
             }
+
             if (pickerValue === 'Diary') {
                 if (write === '') {
                     Alert.alert('텍스트를 입력해 주세요!');

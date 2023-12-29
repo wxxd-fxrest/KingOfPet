@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import { MaterialIcons } from '@expo/vector-icons';
 import EmptyImg from '../../../assets/logo.png';
+import NonePage from '../../../components/NonePage';
 
 const RandomFeedScreen = ({ navigation, handleScroll, postData }) => {
     // 랜덤한 dimensions 값을 생성하는 함수
@@ -31,19 +32,25 @@ const RandomFeedScreen = ({ navigation, handleScroll, postData }) => {
     return (
         <Container>
             {dataWithDimensions.length === 0 ? (
-                <LoadingContainer>
-                    <ActivityIndicator color="#243e35" />
-                </LoadingContainer>
+                <NonePage type={'포스트'} />
             ) : (
-                <MasonryList
-                    onScroll={handleScroll}
-                    data={dataWithDimensions}
-                    keyExtractor={(item) => item.id}
-                    numColumns={2}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({ item, i }) => <RandomCard item={item} index={i} navigation={navigation} />}
-                    onEndReachedThreshold={0.1}
-                />
+                <>
+                    {dataWithDimensions.length < 1 ? (
+                        <LoadingContainer>
+                            <ActivityIndicator color="#243e35" />
+                        </LoadingContainer>
+                    ) : (
+                        <MasonryList
+                            onScroll={handleScroll}
+                            data={dataWithDimensions}
+                            keyExtractor={(item) => item.id}
+                            numColumns={2}
+                            showsVerticalScrollIndicator={false}
+                            renderItem={({ item, i }) => <RandomCard item={item} index={i} navigation={navigation} />}
+                            onEndReachedThreshold={0.1}
+                        />
+                    )}
+                </>
             )}
         </Container>
     );

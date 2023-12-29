@@ -74,7 +74,6 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
                         });
                     });
             }
-
             if (TextData[0] === 'QnA') {
                 firestore()
                     .collection('Posts')
@@ -82,7 +81,6 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
                         type: TextData[0],
                         text: TextData[1],
                         QnAType: TextData[2].QnAType,
-                        healthType: TextData[3].healthType !== undefined ? '' : TextData[3].healthType,
                         image: filteredArray,
                         useremail: currentUser.email,
                         orderBy: saveDate,

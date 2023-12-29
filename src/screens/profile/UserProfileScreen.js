@@ -13,10 +13,7 @@ import EmptyImg from '../../assets/logo.png';
 const Tab = createMaterialTopTabNavigator();
 
 const UserProfileScreen = ({ navigation, route: params }) => {
-    // const navigation = useNavigation();
     const [hide, setHide] = useState(true);
-    const [postData, setPostData] = useState([]);
-    const [follow, setFollow] = useState(false);
     const [currentUser, setCurrentUser] = useState([]);
     const [currentUserData, setCurrentUserData] = useState([]);
     const [userData, setUserData] = useState([]);
@@ -53,24 +50,6 @@ const UserProfileScreen = ({ navigation, route: params }) => {
     }, [params]);
 
     // console.log('currentUserData', userData.userid);
-
-    useEffect(() => {
-        const subscriber = firestore()
-            .collection('Posts')
-            .orderBy('orderBy', 'desc')
-            .onSnapshot((documentSnapshot) => {
-                let feedArray = [];
-                documentSnapshot.forEach((doc) => {
-                    feedArray.push({
-                        DocID: doc.id,
-                        Data: doc.data(),
-                    });
-                });
-                setPostData(feedArray);
-            });
-
-        return () => subscriber();
-    }, []);
 
     const handleScroll = (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;
@@ -153,12 +132,7 @@ const UserProfileScreen = ({ navigation, route: params }) => {
                 <Tab.Screen
                     name="Post"
                     children={() => (
-                        <UserPostFeedScreen
-                            navigation={navigation}
-                            handleScroll={handleScroll}
-                            userData={userData}
-                            postData={postData}
-                        />
+                        <UserPostFeedScreen navigation={navigation} handleScroll={handleScroll} userData={userData} />
                     )}
                     options={{
                         title: '게시글',

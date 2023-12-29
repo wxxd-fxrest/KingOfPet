@@ -6,6 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 import EmptyImg from '../../assets/logo.png';
 import { ActivityIndicator } from 'react-native';
 import BookMarkButton from '../../components/BookMarkButton';
+import NonePage from '../../components/NonePage';
 
 const DiaryFeedScreen = ({ navigation, handleScroll, currentUser, currentUserData }) => {
     const [diaryData, setDiaryData] = useState([]);
@@ -45,41 +46,64 @@ const DiaryFeedScreen = ({ navigation, handleScroll, currentUser, currentUserDat
                             <Private>현재 일기장은 비공개 설정이 되어있습니다.</Private>
                         </PrivateBox>
                     )}
-                    {diaryData.map((item) => {
-                        let postDate = item.Data.orderBy;
-                        let date = postDate.split(' ');
-                        let newDate = date[0] + ' ' + date[1] + ' ' + date[2] + ' ' + date[3] + ' ' + date[4];
 
-                        return (
-                            <DiaryContainer
-                                key={item.DocID}
-                                onPress={() =>
-                                    navigation.navigate('MainStack', { screen: 'DiaryDetail', params: item })
-                                }
-                            >
-                                <DiaryImgBox>
-                                    <DiaryImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
-                                </DiaryImgBox>
-                                <DiaryDetailBox>
-                                    <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
-                                        {item.Data.text}
-                                    </DiaryDetail>
+                    {diaryData.length === 0 ? (
+                        <NonePage type={'일기'} />
+                    ) : (
+                        <>
+                            {diaryData.length < 1 ? (
+                                <LoadingContainer>
+                                    <ActivityIndicator color="#243e35" />
+                                </LoadingContainer>
+                            ) : (
+                                <>
+                                    {diaryData.map((item) => {
+                                        let postDate = item.Data.orderBy;
+                                        let date = postDate.split(' ');
+                                        let newDate =
+                                            date[0] + ' ' + date[1] + ' ' + date[2] + ' ' + date[3] + ' ' + date[4];
 
-                                    <LikeBottomBox>
-                                        <DiaryDateBox>
-                                            <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
-                                            <DiayrDate>{newDate}</DiayrDate>
-                                        </DiaryDateBox>
-                                        <BookMarkButton
-                                            DocID={item.DocID}
-                                            currentUser={currentUser}
-                                            detailData={item.Data}
-                                        />
-                                    </LikeBottomBox>
-                                </DiaryDetailBox>
-                            </DiaryContainer>
-                        );
-                    })}
+                                        return (
+                                            <DiaryContainer
+                                                key={item.DocID}
+                                                onPress={() =>
+                                                    navigation.navigate('MainStack', {
+                                                        screen: 'DiaryDetail',
+                                                        params: item,
+                                                    })
+                                                }
+                                            >
+                                                <DiaryImgBox>
+                                                    <DiaryImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
+                                                </DiaryImgBox>
+                                                <DiaryDetailBox>
+                                                    <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
+                                                        {item.Data.text}
+                                                    </DiaryDetail>
+
+                                                    <LikeBottomBox>
+                                                        <DiaryDateBox>
+                                                            <MaterialCommunityIcons
+                                                                name="calendar-heart"
+                                                                size={14}
+                                                                color="#243e35"
+                                                            />
+                                                            <DiayrDate>{newDate}</DiayrDate>
+                                                        </DiaryDateBox>
+                                                        <BookMarkButton
+                                                            DocID={item.DocID}
+                                                            currentUser={currentUser}
+                                                            detailData={item.Data}
+                                                        />
+                                                    </LikeBottomBox>
+                                                </DiaryDetailBox>
+                                            </DiaryContainer>
+                                        );
+                                    })}
+                                </>
+                            )}
+                        </>
+                    )}
                 </Container>
             ) : (
                 <ActivityIndicator color="#243e35" />

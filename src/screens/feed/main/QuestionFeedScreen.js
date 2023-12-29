@@ -2,19 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Pressable } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import MasonryList from '@react-native-seoul/masonry-list';
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 import LinearGradient from 'react-native-linear-gradient';
 import EmptyImg from '../../../assets/logo.png';
+import NonePage from '../../../components/NonePage';
 
-const QuestionFeedScreen = ({ navigation, handleScroll, postData }) => {
+const QuestionFeedScreen = ({ navigation, handleScroll }) => {
+    const [postData, setPostData] = useState([]);
+
     // 랜덤한 dimensions 값을 생성하는 함수
     const generateRandomDimensions = () => {
         const width = Math.floor(Math.random() * 200) + 100; // 최소 100, 최대 300
         const height = Math.floor(Math.random() * 191) + 130; // 최소 130, 최대 320
         return { width, height };
     };
+
+    useEffect(() => {
+        firestore()
+            .collection('Posts')
+            .where('type', '==', 'QnA')
+            .onSnapshot((documentSnapshot) => {
+                if (documentSnapshot) {
+                    let feedArray = [];
+                    documentSnapshot.forEach((doc) => {
+                        feedArray.push({
+                            DocID: doc.id,
+                            Data: doc.data(),
+                        });
+                    });
+                    setPostData(feedArray);
+                    // console.log(feedArray);
+                }
+            });
+    }, []);
 
     const [dataWithDimensions, setDataWithDimensions] = useState([]);
 
@@ -33,27 +54,34 @@ const QuestionFeedScreen = ({ navigation, handleScroll, postData }) => {
     return (
         <Container>
             {dataWithDimensions.length === 0 ? (
-                <LoadingContainer>
-                    <ActivityIndicator color="red" />
-                </LoadingContainer>
+                <NonePage type={'질문'} />
             ) : (
-                <MasonryList
-                    onScroll={handleScroll}
-                    data={dataWithDimensions}
-                    keyExtractor={(item) => item.id}
-                    numColumns={2}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({ item, i }) => <QnACard item={item} index={i} navigation={navigation} />}
-                    onEndReachedThreshold={0.1}
-                />
+                <>
+                    {dataWithDimensions.length < 1 ? (
+                        <LoadingContainer>
+                            <ActivityIndicator color="#243e35" />
+                        </LoadingContainer>
+                    ) : (
+                        <MasonryList
+                            onScroll={handleScroll}
+                            data={dataWithDimensions}
+                            keyExtractor={(item) => item.id}
+                            numColumns={2}
+                            showsVerticalScrollIndicator={false}
+                            renderItem={({ item, i }) => <QnACard item={item} index={i} navigation={navigation} />}
+                            onEndReachedThreshold={0.1}
+                        />
+                    )}
+                </>
             )}
         </Container>
     );
 };
 
 const Container = styled.View`
-    margin: 0 4px;
-    margin-top: 4px;
+    background-color: #f9f9f7;
+    padding: 0 4px;
+    padding-top: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;

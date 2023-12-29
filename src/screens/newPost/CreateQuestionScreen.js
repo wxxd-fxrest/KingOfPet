@@ -1,15 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { styled } from 'styled-components';
 
-const CreateQuestionScreen = ({ typeHealth, typeLife, typeEtc, typeFirst, typeSecond, typeThird }) => {
+const CreateQuestionScreen = ({ typeHealth, typeLife, typeEtc }) => {
     const [health, setHealth] = useState(false);
     const [life, setLife] = useState(true);
     const [etc, setEtc] = useState(false);
-
-    const [first, setFirst] = useState(false);
-    const [second, setSecond] = useState(true);
-    const [third, setThird] = useState(false);
 
     return (
         <Container onPress={() => keyboard.dismiss()}>
@@ -101,95 +97,6 @@ const CreateQuestionScreen = ({ typeHealth, typeLife, typeEtc, typeFirst, typeSe
                     }}
                 />
             </QnABox>
-
-            {health && (
-                <QnABox
-                    health={health}
-                    style={{
-                        backgroundColor: 'rgba(252, 147, 128, 0.4)',
-                    }}
-                >
-                    <>
-                        <Title>건강에 대한 질문입니다.</Title>
-                        <PetInputTitle>응급도를 선택해 주세요.</PetInputTitle>
-                        <PetCheckBox
-                            size={20}
-                            fillColor="#243e35"
-                            unfillColor="#f9f9f7"
-                            text="상"
-                            ref={typeFirst}
-                            isChecked={first}
-                            innerIconStyle={{ borderWidth: 2 }}
-                            textStyle={{
-                                textDecorationLine: 'none',
-                                fontSize: 14,
-                            }}
-                            onPress={() => {
-                                if (typeFirst.current.state.checked === true) {
-                                    if (typeSecond.current.state.checked === true) {
-                                        typeSecond.current.onPress();
-                                    }
-                                    if (typeThird.current.state.checked === true) {
-                                        typeThird.current.onPress();
-                                        // setThird(false);
-                                    }
-                                    setFirst(!first);
-                                }
-                                console.log(typeFirst.current.state.checked);
-                            }}
-                        />
-                        <PetCheckBox
-                            size={20}
-                            fillColor="#243e35"
-                            unfillColor="#f9f9f7"
-                            text="중"
-                            ref={typeSecond}
-                            isChecked={second}
-                            innerIconStyle={{ borderWidth: 2 }}
-                            textStyle={{
-                                textDecorationLine: 'none',
-                                fontSize: 14,
-                            }}
-                            onPress={() => {
-                                if (typeSecond.current.state.checked === true) {
-                                    if (typeFirst.current.state.checked === true) {
-                                        typeFirst.current.onPress();
-                                    }
-                                    if (typeThird.current.state.checked === true) {
-                                        typeThird.current.onPress();
-                                        // setThird(false);
-                                    }
-                                    setSecond(!second);
-                                }
-                            }}
-                        />
-                        <PetCheckBox
-                            size={20}
-                            fillColor="#243e35"
-                            unfillColor="#f9f9f7"
-                            text="하"
-                            ref={typeThird}
-                            isChecked={third}
-                            innerIconStyle={{ borderWidth: 2 }}
-                            textStyle={{
-                                textDecorationLine: 'none',
-                                fontSize: 14,
-                            }}
-                            onPress={() => {
-                                if (typeThird.current.state.checked === true) {
-                                    if (typeFirst.current.state.checked === true) {
-                                        typeFirst.current.onPress();
-                                    }
-                                    if (typeSecond.current.state.checked === true) {
-                                        typeSecond.current.onPress();
-                                    }
-                                    setThird(!third);
-                                }
-                            }}
-                        />
-                    </>
-                </QnABox>
-            )}
         </Container>
     );
 };
@@ -204,7 +111,7 @@ const QnABox = styled.View`
     background-color: #d5d5d4;
     padding: 8px;
     border-radius: 12px;
-    width: ${({ health }) => (health === true ? '48%' : '100%')};
+    width: 100%;
 `;
 
 const Title = styled.Text`

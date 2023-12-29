@@ -7,6 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import EmptyImg from '../../assets/logo.png';
 import BookMarkButton from '../../components/BookMarkButton';
+import NonePage from '../../components/NonePage';
 
 const ImportantDiarySceren = () => {
     const navigation = useNavigation();
@@ -52,43 +53,58 @@ const ImportantDiarySceren = () => {
 
     return (
         <Container>
-            {detailData && (
+            {detailData.length === 0 ? (
+                <NonePage type={'중요 표시한 일기'} />
+            ) : (
                 <>
-                    <FlatList
-                        data={detailData}
-                        ItemSeparatorComponent={heightEmpty}
-                        renderItem={({ item }) => (
-                            <DiaryContainer
-                                onPress={() =>
-                                    navigation.navigate('MainStack', { screen: 'DiaryDetail', params: item })
-                                }
-                            >
-                                <DiaryImgBox>
-                                    <DiaryImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
-                                </DiaryImgBox>
-                                <DiaryDetailBox>
-                                    <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
-                                        {item.Data.text}
-                                    </DiaryDetail>
+                    {detailData.length < 1 ? (
+                        <LoadingContainer>
+                            <ActivityIndicator color="#243e35" />
+                        </LoadingContainer>
+                    ) : (
+                        <FlatList
+                            data={detailData}
+                            ItemSeparatorComponent={heightEmpty}
+                            renderItem={({ item }) => (
+                                <DiaryContainer
+                                    onPress={() =>
+                                        navigation.navigate('MainStack', {
+                                            screen: 'DiaryDetail',
+                                            params: item,
+                                        })
+                                    }
+                                >
+                                    <DiaryImgBox>
+                                        <DiaryImg source={{ uri: item.Data.image[0].url } || EmptyImg} />
+                                    </DiaryImgBox>
+                                    <DiaryDetailBox>
+                                        <DiaryDetail numberOfLines={6} ellipsizeMode="tail">
+                                            {item.Data.text}
+                                        </DiaryDetail>
 
-                                    <BookMarkBottomBox>
-                                        <DiaryDateBox>
-                                            <MaterialCommunityIcons name="calendar-heart" size={14} color="#243e35" />
-                                            <DiayrDate>{item.Data.orderBy}</DiayrDate>
-                                        </DiaryDateBox>
+                                        <BookMarkBottomBox>
+                                            <DiaryDateBox>
+                                                <MaterialCommunityIcons
+                                                    name="calendar-heart"
+                                                    size={14}
+                                                    color="#243e35"
+                                                />
+                                                <DiayrDate>{item.Data.orderBy}</DiayrDate>
+                                            </DiaryDateBox>
 
-                                        <BookMarkButton
-                                            DocID={item.DocID}
-                                            currentUser={currentUser}
-                                            detailData={item.Data}
-                                        />
-                                    </BookMarkBottomBox>
-                                </DiaryDetailBox>
-                            </DiaryContainer>
-                        )}
-                        keyExtractor={(item) => item.DocID + ''}
-                        showsVerticalScrollIndicator={false}
-                    />
+                                            <BookMarkButton
+                                                DocID={item.DocID}
+                                                currentUser={currentUser}
+                                                detailData={item.Data}
+                                            />
+                                        </BookMarkBottomBox>
+                                    </DiaryDetailBox>
+                                </DiaryContainer>
+                            )}
+                            keyExtractor={(item) => item.DocID + ''}
+                            showsVerticalScrollIndicator={false}
+                        />
+                    )}
                 </>
             )}
             <View
