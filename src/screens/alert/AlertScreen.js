@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { FlatList } from 'react-native';
-import postData from '../../data/postData';
 import styled from 'styled-components';
 
 const AlertScreen = ({ navigation }) => {
@@ -12,7 +11,11 @@ const AlertScreen = ({ navigation }) => {
 
     return (
         <Container>
-            <FlatList
+            <NoneBox>
+                <None>아직 알림이 없습니다.</None>
+            </NoneBox>
+
+            {/* <FlatList
                 data={postData}
                 ItemSeparatorComponent={heightEmpty}
                 keyExtractor={(item) => item.id + ''}
@@ -37,7 +40,7 @@ const AlertScreen = ({ navigation }) => {
                         </AlertUserProfileBox>
                     </AlertBox>
                 )}
-            />
+            /> */}
         </Container>
     );
 };
@@ -46,6 +49,19 @@ const Container = styled.View`
     background-color: #f9f9f7;
     flex: 1;
     padding: 0px 20px;
+`;
+
+const NoneBox = styled.View`
+    flex: 1;
+    width: 100%;
+    align-items: center;
+    padding-top: ${(props) => (props.type === '일기' ? '22%' : '30%')};
+`;
+
+const None = styled.Text`
+    font-size: 14px;
+    font-weight: 400;
+    color: #343c3a;
 `;
 
 const heightEmpty = styled.View`
