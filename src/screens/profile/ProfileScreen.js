@@ -56,12 +56,17 @@ const ProfileScreen = () => {
                         style={{
                             width: '40%',
                             flexDirection: 'row',
-                            justifyContent: 'space-between',
+
+                            justifyContent: 'flex-end',
                             alignItems: 'center',
                             marginRight: 20,
                         }}
                     >
-                        <SetupButton>
+                        <SetupButton
+                            style={{
+                                marginRight: 12,
+                            }}
+                        >
                             <MaterialCommunityIcons
                                 name="star-circle-outline"
                                 size={30}

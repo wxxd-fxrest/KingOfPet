@@ -59,12 +59,16 @@ const MainScreen = ({ handleScroll, hide, postData }) => {
                     style={{
                         width: '40%',
                         flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        justifyContent: 'flex-end',
                         alignItems: 'center',
                         marginRight: 20,
                     }}
                 >
-                    <SetupButton>
+                    <SetupButton
+                        style={{
+                            marginRight: 12,
+                        }}
+                    >
                         <Feather
                             name="search"
                             size={28}

@@ -138,10 +138,10 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                     >
                         {detailData.image.map((item, i) => {
                             return (
-                                <>
+                                <View key={i}>
                                     {detailData && detailData.image ? (
                                         <>
-                                            <BannerContainer key={i} activeOpacity={0.9}>
+                                            <BannerContainer activeOpacity={0.9}>
                                                 <LinearGradientBox
                                                     start={{ x: 0, y: 0 }}
                                                     end={{ x: 0, y: 1 }}
@@ -182,7 +182,7 @@ const DetailScreen = ({ navigation, route: { params } }) => {
                                             </BannerContainer>
                                         </>
                                     ) : null}
-                                </>
+                                </View>
                             );
                         })}
                     </Swiper>

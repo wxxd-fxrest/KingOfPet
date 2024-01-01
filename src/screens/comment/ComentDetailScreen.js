@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, NativeModules, ScrollView, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, NativeModules, ScrollView } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';

@@ -30,9 +30,11 @@ const FollowingScreen = ({ navigation }) => {
                 keyExtractor={(item) => item.email + ''}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => {
-                    const isFollowing =
-                        Array.isArray(currentUserData.follower) && currentUserData.follower.includes(item.email);
-
+                    if (currentUserData) {
+                        isFollowing =
+                            Array.isArray(currentUserData.following) && currentUserData.following.includes(item.email);
+                    }
+                    console.log('item', item.email, isFollowing);
                     return (
                         <UserBox
                             onPress={() => {

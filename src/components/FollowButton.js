@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import firestore from '@react-native-firebase/firestore';
 import styled from 'styled-components';
 
@@ -50,16 +50,17 @@ const FollowButton = ({ isFollowing, currentUserData, userData }) => {
                 .collection('Users')
                 .doc(`${currentUserData.email}`)
                 .update({
-                    following: [...currentUserData.following, userData.email],
-                    following_data: [...currentUserData.following_data, userFollow],
+                    following: [...(currentUserData.following || []), userData.email],
+                    following_data: [...(currentUserData.following_data || []), userFollow],
                 });
+
             // user
             firestore()
                 .collection('Users')
                 .doc(`${userData.email}`)
                 .update({
-                    follower: [...userData?.follower, currentUserData.email],
-                    follower_data: [...userData?.follower_data, currentFollow],
+                    follower: [...(userData.follower || []), currentUserData.email],
+                    follower_data: [...(userData.follower_data || []), currentFollow],
                 })
                 .then(() => {
                     console.log('User added!');
