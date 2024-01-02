@@ -74,10 +74,15 @@ const AllLikeFeedScreen = ({ navigation, handleScroll, currentUser, currentUserD
                                             >
                                                 <LikeUserImgBox>
                                                     <LikeUserImg
-                                                        source={{ uri: currentUserData.petimage } || EmptyImg}
+                                                        source={
+                                                            (currentUserData && { uri: currentUserData.petimage }) ||
+                                                            EmptyImg
+                                                        }
                                                     />
                                                 </LikeUserImgBox>
-                                                <LikeuserName>{currentUserData.petname} </LikeuserName>
+                                                <LikeuserName>
+                                                    {currentUserData && currentUserData.petname}{' '}
+                                                </LikeuserName>
                                             </LikeUserBox>
                                             <LikeButton
                                                 currentUser={currentUser}

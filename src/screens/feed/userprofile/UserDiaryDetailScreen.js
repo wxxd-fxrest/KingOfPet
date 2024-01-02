@@ -216,12 +216,13 @@ const PetMoodContainer = styled.View`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    border-width: 1px;
-    border-color: rgba(36, 62, 53, 0.4);
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(36, 62, 53, 0.4);
+    border-top-width: 1px;
+    border-top-color: rgba(36, 62, 53, 0.4);
     margin: 20px 20px;
     margin-bottom: 10px;
     padding: 20px 20px;
-    border-radius: 12px;
 `;
 
 const DiaryDateBox = styled.View`

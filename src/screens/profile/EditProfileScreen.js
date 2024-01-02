@@ -7,6 +7,7 @@ import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import { styled } from 'styled-components';
 import { Feather } from '@expo/vector-icons';
+import EmptyImg from '../../assets/logo.png';
 
 const EditProfileScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
@@ -135,7 +136,11 @@ const EditProfileScreen = ({ navigation }) => {
                                 <PreviewBox>
                                     <PreviewImage
                                         source={
-                                            userData ? { uri: userData.petimage } : saveImgUrl && { uri: saveImgUrl }
+                                            saveImgUrl
+                                                ? { uri: saveImgUrl }
+                                                : userData
+                                                ? { uri: userData.petimage }
+                                                : EmptyImg
                                         }
                                     />
                                     <EditImageBtn>

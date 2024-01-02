@@ -247,7 +247,7 @@ const CreateSelectImgScreen = ({ navigation, route: params }) => {
                         <ActivityIndicator color="white" />
                     ) : (
                         <>
-                            <ButtonText> 다음 </ButtonText>
+                            <ButtonText> 업로드 </ButtonText>
                             <NextBtton name="keyboard-arrow-right" size={22} color="#f9f9f7" />
                         </>
                     )}

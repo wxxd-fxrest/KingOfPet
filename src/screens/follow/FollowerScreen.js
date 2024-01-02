@@ -24,44 +24,59 @@ const FollowerScreen = ({ navigation }) => {
 
     return (
         <Container>
-            <FlatList
-                data={currentUserData.follower_data}
-                ItemSeparatorComponent={heightEmpty}
-                keyExtractor={(item) => item.email + ''}
-                showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => {
-                    const isFollowing =
-                        Array.isArray(currentUserData.following) && currentUserData.following.includes(item.email);
-                    // console.log(item);
-                    return (
-                        <>
-                            <UserBox
-                                onPress={() => {
-                                    navigation.navigate('MainStack', {
-                                        screen: 'UserProfile',
-                                        params: item,
-                                    });
-                                }}
-                            >
-                                <UserImgBox>
-                                    <UserImg source={{ uri: item.petimage }} />
-                                </UserImgBox>
+            {currentUserData.follower_data && currentUserData.follower_data.length === 0 ? (
+                <NoneBox>
+                    <None>아직 팔로워가 없습니다.</None>
+                </NoneBox>
+            ) : (
+                <>
+                    {currentUserData.follower_data && currentUserData.follower_data.length < 1 ? (
+                        <LoadingContainer>
+                            <ActivityIndicator color="#243e35" />
+                        </LoadingContainer>
+                    ) : (
+                        <FlatList
+                            data={currentUserData.follower_data}
+                            ItemSeparatorComponent={heightEmpty}
+                            keyExtractor={(item) => item.email + ''}
+                            showsVerticalScrollIndicator={false}
+                            renderItem={({ item }) => {
+                                const isFollowing =
+                                    Array.isArray(currentUserData.following) &&
+                                    currentUserData.following.includes(item.email);
+                                // console.log(item);
+                                return (
+                                    <>
+                                        <UserBox
+                                            onPress={() => {
+                                                navigation.navigate('MainStack', {
+                                                    screen: 'UserProfile',
+                                                    params: item,
+                                                });
+                                            }}
+                                        >
+                                            <UserImgBox>
+                                                <UserImg source={{ uri: item.petimage }} />
+                                            </UserImgBox>
 
-                                <ProfilePetNameBox>
-                                    <ProfilePetNameTitle>상전</ProfilePetNameTitle>
-                                    <ProfilePetName>{item.petname}</ProfilePetName>
-                                </ProfilePetNameBox>
+                                            <ProfilePetNameBox>
+                                                <ProfilePetNameTitle>상전</ProfilePetNameTitle>
+                                                <ProfilePetName>{item.petname}</ProfilePetName>
+                                            </ProfilePetNameBox>
 
-                                <FollowButton
-                                    isFollowing={isFollowing}
-                                    currentUserData={currentUserData}
-                                    userData={item}
-                                />
-                            </UserBox>
-                        </>
-                    );
-                }}
-            />
+                                            <FollowButton
+                                                isFollowing={isFollowing}
+                                                currentUserData={currentUserData}
+                                                userData={item}
+                                            />
+                                        </UserBox>
+                                    </>
+                                );
+                            }}
+                        />
+                    )}
+                </>
+            )}
         </Container>
     );
 };
@@ -70,6 +85,19 @@ const Container = styled.View`
     background-color: #f9f9f7;
     flex: 1;
     padding: 20px;
+`;
+
+const NoneBox = styled.View`
+    flex: 1;
+    width: 100%;
+    align-items: center;
+    padding-top: ${(props) => (props.type === '일기' ? '22%' : '30%')};
+`;
+
+const None = styled.Text`
+    font-size: 14px;
+    font-weight: 400;
+    color: #343c3a;
 `;
 
 const heightEmpty = styled.View`
