@@ -40,3 +40,5 @@ android/
 .env
 data/
 BoardingData.js
+assets/
+BoardingImage/
