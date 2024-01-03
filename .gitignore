@@ -38,3 +38,5 @@ ios/
 android/
 
 .env
+data/
+BoardingData.js

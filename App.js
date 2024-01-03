@@ -10,6 +10,8 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import MainRoot from './src/navigation/MainRoot';
 import AuthRoot from './src/navigation/AuthRoot';
+import OnBoarding from './src/screens/onboarding/OnBoarding';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +22,34 @@ export default function App() {
     const [isAuthentication, setIsAuthentication] = useState(false);
     const [currentUser, setCurrentUser] = useState({});
     const [hide, setHide] = useState(true);
+    const [onBoardingSeen, setOnBoardingSeen] = useState(false);
+    console.log(onBoardingSeen);
+
+    useEffect(() => {
+        // Async 함수를 사용하여 AsyncStorage에서 'onBoardingSeen' 값을 읽어옴
+        const checkOnBoardingSeen = async () => {
+            try {
+                const value = await AsyncStorage.getItem('onBoardingSeen');
+                if (value !== null) {
+                    setOnBoardingSeen(true);
+                }
+            } catch (e) {
+                console.error('AsyncStorage Error:', e);
+            }
+        };
+
+        checkOnBoardingSeen();
+    }, []);
+
+    const handleOnBoardingSeen = async () => {
+        try {
+            // Async 함수를 사용하여 'onBoardingSeen' 값을 저장
+            await AsyncStorage.setItem('onBoardingSeen', 'true');
+            setOnBoardingSeen(true);
+        } catch (e) {
+            console.error('AsyncStorage Error:', e);
+        }
+    };
 
     const handleScroll = (event) => {
         const offsetY = event.nativeEvent.contentOffset.y;
@@ -83,17 +113,23 @@ export default function App() {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>
-                {isAuthentication ? (
-                    <Stack.Screen name="MainRoot" options={{ headerShown: false }}>
-                        {(props) => <MainRoot {...props} handleScroll={handleScroll} hide={hide} postData={postData} />}
-                    </Stack.Screen>
-                ) : (
-                    <Stack.Screen name="AuthRoot" options={{ headerShown: false }}>
-                        {(props) => <AuthRoot {...props} />}
-                    </Stack.Screen>
-                )}
-            </Stack.Navigator>
+            {onBoardingSeen ? (
+                <Stack.Navigator>
+                    {isAuthentication ? (
+                        <Stack.Screen name="MainRoot" options={{ headerShown: false }}>
+                            {(props) => (
+                                <MainRoot {...props} handleScroll={handleScroll} hide={hide} postData={postData} />
+                            )}
+                        </Stack.Screen>
+                    ) : (
+                        <Stack.Screen name="AuthRoot" options={{ headerShown: false }}>
+                            {(props) => <AuthRoot {...props} />}
+                        </Stack.Screen>
+                    )}
+                </Stack.Navigator>
+            ) : (
+                <OnBoarding handleOnBoardingSeen={handleOnBoardingSeen} />
+            )}
             <StatusBar barStyle="auto" />
         </NavigationContainer>
     );
