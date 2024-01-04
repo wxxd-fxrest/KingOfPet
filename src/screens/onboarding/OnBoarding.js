@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Platform, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Swiper from 'react-native-swiper';
