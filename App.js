@@ -31,7 +31,7 @@ export default function App() {
             try {
                 const value = await AsyncStorage.getItem('onBoardingSeen');
                 if (value !== null) {
-                    setOnBoardingSeen(true);
+                    setOnBoardingSeen(false);
                 }
             } catch (e) {
                 console.error('AsyncStorage Error:', e);

@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Platform, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Swiper from 'react-native-swiper';
 import styled from 'styled-components';
@@ -63,25 +63,29 @@ const OnBoarding = ({ handleOnBoardingSeen }) => {
                                         }}
                                     />
                                     {item.id === '1' && (
-                                        <DiaryCheckBox>
-                                            <Bar />
-                                            <DiaryIconBox>
-                                                <MaterialIcons name="pets" size={24} color="#f9f9f7" />
-                                            </DiaryIconBox>
-                                            <DiaryInfo>최초 가입 시 일기장은 비공개로 설정되어 있으며,</DiaryInfo>
-                                            <DiaryInfo>프로필 수정 화면에서 변경하실 수 있습니다.</DiaryInfo>
-                                        </DiaryCheckBox>
+                                        <>
+                                            {/* <Bar /> */}
+                                            <DiaryCheckBox>
+                                                <DiaryIconBox>
+                                                    <MaterialIcons name="pets" size={24} color="#f9f9f7" />
+                                                </DiaryIconBox>
+                                                <DiaryInfo>최초 가입 시 일기장은 비공개로 설정되어 있으며,</DiaryInfo>
+                                                <DiaryInfo>프로필 수정 화면에서 변경하실 수 있습니다.</DiaryInfo>
+                                            </DiaryCheckBox>
+                                        </>
                                     )}
                                     {item.id === '2' && (
-                                        <PostCreateBox>
-                                            <Circle />
-                                            <PostIconBox>
-                                                <MaterialIcons name="pets" size={24} color="#f9f9f7" />
-                                            </PostIconBox>
-                                            <PostCreateInfo>
-                                                포스트 카테고리 선택 후 글을 작성할 수 있습니다.
-                                            </PostCreateInfo>
-                                        </PostCreateBox>
+                                        <>
+                                            {/* <Circle /> */}
+                                            <PostCreateBox>
+                                                <PostIconBox>
+                                                    <MaterialIcons name="pets" size={24} color="#f9f9f7" />
+                                                </PostIconBox>
+                                                <PostCreateInfo>
+                                                    포스트 카테고리 선택 후 글을 작성할 수 있습니다.
+                                                </PostCreateInfo>
+                                            </PostCreateBox>
+                                        </>
                                     )}
                                     {item.id === '3' && (
                                         <QnAInfoBox>
@@ -91,7 +95,21 @@ const OnBoarding = ({ handleOnBoardingSeen }) => {
                                             <QnAInfo>건강 관련 질문에 경우 별도 표시를 확인할 수 있습니다.</QnAInfo>
                                         </QnAInfoBox>
                                     )}
-                                    <BannerImage source={(item && { uri: item.image }) || EmptyImg} />
+                                    <BannerImage
+                                        source={
+                                            item === ''
+                                                ? EmptyImg
+                                                : Platform.OS === 'android'
+                                                ? item.id === '1'
+                                                    ? require('/Users/drizzle/KingOfPet/src/assets/BoardingImage/profile.png')
+                                                    : item.id === '2'
+                                                    ? require('/Users/drizzle/KingOfPet/src/assets/BoardingImage/test.png')
+                                                    : item.id === '3'
+                                                    ? require('/Users/drizzle/KingOfPet/src/assets/BoardingImage/qna.png')
+                                                    : { uri: item.image }
+                                                : { uri: item.image }
+                                        }
+                                    />
                                 </BannerContainer>
                             </View>
                         );
@@ -143,21 +161,22 @@ const DiaryCheckBox = styled.View`
     position: absolute;
     top: 44%;
     right: 12px;
-    z-index: 300;
+    z-index: 1;
     ${Platform.OS === 'android' ? 'elevation: 4;' : ''}
     ${Platform.OS === 'ios'
         ? 'shadow-color: #000; shadow-offset: 0px 3px; shadow-opacity: 0.4; shadow-radius: 2px;'
         : ''}
 `;
 
-const Bar = styled.View`
-    width: 70px;
-    height: 1.6px;
-    background-color: #f91300;
-    position: absolute;
-    top: -12px;
-    right: 105px;
-`;
+// const Bar = styled.View`
+//     width: 70px;
+//     height: 1.6px;
+//     background-color: #f91300;
+//     position: absolute;
+//     top: 42%;
+//     right: 30%;
+//     z-index: 2;
+// `;
 
 const DiaryIconBox = styled.View`
     position: absolute;
@@ -193,16 +212,17 @@ const PostCreateBox = styled.View`
         : ''}
 `;
 
-const Circle = styled.View`
-    width: 70px;
-    height: 42px;
-    border-radius: 2px;
-    border-color: #f91300;
-    border-width: 1px;
-    position: absolute;
-    top: -68px;
-    right: 44px;
-`;
+// const Circle = styled.View`
+//     width: 16%;
+//     height: 6%;
+//     border-radius: 2px;
+//     border-color: #f91300;
+//     border-width: 1px;
+//     position: absolute;
+//     ${Platform.OS === 'android' ? 'top: 10.8%;' : 'top: 9.5%;'}
+//     ${Platform.OS === 'android' ? 'right: 18%;' : 'right: 15%;'}
+//     z-index: 2;
+// `;
 
 const PostIconBox = styled.View`
     position: absolute;
@@ -266,10 +286,9 @@ const LinearGradientBox = styled(LinearGradient)`
 `;
 
 const BannerImage = styled.Image`
-    width: 80%;
+    ${Platform.OS === 'android' ? 'width: 70%;' : 'width: 80%;'}
     height: 100%;
     border-radius: 16px;
-    resize: contain;
 `;
 
 export default OnBoarding;
