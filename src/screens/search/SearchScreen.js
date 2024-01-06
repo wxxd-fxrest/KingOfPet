@@ -34,7 +34,8 @@ const SearchScreen = ({ navigation }) => {
         if (category === true) {
             firestore()
                 .collection('Posts')
-                .where('text', '==', `${searchText}`)
+                .where('text', '>=', searchText) // 변경된 부분
+                .where('text', '<=', searchText + '\uf8ff') // 변경된 부분
                 .onSnapshot((documentSnapshot) => {
                     const promises = [];
 
@@ -86,7 +87,7 @@ const SearchScreen = ({ navigation }) => {
                         });
                     });
                     setSearchUser(feedArray);
-                    console.log('searchUser', searchUser);
+                    // console.log('searchUser', searchUser);
                 });
         }
     };
