@@ -12,6 +12,7 @@ React-Native + Firebase + Api (05)
   소셜 로그인
   회원 정보 수정
 
+[Notion](https://puffy-poinsettia-b48.notion.site/King-of-the-Pet-c200c829844c41c68688670cfb820a99?pvs=4)
 
 
 ![README_KingOfPet](https://github.com/wxxd-fxrest/KingOfPet/blob/master/REDME_KingOfPet.png)
